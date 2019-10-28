@@ -47,15 +47,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                          <a href="{{route('type_index')}}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Types de Chambre</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{route('chambre_index')}}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Chambres</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('type_index')}}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Types de Chambre</p>
                             </a>
                         </li>
                     </ul>

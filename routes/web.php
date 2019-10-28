@@ -17,12 +17,12 @@
 
 Route::get('/','WelcomeController@dashboard')->name('dashboard') ;
 
-Route::get('/parametre/type','TypeController@index')->name('type_index') ;
-Route::get('/parametre/type/add','TypeController@add')->name('type_add') ;
-Route::post('/parametre/type/store','TypeController@store')->name('type_store') ;
-Route::get('/parametre/type/edit/{id}','TypeController@edit')->name('type_edit') ;
-Route::post('/parametre/type/update/{id}','TypeController@update')->name('type_update') ;
-Route::get('/parametre/type/delete/{id}','TypeController@delete')->name('type_delete') ;
+Route::get('/parametre/type','TypesController@index')->name('type_index') ;
+Route::get('/parametre/type/add','TypesController@add')->name('type_add') ;
+Route::post('/parametre/type/store','TypesController@store')->name('type_store') ;
+Route::get('/parametre/type/edit/{id}','TypesController@edit')->name('type_edit') ;
+Route::post('/parametre/type/update/{id}','TypesController@update')->name('type_update') ;
+Route::get('/parametre/type/delete/{id}','TypesController@delete')->name('type_delete') ;
 
 Route::get('/parametre/batiment','BatimentsController@index')->name('batiment_index') ;
 Route::get('/parametre/batiment/add','BatimentsController@add')->name('batiment_add') ;
