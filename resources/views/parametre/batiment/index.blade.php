@@ -11,7 +11,7 @@
             <h6 class="card-title">Liste des batiments</h6>
           </div>
           <div class="col-md-2">
-           <a href="{{route('batiment_add')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ajouter</a>
+           <a style="width:100%" href="{{route('batiment_add')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ajouter</a>
           </div>
         </div>
         <p class="card-text">

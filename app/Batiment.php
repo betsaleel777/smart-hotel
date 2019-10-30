@@ -14,4 +14,8 @@ class Batiment extends Model
     public function chambres(){
       return $this->hasMany(Chambre::class,'chambre') ;
     }
+
+    public function attributions_passages(){
+      return $this->hasMany(AttributionsPassage::class,'batiment');
+    }
 }
