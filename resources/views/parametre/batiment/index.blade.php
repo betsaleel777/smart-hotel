@@ -15,7 +15,7 @@
           </div>
         </div>
         <p class="card-text">
-          <table style="width:75%" id="batiment" class="table table-bordered table-striped">
+          <table style="width:80%" id="batiment" class="table table-bordered table-striped">
           <thead>
             <tr>
               <th>#</th>
@@ -47,14 +47,7 @@
   <script src="{{asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
   <script>
     $(function () {
-      $('#batiment').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-      });
+      $('#batiment').DataTable();
     });
   </script>
 @endsection
