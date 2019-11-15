@@ -49,6 +49,7 @@ Route::post('/home/attributions/update/{id}','AttributionsPassagesController@upd
 Route::get('/home/attributions/delete/{id}','AttributionsPassagesController@delete')->name('attributions_pass_delete') ;
 
 // api ajax vue route
-Route::get('api/chambres/all/{batiment}','ApiController@allRooms')->name('all_chambre') ;
-Route::get('api/chambres/empty','ApiController@emptyRooms')->name('empty_chambre') ;
-Route::get('api/chambres/used','ApiController@usedRooms')->name('used_chambre') ;
+Route::get('/api/chambres/all/{batiment}','ApiController@allRooms')->name('all_chambre') ;
+Route::get('/api/chambres/empty/{batiment}','ApiController@emptyRooms')->name('empty_chambre') ;
+Route::get('/api/chambres/used/{batiment}','ApiController@usedRooms')->name('used_chambre') ;
+Route::post('/api/attribution/passage','ApiController@attribuer')->name('attribution_passage') ;

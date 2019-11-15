@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Chambre extends Model
 {
     protected $fillable = ['libelle','statut','batiment','type'] ;
-
+    protected $dates = ['created_at','updated_at','deleted_at'] ;
     const RULES = [
                    'libelle'  => 'required|max:50',
                    'batiment'  => 'required',

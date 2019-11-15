@@ -1,17 +1,27 @@
 <template>
-<table v-show="visible" id="attribution">
+<table v-show="visible" class="table table-bordered table-striped">
     <thead>
         <th>Chambre</th>
         <th>Type</th>
         <th>Coût</th>
         <th>Statut</th>
+        <th>Options</th>
     </thead>
     <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr v-for="chambre in chambres" :key="chambre.id">
+            <td>{{chambre.libelle}}</td>
+            <td>{{chambre.type_linked.libelle}}</td>
+            <td>{{chambre.type_linked.cout_passage}}</td>
+            <td v-show="chambre.statut === 'inoccupée'">
+                <h5><span class="badge badge-success">{{chambre.statut}}</span></h5>
+            </td>
+            <td v-show="chambre.statut === 'occupée'">
+                <h5><span class="badge badge-danger">{{chambre.statut}}</span></h5>
+            </td>
+            <td v-show="chambre.statut === 'reservée'">
+                <h5><span class="badge badge-primary">{{chambre.statut}}</span></h5>
+            </td>
+            <td><button @click="open(chambre.id)" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-small-attribution">attribuer</button></td>
         </tr>
     </tbody>
     <tfoot>
@@ -20,58 +30,61 @@
         <th>Coût</th>
         <th>Statut</th>
     </tfoot>
+    <attribution-add-modal :chambre="identifiant"></attribution-add-modal>
 </table>
 </template>
 
 <script>
+Vue.component('attribution-add-modal', require('./AttributionAddModalComponent').default);
 export default {
     data() {
         return {
             visible: false,
-            chambres: ''
+            chambres: '',
+            identifiant: null,
         }
     },
     mounted() {
-        this.$root.$on('charger', (statut,csrf,batiment) => {
-            console.log(statut,csrf,batiment);
-            this.getChambres(statut,csrf,batiment)
+        this.$root.$on('charger', (statut, batiment) => {
+            this.getChambres(statut, batiment)
         })
     },
     methods: {
-        getChambres: function(statut,csrf,batiment) {
+        open: function(chambre) {
+            this.identifiant = chambre
+        },
+        getChambres: function(statut, batiment) {
             this.visible = true
-            if(statut == null){
-              this.fetchAllRooms(batiment)
-            }else if (statut == 'vide') {
-              this.fetchEmptyRooms(statut,csrf,batiment)
-            }else{
-              this.fetchUsedRooms(statut,csrf,batiment)
+            if (statut == null) {
+                this.fetchAllRooms(batiment)
+            } else if (statut == 'vide') {
+                this.fetchEmptyRooms(batiment)
+            } else {
+                this.fetchUsedRooms(batiment)
             }
         },
         fetchAllRooms: function(batiment) {
-            //get content of meta csrf and id selected
-            this.$http.get('api/chambres/all/'+batiment).then(function(response) {
-                console.log(reponse.data);
-                this.$set('chambres', response.data);
+            let current = this
+            axios.get('/api/chambres/all/' + batiment).then(function(response) {
+                current.chambres = response.data.chambres
             }, function(response) {
-                console.log('une erreure a eu lieu', reponse);
+                console.log('une erreure a eu lieu', response);
             });
         },
-        fetchEmptyRooms: function(statut,csrf,batiment) {
-            //get by name
-            // get by id this.$refs.myId.innerText = 'Hello Bro';
-            this.$http.get('api/chambres/empty').then(function(response) {
-                this.$set('chambres', response.data);
+        fetchEmptyRooms: function(batiment) {
+            let current = this
+            axios.get('/api/chambres/empty').then(function(response) {
+                current.chambres = response.data
             }, function(response) {
-                console.log('une erreure a eu lieu', reponse);
+                console.log('une erreure a eu lieu', response);
             });
         },
-        fetchUsedRooms: function(statut,csrf,batiment) {
-            //get content of meta csrf and id selected
-            this.$http.get('api/chambres/used').then(function(response) {
-                this.$set('chambres', response.data);
+        fetchUsedRooms: function(batiment) {
+            let current = this
+            axios.get('/api/chambres/used').then(function(response) {
+                current.chambres = response.data
             }, function(response) {
-                console.log('une erreure a eu lieu', reponse);
+                console.log('une erreure a eu lieu', response);
             });
         }
     }

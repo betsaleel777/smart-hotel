@@ -20,7 +20,7 @@ export default {
     },
     methods:{
       crier: function(){
-        const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
+        //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
         const radios = document.getElementsByName('statut')
         const batiment = document.getElementById('batiment').value
         let statut = null
@@ -29,7 +29,7 @@ export default {
             statut = radios[i].value
           }
         }
-        this.$root.$emit('charger',statut,csrf,batiment)
+        this.$root.$emit('charger',statut,batiment)
       }
     }
 }

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Batiment extends Model
 {
     protected $fillable = ['libelle'];
-
+    protected $dates = ['created_at','updated_at','deleted_at'] ;
     const RULES = ['libelle'  => 'required|max:20' ] ;
     const MESSAGES = ['libelle.required'  => 'Ce champs est requis','libelle.max' => 'maximum de caractère dépassé (20)' ] ;
 
     public function chambres(){
-      return $this->hasMany(Chambre::class,'chambre') ;
+      return $this->hasMany(Chambre::class,'batiment') ;
     }
 
     public function attributions_passages(){

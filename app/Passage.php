@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Passage extends Model
 {
     protected $fillable = ['heure','chambre','passage','repos'] ;
+    protected $dates = ['created_at','updated_at'] ;
 
-    public function chambre(){
+    public function chambreLinked(){
       return $this->belongsTo(Chambre::class,'chambre') ;
     }
 
@@ -17,7 +18,7 @@ class Passage extends Model
     }
 
     public function kind(){
-      return $this->attributes['passage'] ? 'passage' : 'repos' ; 
+      return $this->attributes['passage'] ? 'passage' : 'repos' ;
     }
 
 }

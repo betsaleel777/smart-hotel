@@ -8,6 +8,7 @@ class AttributionsPassage extends Model
 {
     protected $fillable = ['batiment','passage'] ;
     protected $table = 'attributions_passages' ;
+    protected $dates = ['created_at','updated_at','deleted_at'] ;
     const RULES = [] ;
     const MESSAGES = [] ;
 

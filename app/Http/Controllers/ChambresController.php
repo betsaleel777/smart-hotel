@@ -11,7 +11,7 @@ class ChambresController extends Controller
 {
   public function index(){
     $titre = 'Chambres' ;
-    $chambres = Chambre::get() ;
+    $chambres = Chambre::with('typeLinked','batimentLinked')->get() ;
     return view('parametre.chambre.index',compact('titre','chambres')) ;
   }
 

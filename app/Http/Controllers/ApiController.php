@@ -3,18 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Batiment ;
+use App\Passage ;
+use App\AttributionsPassage ;
+use App\Chambre ;
 
 class ApiController extends Controller
 {
-    public function allRooms(Request $request){
-      return 'tout rentre bien' ;
+    public function allRooms($batiment){
+       $chambres = Batiment::with('chambres.typeLinked')->findOrFail($batiment)->chambres->all() ;
+      return response()->json(['chambres' => $chambres]) ;
     }
 
-    public function emptyRooms(Request $request){
+    public function emptyRooms($batiment){
 
     }
 
-    public function usedRooms(Request $request){
+    public function usedRooms($batiment){
 
+    }
+
+    public function attribuer(Request $request){
+      //insertion du passage dans la table passage
+      $passage = new Passage() ;
+      $passage->heure = $request->heure ;
+      $passage->chambre = $request->chambre ;
+      if($request->kind === 'passage'){
+        $passage->passage = true ;
+        $passage->repos = false ;
+      }else{
+        $passage->passage = false ;
+        $passage->repos = true ;
+      }
+      //c'est ici le soucis comment recupérer l'id du passage qui vient d'être enregistré
+      $passage->save() ;
+
+      //modification du statut de la chambre deviendra "occupée"
+      $chambre = Chambre::findOrFail($request->chambre) ;
+      $chambre->statut = 'occupée' ;
+      $chambre->save() ;
+
+      //insertion de l'attribution de passage dans la table attributions_passages
+      $attribution = new AttributionsPassage() ;
+      $attribution->passage = $passage->id ;
+      $attribution->batiment = $request->batiment ;
+      $attribution->save() ;
+      return response()->json([$request->all()]) ;
     }
 }
