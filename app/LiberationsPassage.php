@@ -3,9 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LiberationsPassage extends Model
 {
-    use SoftDeletes ;
+    protected $table = 'liberations_passages' ;
+    protected $fillable = ['attribution'] ;
+    protected $dates = ['created_at','updated_at'] ;
+
+    const RULES = [] ;
+    const MESSAGES = [] ;
+
+    public function assignationLinked(){
+      return $this->hasOne(AssignationsPassage::class,'attribution') ;
+    }
 }

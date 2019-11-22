@@ -15,6 +15,8 @@ class CreateTableLiberationsPassage extends Migration
     {
         Schema::create('liberations_passages', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('attribution')->index() ;
+            $table->foreign('attribution')->references('id')->on('attributions_passages')->onDelete('cascade') ;
             $table->timestamps();
         });
     }

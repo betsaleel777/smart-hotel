@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AttributionsPassage extends Model
 {
     use SoftDeletes ;
-    
+
     protected $fillable = ['batiment','passage'] ;
     protected $table = 'attributions_passages' ;
     protected $dates = ['created_at','updated_at','deleted_at'] ;
@@ -21,6 +21,10 @@ class AttributionsPassage extends Model
 
     public function passageLinked(){
       return $this->belongsTo(Passage::class,'passage') ;
+    }
+
+    public function liberation(){
+      return $this->belongsTo(LiberationsPassage::class,'attribution') ;
     }
 
 }
