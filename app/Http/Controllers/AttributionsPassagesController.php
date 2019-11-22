@@ -21,14 +21,22 @@ class AttributionsPassagesController extends Controller
     }
 
     public function edit($id){
-
+      $titre = 'Modification d\'attribution' ;
+      $batiments = Batiment::select('id','libelle')->get() ;
+      $attribution = AttributionsPassage::with('passageLinked')->findOrFail($id) ;
+      return view('attribution.passage.edit',compact('titre','attribution','batiments')) ;
     }
 
     public function update(Request $request,int $id){
-
+      //mofifier le batiment de l'attribution
+      //modifier le passage associé
+      //redirection
     }
 
     public function delete($id){
-
+       $attribution = AttributionsPassage::findOrFail($id) ;
+       $message = 'Suppression éffectuée avec succes !!' ;
+       $attribution->delete() ;
+       return redirect()->route('attributions_pass_index')->with('success',$message) ;
     }
 }

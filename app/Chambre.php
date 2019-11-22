@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Chambre extends Model
 {
+    use SoftDeletes ;
+    
     protected $fillable = ['libelle','statut','batiment','type'] ;
     protected $dates = ['created_at','updated_at','deleted_at'] ;
     const RULES = [

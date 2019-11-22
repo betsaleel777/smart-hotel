@@ -3,7 +3,7 @@
  <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
-<div id="app" class="col-md-12">
+<div class="col-md-12">
     <!-- general form elements -->
     <div class="card card-primary">
         <div class="card-header">
@@ -17,9 +17,9 @@
             </div>
             <!-- /.card-body -->
             <attribution-add-table></attribution-add-table>
-            <div class="card-footer">
+            {{-- <div class="card-footer">
                 <button type="button" class="btn btn-primary">Envoyer</button>
-            </div>
+            </div> --}}
     </div>
 </div>
 @endsection

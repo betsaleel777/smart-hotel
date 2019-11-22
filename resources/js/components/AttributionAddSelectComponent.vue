@@ -1,36 +1,32 @@
 <template>
 <div class="form-group">
     <label>Batiment:</label>
-    <select @change="crier" class="form-control" id="batiment" name="batiment">
+    <select class="form-control" name="batiment" v-model="choosen">
         <option disabled selected> choix du batiment</option>
         <option v-for="bat in bats" :value="bat.id">{{bat.libelle}}</option>
     </select>
-      <label for="">Occupée</label><input class="form-group" type="radio" name="statut" value="plein">
-      <label for="">Vide</label><input class="form-group" type="radio" name="statut" value="vide">
+    <label for="used">Occupée</label><input v-on:change="crier" class="form-group" type="radio" value="plein" v-model="statut">
+    <label for="empty">Vide</label><input v-on:change="crier" class="form-group" type="radio" value="vide" v-model="statut">
 </div>
 </template>
 
 <script>
 export default {
-    props:['batiments'],
+    props: ['batiments'],
     data() {
         return {
-            bats: this.batiments
+            bats: this.batiments,
+            choosen: null,
+            statut: null,
         }
     },
-    methods:{
-      crier: function(){
-        //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
-        const radios = document.getElementsByName('statut')
-        const batiment = document.getElementById('batiment').value
-        let statut = null
-        for (var i = 0, c = radios.length ; i < c; i++) {
-          if(radios[i].checked){
-            statut = radios[i].value
-          }
+    methods: {
+        crier: function() {
+            //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
+            if (this.choosen && this.statut) {
+                this.$root.$emit('charger', this.statut, this.choosen)
+            }
         }
-        this.$root.$emit('charger',statut,batiment)
-      }
     }
 }
 </script>

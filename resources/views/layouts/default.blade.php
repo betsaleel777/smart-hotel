@@ -23,9 +23,9 @@
   <!-- Main content -->
   <div class="content">
     <div class="container-fluid">
-      <div class="row">
+      <div id="app" class="row">
         <!-- /.col-md-6 -->
-        @yield('content')
+          @yield('content')
         <!-- /.col-md-6 -->
       </div>
       <!-- /.row -->

@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('meta')
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('content')
 @php
 $badge = ['inoccupée' => 'badge badge-success' ,
@@ -24,10 +27,10 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Chambre</th>
+                            <th style="width:5%">chambre</th>
                             <th>Type</th>
                             <th>Coût(Fcfa)</th>
-                            <th>Heures(H)</th>
+                            <th style="width:5%">Heures(H)</th>
                             <th>Progression</th>
                             <th>Statut</th>
                             <th>Option</th>
@@ -42,11 +45,10 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             <td>{{$attribution->passageLinked->chambreLinked->typeLinked->cout_passage}}</td>
                             <td>{{$attribution->passageLinked->heure}}</td>
                             <td>
-                                <div class="progress progress-sm active">
-                                    <div class="progress-bar bg-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                                     style="width: {{number_format(($attribution->created_at->diffInHours(Carbon\Carbon::now())/$attribution->passageLinked->heure)*100,2)}}%">
-                                    </div>
-                                </div>
+                              @if (Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')))
+                                <span style="color:red" >{{'doit libérer'}}</span>
+                              @endif
+                              <countdown :end="'{{$attribution->created_at->add($attribution->passageLinked->heure,'hour')}}'"></countdown>
                             </td>
                             <td>
                                 <h5><span class="{{$badge[$attribution->passageLinked->chambreLinked->statut]}}">{{$attribution->passageLinked->chambreLinked->statut}}</span></h5>
@@ -73,4 +75,11 @@ $badge = ['inoccupée' => 'badge badge-success' ,
         $('#attr').DataTable();
     });
 </script>
+{{-- <script>
+  refresh = function(time){
+    setTimeout(function(){location.reload()},time*1000)
+  }
+  refresh(10*60)
+</script> --}}
+<script src="../../js/app.js" type="text/javascript"></script>
 @endsection

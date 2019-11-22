@@ -38,7 +38,7 @@
                 <td>{{$chambre->libelle}}</td>
                 <td>{{$chambre->batimentLinked->libelle}}</td>
                 <td>{{$chambre->typeLinked->libelle}}</td>
-                <td><h3><span class="{{$badge[$chambre->statut]}}">{{$chambre->statut}}</span></h3></td>
+                <td><h5><span class="{{$badge[$chambre->statut]}}">{{$chambre->statut}}</span></h5></td>
                 <td>
                   <a href="{{route('chambre_edit',$chambre)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
                   <a href="{{route('chambre_delete',$chambre)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>supprimer</a>

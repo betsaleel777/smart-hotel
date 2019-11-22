@@ -12,15 +12,17 @@ class ApiController extends Controller
 {
     public function allRooms($batiment){
        $chambres = Batiment::with('chambres.typeLinked')->findOrFail($batiment)->chambres->all() ;
-      return response()->json(['chambres' => $chambres]) ;
+       return response()->json(['chambres' => $chambres]) ;
     }
 
     public function emptyRooms($batiment){
-
+       $chambres = Batiment::with(['chambres' => function($query){$query->where('statut','=','inoccupée');},'chambres.typeLinked'])->findOrFail($batiment)->chambres->all() ;
+       return response()->json(['chambres' => $chambres]) ;
     }
 
     public function usedRooms($batiment){
-
+       $chambres = Batiment::with(['chambres' => function($query){$query->where('statut','=','occupée');},'chambres.typeLinked'])->findOrFail($batiment)->chambres->all() ;
+       return response()->json(['chambres' => $chambres]) ;
     }
 
     public function attribuer(Request $request){
@@ -35,7 +37,6 @@ class ApiController extends Controller
         $passage->passage = false ;
         $passage->repos = true ;
       }
-      //c'est ici le soucis comment recupérer l'id du passage qui vient d'être enregistré
       $passage->save() ;
 
       //modification du statut de la chambre deviendra "occupée"
@@ -48,6 +49,6 @@ class ApiController extends Controller
       $attribution->passage = $passage->id ;
       $attribution->batiment = $request->batiment ;
       $attribution->save() ;
-      return response()->json([$request->all()]) ;
+      return response()->json(['success']) ;
     }
 }

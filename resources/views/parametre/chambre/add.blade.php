@@ -23,6 +23,7 @@
                     <label>Batiment:</label>
                     <div class="select2-purple">
                       <select name="batiment" class="form-control" >
+                        <option disabled selected>choix du batiment ...</option>
                         @foreach ($batiments as $id => $libelle)
                           <option value="{{$id}}">{{$libelle}}</option>
                         @endforeach
@@ -36,6 +37,7 @@
                     <label>Type de Chambre</label>
                     <div class="select2-purple">
                       <select name="type" class="form-control">
+                        <option disabled selected>choix du type de chambre ...</option>
                         @foreach ($types as $id => $libelle)
                           <option value="{{$id}}">{{$libelle}}</option>
                         @endforeach
