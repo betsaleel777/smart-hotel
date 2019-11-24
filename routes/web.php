@@ -29,6 +29,7 @@ Route::get('/parametre/batiment','BatimentsController@index')->name('batiment_in
 Route::get('/parametre/batiment/add','BatimentsController@add')->name('batiment_add') ;
 Route::post('/parametre/batiment/store','BatimentsController@store')->name('batiment_store') ;
 Route::get('/parametre/batiment/edit/{id}','BatimentsController@edit')->name('batiment_edit') ;
+Route::get('/parametre/batiment/show/{id}','BatimentsController@show')->name('batiment_show') ;
 Route::post('/parametre/batiment/update/{id}','BatimentsController@update')->name('batiment_update') ;
 Route::get('/parametre/batiment/delete/{id}','BatimentsController@delete')->name('batiment_delete') ;
 

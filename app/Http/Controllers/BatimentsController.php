@@ -46,6 +46,12 @@ class BatimentsController extends Controller
       }
     }
 
+    public function show($id){
+      $batiment = Batiment::with('chambres')->findOrFail($id) ;
+      $titre = 'Détail du batiment '.$batiment->libelle ;
+      return view('parametre.batiment.show',compact('titre','batiment')) ;
+    }
+
     public function delete($id){
       $batiment = Batiment::findOrFail($id) ;
       $message = 'le Batiment "'.$batiment->libelle.'" a été supprimé avec succes !!' ;
