@@ -1798,6 +1798,9 @@ __webpack_require__.r(__webpack_exports__);
       if (this.choosen && this.statut) {
         this.$root.$emit('charger', this.statut, this.choosen);
       }
+    },
+    refresh: function refresh() {
+      console.log('refresh run!!');
     }
   }
 });
@@ -1851,6 +1854,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddModalComponent */ "./resources/js/components/AttributionAddModalComponent.vue")["default"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -1858,8 +1864,9 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
       visible: false,
       chambres: '',
       identifiant: null,
-      message: null,
-      batiment: null
+      batiment: null,
+      showAttribuer: null,
+      showLiberer: null
     };
   },
   mounted: function mounted() {
@@ -1867,6 +1874,8 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
 
     this.$root.$on('charger', function (statut, batiment) {
       _this.batiment = batiment;
+
+      _this.optionButton(statut);
 
       _this.getChambres(statut, batiment);
     });
@@ -1890,8 +1899,6 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
       var current = this;
       axios.get('/api/chambres/all/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
-        current.message = "".concat(response.data.chambres.length, " chambres ont \xE9t\xE9 r\xE9pertori\xE9es !!");
-        current.showAlert();
       }, function (response) {
         console.log('une erreure a eu lieu', response);
       });
@@ -1900,8 +1907,6 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
       var current = this;
       axios.get('/api/chambres/empty/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
-        current.message = "".concat(response.data.chambres.length, " chambres vides !!");
-        current.showAlert();
       }, function (response) {
         console.log('une erreure a eu lieu', response);
       });
@@ -1910,10 +1915,27 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
       var current = this;
       axios.get('/api/chambres/used/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
-        current.message = "".concat(response.data.chambres.length, " chambres utilis\xE9es !!");
-        current.showAlert();
       }, function (response) {
         console.log('une erreure a eu lieu', response);
+      });
+    },
+    optionButton: function optionButton(statut) {
+      if (statut === 'plein') {
+        this.showLiberer = true;
+        this.showAttribuer = false;
+      } else if (statut === 'vide') {
+        this.showAttribuer = true;
+        this.showLiberer = false;
+      }
+    },
+    liberer: function liberer(id_chambre) {
+      axios.post('/api/liberation/passage/', {
+        chambre: id_chambre
+      }).then(function (response) {
+        //appeler la fonction de notification ici
+        location.href = '/home/attributions';
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   }
@@ -37499,19 +37521,22 @@ var render = function() {
         staticClass: "form-control",
         attrs: { name: "batiment" },
         on: {
-          change: function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.choosen = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          }
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.choosen = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.refresh
+          ]
         }
       },
       [
@@ -37691,6 +37716,14 @@ var render = function() {
                 _c(
                   "button",
                   {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.showAttribuer,
+                        expression: "showAttribuer"
+                      }
+                    ],
                     staticClass: "btn btn-outline-danger",
                     attrs: {
                       "data-toggle": "modal",
@@ -37703,6 +37736,27 @@ var render = function() {
                     }
                   },
                   [_vm._v("attribuer")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.showLiberer,
+                        expression: "showLiberer"
+                      }
+                    ],
+                    staticClass: "btn btn-outline-warning",
+                    on: {
+                      click: function($event) {
+                        return _vm.liberer(chambre.id)
+                      }
+                    }
+                  },
+                  [_vm._v("libérer")]
                 )
               ])
             ])

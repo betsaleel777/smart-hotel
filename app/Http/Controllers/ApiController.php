@@ -7,6 +7,7 @@ use App\Batiment ;
 use App\Passage ;
 use App\AttributionsPassage ;
 use App\Chambre ;
+use App\LiberationsPassage ;
 
 class ApiController extends Controller
 {
@@ -38,17 +39,40 @@ class ApiController extends Controller
         $passage->repos = true ;
       }
       $passage->save() ;
-
       //modification du statut de la chambre deviendra "occupée"
       $chambre = Chambre::findOrFail($request->chambre) ;
-      $chambre->statut = 'occupée' ;
+      $chambre->statutChange() ;
       $chambre->save() ;
-
       //insertion de l'attribution de passage dans la table attributions_passages
       $attribution = new AttributionsPassage() ;
       $attribution->passage = $passage->id ;
       $attribution->batiment = $request->batiment ;
       $attribution->save() ;
       return response()->json(['success']) ;
+    }
+
+    public function liberer(Request $request){
+      //doit aller chercher la dernière attribution lié à cette chambre
+      // il faut voir le cas ou il y a plusieurs fois attribution d'une chambre pour récupérer toujour la dernière
+      $chambre = $request->chambre ;
+      $attributions = AttributionsPassage::with(['passageLinked' => function($query) use ($chambre) { $query->where('chambre',$chambre); }])->whereNull('etat')->get()->all() ;
+      $concerned = array_filter($attributions,function($ligne){
+        if($ligne->passageLinked != null){
+          return $ligne; }
+        }) ;
+      $attribution = $concerned[array_key_first($concerned)] ;
+      //changer l'état de l'attribution
+      $concerned_attribution = AttributionsPassage::findOrFail($attribution->id) ;
+      $concerned_attribution->etat = 'libéré' ;
+      $concerned_attribution->save() ;
+      //enregistrer ensuite la liberation de la chambre
+      $liberation = new LiberationsPassage() ;
+      $liberation->attribution = $attribution->id ;
+      $liberation->save() ;
+      //changement du statut de la chambre
+      $chambre = Chambre::findOrFail($chambre) ;
+      $chambre->statutChange() ;
+      $chambre->save() ;
+      return response()->json([$attribution->id]) ;
     }
 }

@@ -22,7 +22,10 @@
                 <td v-show="chambre.statut === 'reservée'">
                     <h5><span class="badge badge-primary">{{chambre.statut}}</span></h5>
                 </td>
-                <td><button @click="open(chambre.id)" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-small-attribution">attribuer</button></td>
+                <td>
+                    <button v-show="showAttribuer" @click="open(chambre.id)" class="btn btn-outline-danger" data-toggle="modal" data-target="#modal-small-attribution">attribuer</button>
+                    <button v-show="showLiberer" @click="liberer(chambre.id)" class="btn btn-outline-warning">libérer</button>
+                </td>
             </tr>
         </tbody>
         <tfoot>
@@ -44,13 +47,15 @@ export default {
             visible: false,
             chambres: '',
             identifiant: null,
-            message: null,
             batiment: null,
+            showAttribuer: null,
+            showLiberer: null
         }
     },
     mounted() {
         this.$root.$on('charger', (statut, batiment) => {
             this.batiment = batiment
+            this.optionButton(statut)
             this.getChambres(statut, batiment)
         })
     },
@@ -72,8 +77,6 @@ export default {
             let current = this
             axios.get('/api/chambres/all/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
-                current.message = `${response.data.chambres.length} chambres ont été répertoriées !!`
-                current.showAlert()
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
             });
@@ -82,8 +85,6 @@ export default {
             let current = this
             axios.get('/api/chambres/empty/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
-                current.message = `${response.data.chambres.length} chambres vides !!`
-                current.showAlert()
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
             });
@@ -92,11 +93,28 @@ export default {
             let current = this
             axios.get('/api/chambres/used/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
-                current.message = `${response.data.chambres.length} chambres utilisées !!`
-                current.showAlert()
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
             });
+        },
+        optionButton(statut) {
+            if (statut === 'plein') {
+                this.showLiberer = true
+                this.showAttribuer = false
+            } else if (statut === 'vide') {
+                this.showAttribuer = true
+                this.showLiberer = false
+            }
+        },
+        liberer(id_chambre) {
+            axios.post('/api/liberation/passage/', {
+                chambre:id_chambre
+            }).then(function(response) {
+                //appeler la fonction de notification ici
+                location.href = '/home/attributions'
+            }).catch((error) => {
+                console.log(error);
+            })
         }
     }
 }

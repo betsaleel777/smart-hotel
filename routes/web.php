@@ -47,9 +47,11 @@ Route::post('/home/attributions/store','AttributionsPassagesController@store')->
 Route::get('/home/attributions/edit/{id}','AttributionsPassagesController@edit')->name('attributions_pass_edit') ;
 Route::post('/home/attributions/update/{id}','AttributionsPassagesController@update')->name('attributions_pass_update') ;
 Route::get('/home/attributions/delete/{id}','AttributionsPassagesController@delete')->name('attributions_pass_delete') ;
+Route::get('/home/attributions/liberer/{id}','AttributionsPassagesController@liberer')->name('attributions_pass_liberer') ;
 
 // api ajax vue route
 Route::get('/api/chambres/all/{batiment}','ApiController@allRooms')->name('all_chambre') ;
 Route::get('/api/chambres/empty/{batiment}','ApiController@emptyRooms')->name('empty_chambre') ;
 Route::get('/api/chambres/used/{batiment}','ApiController@usedRooms')->name('used_chambre') ;
 Route::post('/api/attribution/passage','ApiController@attribuer')->name('attribution_passage') ;
+Route::post('/api/liberation/passage','ApiController@liberer')->name('liberation_passage') ;

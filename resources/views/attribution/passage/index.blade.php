@@ -45,8 +45,10 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             <td>{{$attribution->passageLinked->chambreLinked->typeLinked->cout_passage}}</td>
                             <td>{{$attribution->passageLinked->heure}}</td>
                             <td>
-                              @if (Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')))
+                              @if (Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
                                 <span style="color:red" >{{'doit libérer'}}</span>
+                              @elseif(Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'inoccupée' )
+                                <span style="color:blue" >{{'déjà libérée'}}</span>
                               @endif
                               <countdown :end="'{{$attribution->created_at->add($attribution->passageLinked->heure,'hour')}}'"></countdown>
                             </td>
@@ -55,7 +57,7 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             </td>
                             <td>
                                 <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
-                                <a href="{{route('attributions_pass_delete',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>supprimer</a>
+                                <a href="{{route('attributions_pass_liberer',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>libérer</a>
                             </td>
                         </tr>
                         @endforeach
@@ -75,11 +77,5 @@ $badge = ['inoccupée' => 'badge badge-success' ,
         $('#attr').DataTable();
     });
 </script>
-{{-- <script>
-  refresh = function(time){
-    setTimeout(function(){location.reload()},time*1000)
-  }
-  refresh(10*60)
-</script> --}}
 <script src="../../js/app.js" type="text/javascript"></script>
 @endsection

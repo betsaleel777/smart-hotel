@@ -1,7 +1,7 @@
 <template>
 <div class="form-group">
     <label>Batiment:</label>
-    <select class="form-control" name="batiment" v-model="choosen">
+    <select v-on:change="refresh" class="form-control" name="batiment" v-model="choosen">
         <option disabled selected> choix du batiment</option>
         <option v-for="bat in bats" :value="bat.id">{{bat.libelle}}</option>
     </select>
@@ -26,6 +26,9 @@ export default {
             if (this.choosen && this.statut) {
                 this.$root.$emit('charger', this.statut, this.choosen)
             }
+        },
+        refresh (){
+          console.log('refresh run!!');
         }
     }
 }

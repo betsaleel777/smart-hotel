@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\AttributionsPassage ;
 use App\Batiment ;
+use App\LiberationsPassage ;
+use App\Chambre ;
 
 class AttributionsPassagesController extends Controller
 {
     public function index(){
        $titre = 'Passages & repos' ;
-       $attributions = AttributionsPassage::with('batimentLinked','passageLinked','passageLinked.chambreLinked','passageLinked.chambreLinked.typeLinked')->get()->all();
+       $attributions = AttributionsPassage::with('batimentLinked','passageLinked','passageLinked.chambreLinked','passageLinked.chambreLinked.typeLinked')->whereNull('etat')->get()->all();
        return view('attribution.passage.index',compact('attributions','titre')) ;
     }
 
@@ -31,6 +33,20 @@ class AttributionsPassagesController extends Controller
       //mofifier le batiment de l'attribution
       //modifier le passage associé
       //redirection
+    }
+
+    public function liberer($id){
+      $attribution = AttributionsPassage::with('passageLinked')->findOrFail($id) ;
+      $attribution->etat = 'libéré' ;
+      $attribution->save() ;
+      $liberation = new LiberationsPassage() ;
+      $liberation->attribution = $attribution->id ;
+      $liberation->save() ;
+      $chambre = Chambre::findOrFail($attribution->passageLinked->chambre) ;
+      $chambre->statutChange() ;
+      $chambre->save() ;
+      $message = 'la chambre '.$chambre->libelle.'a été libérée avec succès !!' ;
+      return redirect()->route('attributions_pass_index')->with('success',$message) ;
     }
 
     public function delete($id){
