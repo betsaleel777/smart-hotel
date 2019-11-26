@@ -110,6 +110,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         array (
             'Fideloper\\Proxy\\' => 16,
             'Faker\\' => 6,
+            'Facade\\IgnitionContracts\\' => 25,
         ),
         'E' => 
         array (
@@ -123,6 +124,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
             'Doctrine\\Common\\Inflector\\' => 26,
             'DeepCopy\\' => 9,
             'DebugBar\\' => 9,
+            'DaveJamesMiller\\Breadcrumbs\\' => 28,
         ),
         'C' => 
         array (
@@ -319,6 +321,10 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
         ),
+        'Facade\\IgnitionContracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/facade/ignition-contracts/src',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
@@ -346,6 +352,10 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'DebugBar\\' => 
         array (
             0 => __DIR__ . '/..' . '/maximebf/debugbar/src/DebugBar',
+        ),
+        'DaveJamesMiller\\Breadcrumbs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src',
         ),
         'Cron\\' => 
         array (
@@ -509,6 +519,15 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
+        'DaveJamesMiller\\Breadcrumbs\\BreadcrumbsException' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/BreadcrumbsException.php',
+        'DaveJamesMiller\\Breadcrumbs\\BreadcrumbsGenerator' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/BreadcrumbsGenerator.php',
+        'DaveJamesMiller\\Breadcrumbs\\BreadcrumbsManager' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/BreadcrumbsManager.php',
+        'DaveJamesMiller\\Breadcrumbs\\BreadcrumbsServiceProvider' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/BreadcrumbsServiceProvider.php',
+        'DaveJamesMiller\\Breadcrumbs\\Exceptions\\DuplicateBreadcrumbException' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/Exceptions/DuplicateBreadcrumbException.php',
+        'DaveJamesMiller\\Breadcrumbs\\Exceptions\\InvalidBreadcrumbException' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/Exceptions/InvalidBreadcrumbException.php',
+        'DaveJamesMiller\\Breadcrumbs\\Exceptions\\UnnamedRouteException' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/Exceptions/UnnamedRouteException.php',
+        'DaveJamesMiller\\Breadcrumbs\\Exceptions\\ViewNotSetException' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/Exceptions/ViewNotSetException.php',
+        'DaveJamesMiller\\Breadcrumbs\\Facades\\Breadcrumbs' => __DIR__ . '/..' . '/davejamesmiller/laravel-breadcrumbs/src/Facades/Breadcrumbs.php',
         'DebugBar\\Bridge\\CacheCacheCollector' => __DIR__ . '/..' . '/maximebf/debugbar/src/DebugBar/Bridge/CacheCacheCollector.php',
         'DebugBar\\Bridge\\DoctrineCollector' => __DIR__ . '/..' . '/maximebf/debugbar/src/DebugBar/Bridge/DoctrineCollector.php',
         'DebugBar\\Bridge\\MonologCollector' => __DIR__ . '/..' . '/maximebf/debugbar/src/DebugBar/Bridge/MonologCollector.php',
@@ -676,6 +695,12 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'Egulias\\EmailValidator\\Warning\\QuotedString' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/QuotedString.php',
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator/Warning/Warning.php',
+        'Facade\\IgnitionContracts\\BaseSolution' => __DIR__ . '/..' . '/facade/ignition-contracts/src/BaseSolution.php',
+        'Facade\\IgnitionContracts\\HasSolutionsForThrowable' => __DIR__ . '/..' . '/facade/ignition-contracts/src/HasSolutionsForThrowable.php',
+        'Facade\\IgnitionContracts\\ProvidesSolution' => __DIR__ . '/..' . '/facade/ignition-contracts/src/ProvidesSolution.php',
+        'Facade\\IgnitionContracts\\RunnableSolution' => __DIR__ . '/..' . '/facade/ignition-contracts/src/RunnableSolution.php',
+        'Facade\\IgnitionContracts\\Solution' => __DIR__ . '/..' . '/facade/ignition-contracts/src/Solution.php',
+        'Facade\\IgnitionContracts\\SolutionProviderRepository' => __DIR__ . '/..' . '/facade/ignition-contracts/src/SolutionProviderRepository.php',
         'Faker\\Calculator\\Iban' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Iban.php',
         'Faker\\Calculator\\Inn' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Inn.php',
         'Faker\\Calculator\\Luhn' => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker/Calculator/Luhn.php',

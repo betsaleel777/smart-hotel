@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('breadcrumb')
+  {{Breadcrumbs::render('types')}}
+@endsection
 @section('content')
   <div class="col-lg-12">
     <div class="card">

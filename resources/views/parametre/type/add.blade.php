@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('breadcrumb')
+  {{Breadcrumbs::render('type_add')}}
+@endsection
 @section('content')
 <div class="col-md-1"></div>
 <div class="col-md-10">

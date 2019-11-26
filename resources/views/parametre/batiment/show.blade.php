@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('breadcrumb')
+  {{Breadcrumbs::render('batiment_show',$batiment)}}
+@endsection
 @section('content')
 @php
 $badge = ['inoccupée' => 'badge badge-success' ,

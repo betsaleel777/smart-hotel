@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('breadcrumb')
+  {{Breadcrumbs::render('attributions')}}
+@endsection
 @section('meta')
  <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection

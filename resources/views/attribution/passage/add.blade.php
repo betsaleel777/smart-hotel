@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('breadcrumb')
+  {{Breadcrumbs::render('attributions_pass_add')}}
+@endsection
 @section('meta')
  <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -7,7 +10,7 @@
     <!-- general form elements -->
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Ajouter Batiment</h3>
+            <h3 class="card-title">Attribuer Chambre</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
