@@ -58,6 +58,12 @@
                                 <p>Chambres</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{route('type_piece_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Type de pièce</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
@@ -70,7 +76,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="" class="nav-link ">
+                            <a href="{{route('attributions_sejour_index')}}" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Séjour</p>
                             </a>

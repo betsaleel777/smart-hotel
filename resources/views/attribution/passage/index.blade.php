@@ -50,16 +50,16 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             <td>
                               @if (Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
                                 <span style="color:red" >{{'doit libérer'}}</span>
-                              @elseif(Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'inoccupée' )
-                                <span style="color:blue" >{{'déjà libérée'}}</span>
                               @endif
-                              <countdown :end="'{{$attribution->created_at->add($attribution->passageLinked->heure,'hour')}}'"></countdown>
+                              <progression :end="'{{$attribution->created_at->add($attribution->passageLinked->heure,'hour')}}'" :chambre="'{{$attribution->passageLinked->chambreLinked->libelle}}'"></progression>
                             </td>
                             <td>
                                 <h5><span class="{{$badge[$attribution->passageLinked->chambreLinked->statut]}}">{{$attribution->passageLinked->chambreLinked->statut}}</span></h5>
                             </td>
                             <td>
+                                @if (!Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
                                 <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
+                                @endif
                                 <a href="{{route('attributions_pass_liberer',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>libérer</a>
                             </td>
                         </tr>

@@ -9,7 +9,7 @@ use App\AttributionsPassage ;
 use App\Chambre ;
 use App\LiberationsPassage ;
 
-class ApiController extends Controller
+class ApiPassageController extends Controller
 {
     public function allRooms($batiment){
        $chambres = Batiment::with('chambres.typeLinked')->findOrFail($batiment)->chambres->all() ;

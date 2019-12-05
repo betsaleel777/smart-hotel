@@ -9,7 +9,7 @@ class AttributionsPassage extends Model
 {
     use SoftDeletes ;
 
-    protected $fillable = ['batiment','passage'] ;
+    protected $fillable = ['batiment','passage','restHeure'] ;
     protected $table = 'attributions_passages' ;
     protected $dates = ['created_at','updated_at','deleted_at'] ;
     const RULES = [] ;

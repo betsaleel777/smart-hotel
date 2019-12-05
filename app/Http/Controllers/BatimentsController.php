@@ -58,4 +58,8 @@ class BatimentsController extends Controller
       $batiment->delete() ;
       return \redirect()->route('batiment_index')->with('success',$message) ;
     }
+
+    public function allBatiments(){
+      return response()->json(['all' => Batiment::get()->all()]) ;
+    }
 }

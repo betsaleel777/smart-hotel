@@ -45,6 +45,7 @@ Breadcrumbs::for('chambres', function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Chambres', route('type_index'));
 });
+
 //Acceuil > Chambres > ajouter chambre
 Breadcrumbs::for('chambre_add', function ($trail) {
     $trail->parent('chambres');
@@ -62,11 +63,30 @@ Breadcrumbs::for('attributions', function ($trail) {
     $trail->push('Attributions', route('attributions_pass_index'));
 });
 
-//Acceuil > Attributions > ajouter
 Breadcrumbs::for('attributions_pass_add', function ($trail) {
     $trail->parent('attributions');
-    $trail->push('Créer', route('attributions_pass_add'));
+    $trail->push('Attributions', route('attributions_pass_add'));
 });
+//---------------------------------
+
+//Acceuil > type de pièce
+Breadcrumbs::for('pieces', function ($trail) {
+  $trail->parent('dashboard');
+  $trail->push('Pièces', route('type_piece_index'));
+});
+
+//Acceuil > Type de pièce > ajouter
+Breadcrumbs::for('type_piece_add', function ($trail) {
+    $trail->parent('pieces');
+    $trail->push('Créer', route('type_piece_add'));
+});
+
+//Acceuil > type de chambre > modifier chambre
+Breadcrumbs::for('type_piece_edit', function ($trail,$piece) {
+    $trail->parent('pieces');
+    $trail->push('Modifier '.$piece->libelle, route('type_piece_edit',$piece));
+});
+
 
 
 

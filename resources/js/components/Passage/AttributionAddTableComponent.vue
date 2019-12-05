@@ -110,7 +110,6 @@ export default {
             axios.post('/api/liberation/passage/', {
                 chambre:id_chambre
             }).then(function(response) {
-                //appeler la fonction de notification ici
                 location.href = '/home/attributions'
             }).catch((error) => {
                 console.log(error);
@@ -119,3 +118,6 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+  @import '~vue-awesome-notifications/dist/styles/style.scss';
+</style>
