@@ -43,4 +43,8 @@ class Chambre extends Model
     public function passages(){
       return $this->hasMany(Passage::class,'chambre') ;
     }
+
+    public function sejours(){
+      return $this->hasMany(Sejour::class,'chambre') ;
+    }
 }

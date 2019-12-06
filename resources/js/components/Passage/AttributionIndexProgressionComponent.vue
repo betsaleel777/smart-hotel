@@ -27,11 +27,12 @@ export default {
 
     },
     beforeUpdate(){
-      if(this.temps <= 0){
+      if(this.temps < 0){
+        console.log('on passe dedans une fois')
         const audio = new Audio('http://soundbible.com/mp3/analog-watch-alarm_daniel-simion.mp3')
         audio.play()
         clearInterval(this.timer)
-        this.$awn.info('la chmabre '+this.chambre+' doit être libérée !!')
+        this.$awn.info('la chambre '+this.chambre+' doit être libérée !!')
       }
     },
     mounted() {
@@ -53,7 +54,8 @@ export default {
                 this.minutes = ('0' + Math.floor((this.temps % (1000 * 60 * 60)) / (1000 * 60))).slice(-2)
                 this.secondes = ('0' + Math.floor((this.temps % (1000 * 60)) / 1000)).slice(-2)
             } else {
-                this.afficherTimer = false
+                this.afficher = false
+                //this.$awn.info('la chambre '+this.chambre+' doit être libérée !!')
             }
         }, 1000)
     },

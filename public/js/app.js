@@ -15007,11 +15007,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {},
   beforeUpdate: function beforeUpdate() {
-    if (this.temps <= 0) {
+    if (this.temps < 0) {
+      console.log('on passe dedans une fois');
       var audio = new Audio('http://soundbible.com/mp3/analog-watch-alarm_daniel-simion.mp3');
       audio.play();
       clearInterval(this.timer);
-      this.$awn.info('la chmabre ' + this.chambre + ' doit être libérée !!');
+      this.$awn.info('la chambre ' + this.chambre + ' doit être libérée !!');
     }
   },
   mounted: function mounted() {
@@ -15035,7 +15036,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.minutes = ('0' + Math.floor(_this.temps % (1000 * 60 * 60) / (1000 * 60))).slice(-2);
         _this.secondes = ('0' + Math.floor(_this.temps % (1000 * 60) / 1000)).slice(-2);
       } else {
-        _this.afficherTimer = false;
+        _this.afficher = false; //this.$awn.info('la chambre '+this.chambre+' doit être libérée !!')
       }
     }, 1000);
   },
@@ -15133,17 +15134,15 @@ Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
   methods: {
     handleSelect: function handleSelect(info) {
       var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.endStr).subtract(1, 'days').format('DD-MM-YYYY');
-      this.getType(); //this.getChambres()
-
+      this.getType();
+      this.getBatiments();
       this.$bvModal.show('modal'); //console.log(info.startStr,info.endStr,end)
-      //lancer un modal bootstrap4
-      //je dois faire une table séjour et une table attribution sejour
     },
     handleEvent: function handleEvent(info) {
       //utiliser l'id de l'évenement pour aller chercher les information afin de préremplir les champs
       //si la date de fin n'est pas déjà passé
-      this.getType(); //this.getChambres()
-
+      this.getType();
+      this.getBatiments();
       this.$bvModal.show('modal');
     },
     randomColor: function randomColor() {
@@ -15162,7 +15161,7 @@ Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
     getChambres: function getChambres() {
       var _this2 = this;
 
-      axios.get('/api/chambres/all/' + this.batiment).then(function (response) {
+      axios.get('/api/chambres/empty/' + this.batiment).then(function (response) {
         _this2.chambres = response.data.chambres;
       })["catch"](function (error) {
         console.log(error);
@@ -98962,9 +98961,9 @@ var render = function() {
                 ]
               }
             },
-            _vm._l(_vm.batiments, function(batiment) {
-              return _c("option", { domProps: { value: batiment.id } }, [
-                _vm._v(_vm._s(batiment.libelle))
+            _vm._l(_vm.batiments, function(bat) {
+              return _c("option", { domProps: { value: bat.id } }, [
+                _vm._v(_vm._s(bat.libelle))
               ])
             }),
             0
@@ -99001,9 +99000,9 @@ var render = function() {
                 }
               }
             },
-            _vm._l(_vm.chambres, function(chambre) {
-              return _c("option", { domProps: { value: chambre.id } }, [
-                _vm._v(_vm._s(chambre.libelle))
+            _vm._l(_vm.chambres, function(room) {
+              return _c("option", { domProps: { value: room.id } }, [
+                _vm._v(_vm._s(room.libelle))
               ])
             }),
             0

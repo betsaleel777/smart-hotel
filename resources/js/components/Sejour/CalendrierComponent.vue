@@ -13,11 +13,11 @@
             </select>
             <label for="batiment">Batiments:</label>
             <select v-on:change="getChambres" id="batiment" class="form-control" v-model="batiment">
-                <option v-for="batiment in batiments" :value="batiment.id">{{batiment.libelle}}</option>
+                <option v-for="bat in batiments" :value="bat.id">{{bat.libelle}}</option>
             </select>
             <label for="chambre">Chambre:</label>
             <select id="chambre" class="form-control" v-model="chambre">
-                <option v-for="chambre in chambres" :value="chambre.id">{{chambre.libelle}}</option>
+                <option v-for="room in chambres" :value="room.id">{{room.libelle}}</option>
             </select>
             <label for="numero">Numero de la pièce:</label>
             <input class="form-control" id="numero" type="text" v-model="client.numero">
@@ -66,7 +66,7 @@ export default {
                 piece: null
             },
             chambres: null,
-            chambre:null,
+            chambre: null,
             batiments: null,
             batiment: null,
             typePieces: null
@@ -76,17 +76,15 @@ export default {
         handleSelect(info) {
             const end = moment(info.endStr).subtract(1, 'days').format('DD-MM-YYYY')
             this.getType()
-            //this.getChambres()
+            this.getBatiments()
             this.$bvModal.show('modal')
             //console.log(info.startStr,info.endStr,end)
-            //lancer un modal bootstrap4
-            //je dois faire une table séjour et une table attribution sejour
         },
         handleEvent(info) {
             //utiliser l'id de l'évenement pour aller chercher les information afin de préremplir les champs
             //si la date de fin n'est pas déjà passé
             this.getType()
-            //this.getChambres()
+            this.getBatiments()
             this.$bvModal.show('modal')
         },
         randomColor() {
@@ -101,7 +99,7 @@ export default {
             })
         },
         getChambres() {
-            axios.get('/api/chambres/all/'+this.batiment).then((response) => {
+            axios.get('/api/chambres/empty/' + this.batiment).then((response) => {
                 this.chambres = response.data.chambres
             }).catch((error) => {
                 console.log(error)

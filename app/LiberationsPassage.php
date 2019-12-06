@@ -14,6 +14,6 @@ class LiberationsPassage extends Model
     const MESSAGES = [] ;
 
     public function assignationLinked(){
-      return $this->hasOne(AssignationsPassage::class,'attribution') ;
+      return $this->hasOne(AttributionsPassage::class,'attribution') ;
     }
 }
