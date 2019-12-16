@@ -86,47 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/@fullcalendar/core/locales/fr.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@fullcalendar/core/locales/fr.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function (global, factory) {
-     true ? module.exports = factory() :
-    undefined;
-}(this, function () { 'use strict';
-
-    var fr = {
-        code: "fr",
-        week: {
-            dow: 1,
-            doy: 4 // The week that contains Jan 4th is the first week of the year.
-        },
-        buttonText: {
-            prev: "Précédent",
-            next: "Suivant",
-            today: "Aujourd'hui",
-            year: "Année",
-            month: "Mois",
-            week: "Semaine",
-            day: "Jour",
-            list: "Mon planning"
-        },
-        weekLabel: "Sem.",
-        allDayHtml: "Toute la<br/>journée",
-        eventLimitText: "en plus",
-        noEventsMessage: "Aucun événement à afficher"
-    };
-
-    return fr;
-
-}));
-
-
-/***/ }),
-
 /***/ "./node_modules/@fullcalendar/core/main.esm.js":
 /*!*****************************************************!*\
   !*** ./node_modules/@fullcalendar/core/main.esm.js ***!
@@ -14890,7 +14849,7 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
   data: function data() {
     return {
       visible: false,
-      chambres: '',
+      chambres: null,
       identifiant: null,
       batiment: null,
       showAttribuer: null,
@@ -15060,8 +15019,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/vue */ "./node_modules/@fullcalendar/vue/main.esm.js");
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.esm.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.esm.js");
-/* harmony import */ var _fullcalendar_core_locales_fr__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fullcalendar/core/locales/fr */ "./node_modules/@fullcalendar/core/locales/fr.js");
-/* harmony import */ var _fullcalendar_core_locales_fr__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_fullcalendar_core_locales_fr__WEBPACK_IMPORTED_MODULE_5__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -15097,26 +15064,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    BModal: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]
   },
   data: function data() {
     return {
       calendarPlugins: [_fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__["default"], _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_4__["default"]],
-      evenement: [{
-        id: 1,
-        title: 'event 1',
-        date: '2019-12-01',
-        backgroundColor: this.randomColor()
-      }, {
-        id: 2,
-        title: 'event 2',
-        date: '2019-12-02',
-        backgroundColor: this.randomColor()
-      }],
+      evenement: null,
+      timeInterval: {
+        debut: null,
+        fin: null
+      },
       client: {
         nom: null,
         prenom: null,
@@ -15124,29 +15084,56 @@ Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
         contact: null,
         piece: null
       },
+      pourcentages: this.getPourcentages(),
+      details: null,
+      remise: null,
+      avance: null,
+      message: {
+        net: null,
+        details: null
+      },
+      idSejourAttribution: null,
       chambres: null,
       chambre: null,
       batiments: null,
       batiment: null,
-      typePieces: null
+      typePieces: null,
+      delais: null
     };
+  },
+  mounted: function mounted() {
+    this.getEvents();
   },
   methods: {
     handleSelect: function handleSelect(info) {
-      var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.endStr).subtract(1, 'days').format('DD-MM-YYYY');
-      this.getType();
-      this.getBatiments();
-      this.$bvModal.show('modal'); //console.log(info.startStr,info.endStr,end)
+      var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.endStr).subtract(1, 'days');
+      var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.startStr);
+      this.delais = end.diff(start, 'days');
+
+      if (end.diff(start, 'days') === 0) {
+        this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage');
+      } else {
+        this.timeInterval.debut = start.format('YYYY-MM-DD').toString();
+        this.timeInterval.fin = end.format('YYYY-MM-DD').toString();
+        this.getType();
+        this.getBatiments();
+        this.$bvModal.show('modal');
+      }
     },
-    handleEvent: function handleEvent(info) {
-      //utiliser l'id de l'évenement pour aller chercher les information afin de préremplir les champs
+    handleEventClick: function handleEventClick(info) {
       //si la date de fin n'est pas déjà passé
+      //changer la valeur de idSejourAttribution
+      var event = info.event;
+      var realEnd = moment__WEBPACK_IMPORTED_MODULE_1___default()(event.end).subtract(1, 'days'); //console.log(moment().isBefore(realEnd));
+
+      this.idSejourAttribution = event.id;
       this.getType();
       this.getBatiments();
+      this.getModalInfos();
       this.$bvModal.show('modal');
     },
     randomColor: function randomColor() {
-      var colors = ['#00cbb5', '#fec83c', '#003366', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700'];
+      var colors = ['#00cbb5', '#fec83c', '#c2cf86', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700'];
       return colors[Math.floor(Math.random() * 8)];
     },
     getType: function getType() {
@@ -15157,6 +15144,20 @@ Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    getPourcentages: function getPourcentages() {
+      var pourcentages = [];
+
+      for (var i = 0; i < 100; i++) {
+        var valeur = i / 100;
+        var libelle = String(i) + '%';
+        pourcentages.push({
+          valeur: valeur,
+          libelle: libelle
+        });
+      }
+
+      return pourcentages;
     },
     getChambres: function getChambres() {
       var _this2 = this;
@@ -15176,11 +15177,107 @@ Vue.component('b-modal', bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]);
         console.log(error);
       });
     },
-    updateEvent: function updateEvent() {// la méthode à utiliser pour lancer une modification des évenement
+    getRoomDetails: function getRoomDetails() {
+      var _this4 = this;
+
+      axios.get('/api/chambre/details/' + this.chambre).then(function (response) {
+        var chambre = response.data.chambre;
+        _this4.details = chambre;
+        _this4.message.details = "Chambre:".concat(chambre.libelle, ", Type:").concat(chambre.type_linked.libelle, ",\n                     Co\xFBt/J:").concat(chambre.type_linked.cout_reservation, " jours, Delais:").concat(_this4.delais, ",\n                     Prix:").concat(chambre.type_linked.cout_reservation * _this4.delais);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getEvents: function getEvents() {
+      var _this5 = this;
+
+      axios.get('/api/sejour/all').then(function (response) {
+        _this5.evenement = response.data.events.map(function (event) {
+          var calebasse = {};
+          calebasse.id = event.id;
+          calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.numero_piece;
+          calebasse.start = event.sejour_linked.debut;
+          calebasse.end = moment__WEBPACK_IMPORTED_MODULE_1___default()(event.sejour_linked.fin).add(1, 'days').format('YYYY-MM-DD').toString();
+          calebasse.backgroundColor = _this5.randomColor();
+          return calebasse;
+        });
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    getModalInfos: function getModalInfos() {
+      axios.get('/api/sejour/infos/' + this.idSejourAttribution).then(function (response) {
+        console.log(response.data.infos);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateEvent: function updateEvent() {//la méthode à utiliser pour lancer une modification des évenement
+    },
+    saveEvent: function saveEvent() {
+      var _this6 = this;
+
+      console.log(document.querySelector("meta[name='csrf-token']").getAttribute('content'));
+      axios.post('/api/sejour/add', {
+        nom: this.client.nom,
+        prenom: this.client.prenom,
+        piece: this.client.piece,
+        batiment: this.batiment,
+        chambre: this.chambre,
+        numero_piece: this.client.numero,
+        contact: this.client.contact,
+        debut: this.timeInterval.debut,
+        fin: this.timeInterval.fin,
+        remise: this.remise,
+        avance: this.avance,
+        delais: this.delais,
+        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+      }).then(function (response) {
+        var errors = response.data.errors;
+
+        if (errors) {
+          console.log(errors);
+        } else {
+          _this6.$bvModal.hide('modal');
+
+          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                  du:").concat(_this6.timeInterval.debut, " midi au ").concat(_this6.timeInterval.fin, " midi, pour le\n                  client ").concat(_this6.client.nom, " ").concat(_this6.client.prenom);
+
+          _this6.getEvents();
+
+          _this6.$awn.success(message);
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
     },
     handleOk: function handleOk() {
-      //créer table client son controller et son model
-      console.log('formulaire soumis');
+      if (this.idSejourAttribution) {
+        this.updateEvent();
+      } else {
+        this.saveEvent();
+      }
+    },
+    resetModal: function resetModal() {
+      this.client.nom = null;
+      this.client.prenom = null;
+      this.client.piece = null;
+      this.client.numero = null;
+      this.client.contact = null;
+      this.avance = null;
+      this.remise = null;
+      this.batiment = null;
+      this.chambre = null;
+      this.message.details = null;
+      this.message.net = null;
+    },
+    prixNet: function prixNet() {
+      if (this.message.details) {
+        var prix_normal = this.details.type_linked.cout_reservation * this.delais;
+        var prix_avec_remise = prix_normal - prix_normal * Number(this.remise);
+        this.message.net = "le prix net total \xE0 payer: ".concat(prix_avec_remise, ",\n                                Avance: ").concat(prix_normal * this.avance, " , Reste \xE0 payer: ").concat(prix_avec_remise - prix_normal * this.avance);
+      } else {
+        this.message.net = 'Vous devez choisir le batiment et la chambre !!';
+      }
     }
   }
 });
@@ -98460,7 +98557,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _vm._l(_vm.bats, function(bat) {
-          return _c("option", { domProps: { value: bat.id } }, [
+          return _c("option", { key: bat, domProps: { value: bat.id } }, [
             _vm._v(_vm._s(bat.libelle))
           ])
         })
@@ -98833,118 +98930,82 @@ var render = function() {
           selectable: true,
           weekends: true
         },
-        on: { eventClick: _vm.handleEvent, select: _vm.handleSelect }
+        on: { eventClick: _vm.handleEventClick, select: _vm.handleSelect }
       }),
       _vm._v(" "),
-      _c("b-modal", { attrs: { id: "modal" }, on: { ok: _vm.handleOk } }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.client.nom,
-                expression: "client.nom"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { id: "nom", type: "text" },
-            domProps: { value: _vm.client.nom },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.client, "nom", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.client.prenom,
-                expression: "client.prenom"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { id: "prenom", type: "text", name: "" },
-            domProps: { value: _vm.client.prenom },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.client, "prenom", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
+      _c(
+        "b-modal",
+        {
+          attrs: { id: "modal" },
+          on: { hidden: _vm.resetModal, ok: _vm.handleOk }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
+            _vm._v(" "),
+            _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.client.piece,
-                  expression: "client.piece"
+                  value: _vm.client.nom,
+                  expression: "client.nom"
                 }
               ],
               staticClass: "form-control",
-              attrs: { id: "type" },
+              attrs: { id: "nom", type: "text" },
+              domProps: { value: _vm.client.nom },
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.$set(
-                    _vm.client,
-                    "piece",
-                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                  )
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "nom", $event.target.value)
                 }
               }
-            },
-            _vm._l(_vm.typePieces, function(typePiece) {
-              return _c("option", { domProps: { value: typePiece.id } }, [
-                _vm._v(_vm._s(typePiece.libelle))
-              ])
             }),
-            0
-          ),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "batiment" } }, [_vm._v("Batiments:")]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
+            _vm._v(" "),
+            _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
+            _vm._v(" "),
+            _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.batiment,
-                  expression: "batiment"
+                  value: _vm.client.prenom,
+                  expression: "client.prenom"
                 }
               ],
               staticClass: "form-control",
-              attrs: { id: "batiment" },
+              attrs: { id: "prenom", type: "text" },
+              domProps: { value: _vm.client.prenom },
               on: {
-                change: [
-                  function($event) {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "prenom", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.piece,
+                    expression: "client.piece"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "type" },
+                on: {
+                  change: function($event) {
                     var $$selectedVal = Array.prototype.filter
                       .call($event.target.options, function(o) {
                         return o.selected
@@ -98953,114 +99014,259 @@ var render = function() {
                         var val = "_value" in o ? o._value : o.value
                         return val
                       })
-                    _vm.batiment = $event.target.multiple
+                    _vm.$set(
+                      _vm.client,
+                      "piece",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.typePieces, function(typePiece) {
+                return _c(
+                  "option",
+                  { key: typePiece, domProps: { value: typePiece.id } },
+                  [_vm._v(_vm._s(typePiece.libelle))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "batiment" } }, [_vm._v("Batiments:")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.batiment,
+                    expression: "batiment"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "batiment" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.batiment = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    _vm.getChambres
+                  ]
+                }
+              },
+              _vm._l(_vm.batiments, function(bat) {
+                return _c("option", { key: bat, domProps: { value: bat.id } }, [
+                  _vm._v(_vm._s(bat.libelle))
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "chambre" } }, [_vm._v("Chambre:")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.chambre,
+                    expression: "chambre"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "chambre" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.chambre = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    _vm.getRoomDetails
+                  ]
+                }
+              },
+              _vm._l(_vm.chambres, function(room) {
+                return _c(
+                  "option",
+                  { key: room, domProps: { value: room.id } },
+                  [_vm._v(_vm._s(room.libelle))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("small", { staticClass: "text-muted" }, [
+              _vm._v(_vm._s(_vm.message.details))
+            ]),
+            _c("br"),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.remise,
+                    expression: "remise"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "remise" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.remise = $event.target.multiple
                       ? $$selectedVal
                       : $$selectedVal[0]
-                  },
-                  _vm.getChambres
-                ]
-              }
-            },
-            _vm._l(_vm.batiments, function(bat) {
-              return _c("option", { domProps: { value: bat.id } }, [
-                _vm._v(_vm._s(bat.libelle))
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "chambre" } }, [_vm._v("Chambre:")]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
+                  }
+                }
+              },
+              _vm._l(_vm.pourcentages, function(remise) {
+                return _c(
+                  "option",
+                  { key: remise, domProps: { value: remise.valeur } },
+                  [_vm._v(_vm._s(remise.libelle))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.avance,
+                    expression: "avance"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "avance" },
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.avance = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    _vm.prixNet
+                  ]
+                }
+              },
+              _vm._l(_vm.pourcentages, function(avance) {
+                return _c(
+                  "option",
+                  { key: avance, domProps: { value: avance.valeur } },
+                  [_vm._v(_vm._s(avance.libelle))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("small", { staticClass: "text-muted" }, [
+              _vm._v(_vm._s(_vm.message.net))
+            ]),
+            _c("br"),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "numero" } }, [
+              _vm._v("Numero de la pièce:")
+            ]),
+            _vm._v(" "),
+            _c("input", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.chambre,
-                  expression: "chambre"
+                  value: _vm.client.numero,
+                  expression: "client.numero"
                 }
               ],
               staticClass: "form-control",
-              attrs: { id: "chambre" },
+              attrs: { id: "numero", type: "text" },
+              domProps: { value: _vm.client.numero },
               on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.chambre = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "numero", $event.target.value)
                 }
               }
-            },
-            _vm._l(_vm.chambres, function(room) {
-              return _c("option", { domProps: { value: room.id } }, [
-                _vm._v(_vm._s(room.libelle))
-              ])
             }),
-            0
-          ),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "numero" } }, [
-            _vm._v("Numero de la pièce:")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.client.numero,
-                expression: "client.numero"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { id: "numero", type: "text" },
-            domProps: { value: _vm.client.numero },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+            _vm._v(" "),
+            _c("label", { attrs: { for: "contact" } }, [
+              _vm._v("Contact du client:")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.contact,
+                  expression: "client.contact"
                 }
-                _vm.$set(_vm.client, "numero", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "contact" } }, [
-            _vm._v("Contact du client:")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.client.contact,
-                expression: "client.contact"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { id: "contact", type: "text" },
-            domProps: { value: _vm.client.contact },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              ],
+              staticClass: "form-control",
+              attrs: { id: "contact", type: "text" },
+              domProps: { value: _vm.client.contact },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "contact", $event.target.value)
                 }
-                _vm.$set(_vm.client, "contact", $event.target.value)
               }
-            }
-          })
-        ])
-      ])
+            })
+          ])
+        ]
+      )
     ],
     1
   )
@@ -111225,13 +111431,14 @@ __webpack_require__.r(__webpack_exports__);
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+
+
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-
-
 var options = {
-  position: "top-right",
+  position: 'top-right',
   durations: {
     info: 14000
   }

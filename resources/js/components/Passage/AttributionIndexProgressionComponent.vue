@@ -22,7 +22,7 @@ export default {
          minutes: null,
          secondes: null,
      }
-    },
+   },
     created() {
 
     },

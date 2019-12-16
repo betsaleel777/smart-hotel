@@ -51,4 +51,9 @@ class ChambresController extends Controller
     $chambre->delete() ;
     return redirect()->route('chambre_index')->with('success',$message) ;
   }
+
+  public function details(int $chambre){
+    $chambre = Chambre::with('typeLinked')->findOrFail($chambre) ;
+    return response()->json(['chambre' => $chambre ]) ;
+  }
 }

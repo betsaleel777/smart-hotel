@@ -27,4 +27,8 @@ class AttributionsPassage extends Model
       return $this->belongsTo(LiberationsPassage::class,'attribution') ;
     }
 
+    public function encaissement(){
+      return $this->hasOne(Encaissement::class,'passage') ;
+    }
+
 }

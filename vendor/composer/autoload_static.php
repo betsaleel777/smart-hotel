@@ -401,14 +401,16 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
     );
 
     public static $classMap = array (
+        'App\\AttributionSejour' => __DIR__ . '/../..' . '/app/AttributionSejour.php',
         'App\\AttributionsPassage' => __DIR__ . '/../..' . '/app/AttributionsPassage.php',
         'App\\Batiment' => __DIR__ . '/../..' . '/app/Batiment.php',
         'App\\Chambre' => __DIR__ . '/../..' . '/app/Chambre.php',
+        'App\\Client' => __DIR__ . '/../..' . '/app/Client.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\ApiPassageController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiPassageController.php',
-        'App\\Http\\Controllers\\ApiSejourController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiSejourController.php',
         'App\\Http\\Controllers\\AttributionsPassagesController' => __DIR__ . '/../..' . '/app/Http/Controllers/AttributionsPassagesController.php',
+        'App\\Http\\Controllers\\AttributionsSejoursController' => __DIR__ . '/../..' . '/app/Http/Controllers/AttributionsSejoursController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -428,6 +430,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\LiberationSejour' => __DIR__ . '/../..' . '/app/LiberationSejour.php',
         'App\\LiberationsPassage' => __DIR__ . '/../..' . '/app/LiberationsPassage.php',
         'App\\Passage' => __DIR__ . '/../..' . '/app/Passage.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
@@ -435,6 +438,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Sejour' => __DIR__ . '/../..' . '/app/Sejour.php',
         'App\\Type' => __DIR__ . '/../..' . '/app/Type.php',
         'App\\TypePiece' => __DIR__ . '/../..' . '/app/TypePiece.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',

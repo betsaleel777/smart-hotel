@@ -1,24 +1,34 @@
 <template>
 <div class="">
-    <FullCalendar @eventClick="handleEvent" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :weekends="true" />
-    <b-modal @ok="handleOk" id="modal">
+    <FullCalendar @eventClick="handleEventClick" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :weekends="true" />
+    <b-modal @hidden="resetModal" @ok="handleOk" id="modal">
         <div class="form-group">
             <label for="nom">Nom:</label>
             <input class="form-control" id="nom" type="text" v-model="client.nom">
             <label for="prenom">Prenom:</label>
-            <input class="form-control" id="prenom" type="text" name="" v-model="client.prenom">
+            <input class="form-control" id="prenom" type="text" v-model="client.prenom">
             <label for="type">Piece:</label>
             <select id="type" class="form-control" v-model="client.piece">
-                <option v-for="typePiece in typePieces" :value="typePiece.id">{{typePiece.libelle}}</option>
+                <option v-for="typePiece in typePieces" :key="typePiece" :value="typePiece.id">{{typePiece.libelle}}</option>
             </select>
             <label for="batiment">Batiments:</label>
             <select v-on:change="getChambres" id="batiment" class="form-control" v-model="batiment">
-                <option v-for="bat in batiments" :value="bat.id">{{bat.libelle}}</option>
+                <option v-for="bat in batiments" :key="bat" :value="bat.id">{{bat.libelle}}</option>
             </select>
             <label for="chambre">Chambre:</label>
-            <select id="chambre" class="form-control" v-model="chambre">
-                <option v-for="room in chambres" :value="room.id">{{room.libelle}}</option>
+            <select v-on:change="getRoomDetails" id="chambre" class="form-control" v-model="chambre">
+                <option v-for="room in chambres" :key="room" :value="room.id">{{room.libelle}}</option>
             </select>
+            <small class="text-muted">{{message.details}}</small><br>
+            <label for="remise">Remise:</label>
+            <select id="remise" class="form-control" v-model="remise">
+                <option v-for="remise in pourcentages" :key="remise" :value="remise.valeur">{{remise.libelle}}</option>
+            </select>
+            <label for="avance">Avance:</label>
+            <select v-on:change="prixNet" id="avance" class="form-control" v-model="avance">
+                <option v-for="avance in pourcentages" :key="avance" :value="avance.valeur">{{avance.libelle}}</option>
+            </select>
+            <small class="text-muted">{{message.net}}</small><br>
             <label for="numero">Numero de la pièce:</label>
             <input class="form-control" id="numero" type="text" v-model="client.numero">
             <label for="contact">Contact du client:</label>
@@ -36,28 +46,19 @@ import moment from 'moment'
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import frLocale from '@fullcalendar/core/locales/fr'
-Vue.component('b-modal', BModal)
 export default {
     components: {
-        FullCalendar
+        FullCalendar,
+        BModal
     },
     data() {
         return {
             calendarPlugins: [dayGridPlugin, interactionPlugin],
-            evenement: [{
-                    id: 1,
-                    title: 'event 1',
-                    date: '2019-12-01',
-                    backgroundColor: this.randomColor()
-                },
-                {
-                    id: 2,
-                    title: 'event 2',
-                    date: '2019-12-02',
-                    backgroundColor: this.randomColor()
-                }
-            ],
+            evenement: null,
+            timeInterval: {
+                debut: null,
+                fin: null
+            },
             client: {
                 nom: null,
                 prenom: null,
@@ -65,30 +66,57 @@ export default {
                 contact: null,
                 piece: null
             },
+            pourcentages: this.getPourcentages(),
+            details: null,
+            remise: null,
+            avance: null,
+            message: {
+                net: null,
+                details: null
+            },
+            idSejourAttribution: null,
             chambres: null,
             chambre: null,
             batiments: null,
             batiment: null,
-            typePieces: null
+            typePieces: null,
+            delais: null
         }
+    },
+    mounted() {
+        this.getEvents()
     },
     methods: {
         handleSelect(info) {
-            const end = moment(info.endStr).subtract(1, 'days').format('DD-MM-YYYY')
-            this.getType()
-            this.getBatiments()
-            this.$bvModal.show('modal')
-            //console.log(info.startStr,info.endStr,end)
+            const end = moment(info.endStr).subtract(1, 'days')
+            const start = moment(info.startStr)
+            this.delais = end.diff(start, 'days')
+            if (end.diff(start, 'days') === 0) {
+                this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage')
+            } else {
+                this.timeInterval.debut = start.format('YYYY-MM-DD').toString()
+                this.timeInterval.fin = end.format('YYYY-MM-DD').toString()
+                this.getType()
+                this.getBatiments()
+                this.$bvModal.show('modal')
+            }
         },
-        handleEvent(info) {
-            //utiliser l'id de l'évenement pour aller chercher les information afin de préremplir les champs
+        handleEventClick(info) {
             //si la date de fin n'est pas déjà passé
+            //changer la valeur de idSejourAttribution
+            let {
+                event
+            } = info
+            let realEnd = moment(event.end).subtract(1, 'days')
+            //console.log(moment().isBefore(realEnd));
+            this.idSejourAttribution = event.id
             this.getType()
             this.getBatiments()
+            this.getModalInfos()
             this.$bvModal.show('modal')
         },
         randomColor() {
-            const colors = ['#00cbb5', '#fec83c', '#003366', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700']
+            const colors = ['#00cbb5', '#fec83c', '#c2cf86', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700']
             return colors[Math.floor(Math.random() * 8)]
         },
         getType() {
@@ -97,6 +125,18 @@ export default {
             }).catch((error) => {
                 console.log(error)
             })
+        },
+        getPourcentages() {
+            let pourcentages = []
+            for (let i = 0; i < 100; i++) {
+                const valeur = i / 100
+                const libelle = String(i) + '%'
+                pourcentages.push({
+                    valeur: valeur,
+                    libelle: libelle
+                })
+            }
+            return pourcentages
         },
         getChambres() {
             axios.get('/api/chambres/empty/' + this.batiment).then((response) => {
@@ -112,12 +152,111 @@ export default {
                 console.log(error)
             })
         },
+        getRoomDetails() {
+            axios.get('/api/chambre/details/' + this.chambre).then((response) => {
+                let {
+                    chambre
+                } = response.data
+                this.details = chambre
+                this.message.details =
+                    `Chambre:${chambre.libelle}, Type:${chambre.type_linked.libelle},
+                     Coût/J:${chambre.type_linked.cout_reservation} jours, Delais:${this.delais},
+                     Prix:${chambre.type_linked.cout_reservation*this.delais}`
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        getEvents() {
+            axios.get('/api/sejour/all').then((response) => {
+                this.evenement = response.data.events.map((event) => {
+                    let calebasse = {}
+                    calebasse.id = event.id
+                    calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.numero_piece
+                    calebasse.start = event.sejour_linked.debut
+                    calebasse.end = moment(event.sejour_linked.fin).add(1, 'days').format('YYYY-MM-DD').toString()
+                    calebasse.backgroundColor = this.randomColor()
+                    return calebasse
+                })
+
+            }).catch((err) => {
+                console.log(err);
+            })
+        },
+        getModalInfos() {
+            axios.get('/api/sejour/infos/' + this.idSejourAttribution).then((response) => {
+                console.log(response.data.infos)
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
         updateEvent() {
-            // la méthode à utiliser pour lancer une modification des évenement
+            //la méthode à utiliser pour lancer une modification des évenement
+        },
+        saveEvent() {
+            console.log(document.querySelector("meta[name='csrf-token']").getAttribute('content'));
+            axios.post('/api/sejour/add', {
+                nom: this.client.nom,
+                prenom: this.client.prenom,
+                piece: this.client.piece,
+                batiment: this.batiment,
+                chambre: this.chambre,
+                numero_piece: this.client.numero,
+                contact: this.client.contact,
+                debut: this.timeInterval.debut,
+                fin: this.timeInterval.fin,
+                remise: this.remise,
+                avance: this.avance,
+                delais: this.delais,
+                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+            }).then((response) => {
+                let {
+                    errors
+                } = response.data
+                if (errors) {
+                    console.log(errors);
+                } else {
+                    this.$bvModal.hide('modal')
+                    const message =
+                        `la chambre ${response.data.chambre.libelle} a été attribuée
+                  du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
+                  client ${this.client.nom} ${this.client.prenom}`
+                    this.getEvents()
+                    this.$awn.success(message)
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
         },
         handleOk() {
-            //créer table client son controller et son model
-            console.log('formulaire soumis');
+            if (this.idSejourAttribution) {
+                this.updateEvent()
+            } else {
+                this.saveEvent()
+            }
+        },
+        resetModal() {
+            this.client.nom = null
+            this.client.prenom = null
+            this.client.piece = null
+            this.client.numero = null
+            this.client.contact = null
+            this.avance = null
+            this.remise = null
+            this.batiment = null
+            this.chambre = null
+            this.message.details = null
+            this.message.net = null
+        },
+        prixNet() {
+
+            if (this.message.details) {
+                let prix_normal = this.details.type_linked.cout_reservation * this.delais
+                let prix_avec_remise = prix_normal - prix_normal * Number(this.remise)
+                this.message.net = `le prix net total à payer: ${prix_avec_remise},
+                                Avance: ${prix_normal*this.avance} , Reste à payer: ${prix_avec_remise-prix_normal*this.avance}`
+            } else {
+                this.message.net = 'Vous devez choisir le batiment et la chambre !!'
+            }
         }
     }
 }

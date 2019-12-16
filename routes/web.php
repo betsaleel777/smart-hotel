@@ -33,6 +33,7 @@ Route::post('/parametre/batiment/update/{id}', 'BatimentsController@update')->na
 Route::get('/parametre/batiment/delete/{id}', 'BatimentsController@delete')->name('batiment_delete') ;
 
 Route::get('/parametre/chambre', 'ChambresController@index')->name('chambre_index') ;
+Route::get('/api/chambre/details/{chambre}', 'ChambresController@details')->name('chambre_details') ;
 Route::get('/parametre/chambre/add', 'ChambresController@add')->name('chambre_add') ;
 Route::post('/parametre/chambre/store', 'ChambresController@store')->name('chambre_store') ;
 Route::get('/parametre/chambre/edit/{id}', 'ChambresController@edit')->name('chambre_edit') ;
@@ -55,7 +56,10 @@ Route::get('/api/chambres/used/{batiment}', 'ApiPassageController@usedRooms')->n
 Route::post('/api/attribution/passage', 'ApiPassageController@attribuer')->name('attribution_passage') ;
 Route::post('/api/liberation/passage', 'ApiPassageController@liberer')->name('liberation_passage') ;
 
-Route::get('/home/sejour', 'ApiSejourController@index')->name('attributions_sejour_index') ;
+Route::get('/home/sejour', 'AttributionsSejoursController@index')->name('attributions_sejour_index') ;
+Route::post('/api/sejour/add', 'AttributionsSejoursController@add')->name('attributions_sejour_add') ;
+Route::get('/api/sejour/infos/{attribution}', 'AttributionsSejoursController@infos')->name('attributions_sejour_infos') ;
+Route::get('/api/sejour/all', 'AttributionsSejoursController@getAll')->name('attributions_sejour_all') ;
 
 Route::get('/home/pieces', 'TypesPiecesController@index')->name('type_piece_index') ;
 Route::get('/home/pieces/add', 'TypesPiecesController@add')->name('type_piece_add') ;
@@ -63,3 +67,7 @@ Route::post('/home/pieces/store', 'TypesPiecesController@store')->name('type_pie
 Route::get('/home/pieces/edit/{id}', 'TypesPiecesController@edit')->name('type_piece_edit') ;
 Route::post('/home/pieces/update/{id}', 'TypesPiecesController@update')->name('type_piece_update') ;
 Route::get('/api/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces') ;
+
+Route::get('/client/index', 'ClientsController@index')->name('client_index') ;
+Route::get('/client/edit/{id}', 'ClientsController@edit')->name('client_edit') ;
+Route::post('/client/update/{id}', 'ClientsController@update')->name('client_update') ;

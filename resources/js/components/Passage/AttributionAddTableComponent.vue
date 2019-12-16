@@ -45,7 +45,7 @@ export default {
     data() {
         return {
             visible: false,
-            chambres: '',
+            chambres: null,
             identifiant: null,
             batiment: null,
             showAttribuer: null,

@@ -15,8 +15,8 @@ class CreateTableSejours extends Migration
     {
         Schema::create('sejours', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('debut') ;
-            $table->date('fin') ;
+            $table->dateTime('debut') ;
+            $table->dateTime('fin') ;
             $table->unsignedBigInteger('chambre')->index() ;
             $table->foreign('chambre')->references('id')->on('chambres')->onDelete('cascade') ;
             $table->timestamps();

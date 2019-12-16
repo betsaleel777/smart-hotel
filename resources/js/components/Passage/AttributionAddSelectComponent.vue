@@ -3,7 +3,7 @@
     <label>Batiment:</label>
     <select v-on:change="refresh" class="form-control" name="batiment" v-model="choosen">
         <option disabled selected> choix du batiment</option>
-        <option v-for="bat in bats" :value="bat.id">{{bat.libelle}}</option>
+        <option v-for="bat in bats" :key="bat" :value="bat.id">{{bat.libelle}}</option>
     </select>
     <label for="used">Occupée</label><input v-on:change="crier" class="form-group" type="radio" value="plein" v-model="statut">
     <label for="empty">Vide</label><input v-on:change="crier" class="form-group" type="radio" value="vide" v-model="statut">
@@ -27,8 +27,8 @@ export default {
                 this.$root.$emit('charger', this.statut, this.choosen)
             }
         },
-        refresh (){
-          console.log('refresh run!!');
+        refresh() {
+            console.log('refresh run!!');
         }
     }
 }
