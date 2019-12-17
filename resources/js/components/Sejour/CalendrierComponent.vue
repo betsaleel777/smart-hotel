@@ -1,6 +1,7 @@
 <template>
 <div class="">
     <FullCalendar @eventClick="handleEventClick" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :weekends="true" />
+
     <b-modal @hidden="resetModal" @ok="handleOk" id="modal">
         <div class="form-group">
             <label for="nom">Nom:</label>
@@ -8,26 +9,26 @@
             <label for="prenom">Prenom:</label>
             <input class="form-control" id="prenom" type="text" v-model="client.prenom">
             <label for="type">Piece:</label>
-            <select id="type" class="form-control" v-model="client.piece">
-                <option v-for="typePiece in typePieces" :key="typePiece" :value="typePiece.id">{{typePiece.libelle}}</option>
-            </select>
+            <b-form-select v-model="client.piece">
+                <option id="type" v-for="typePiece in typePieces" :key="typePiece.id" :value="typePiece.id">{{typePiece.libelle}}</option>
+            </b-form-select>
             <label for="batiment">Batiments:</label>
-            <select v-on:change="getChambres" id="batiment" class="form-control" v-model="batiment">
-                <option v-for="bat in batiments" :key="bat" :value="bat.id">{{bat.libelle}}</option>
-            </select>
+            <b-form-select @change="getChambres" id="batiment" v-model="batiment">
+                <option v-for="bat in batiments" :key="bat.id" :value="bat.id">{{bat.libelle}}</option>
+            </b-form-select>
             <label for="chambre">Chambre:</label>
-            <select v-on:change="getRoomDetails" id="chambre" class="form-control" v-model="chambre">
-                <option v-for="room in chambres" :key="room" :value="room.id">{{room.libelle}}</option>
-            </select>
+            <b-form-select @change="getRoomDetails" id="chambre" v-model="chambre">
+                <option v-for="room in chambres" :key="room.id" :value="room.id">{{room.libelle}}</option>
+            </b-form-select>
             <small class="text-muted">{{message.details}}</small><br>
             <label for="remise">Remise:</label>
-            <select id="remise" class="form-control" v-model="remise">
-                <option v-for="remise in pourcentages" :key="remise" :value="remise.valeur">{{remise.libelle}}</option>
-            </select>
+            <b-form-select id="remise" class="form-control" v-model="remise">
+                <option v-for="remise in pourcentages" :key="remise.valeur" :value="remise.valeur">{{remise.libelle}}</option>
+            </b-form-select>
             <label for="avance">Avance:</label>
-            <select v-on:change="prixNet" id="avance" class="form-control" v-model="avance">
-                <option v-for="avance in pourcentages" :key="avance" :value="avance.valeur">{{avance.libelle}}</option>
-            </select>
+            <b-form-select @change="prixNet" id="avance" v-model="avance">
+                <option v-for="avance in pourcentages" :key="avance.valeur" :value="avance.valeur">{{avance.libelle}}</option>
+            </b-form-select>
             <small class="text-muted">{{message.net}}</small><br>
             <label for="numero">Numero de la pièce:</label>
             <input class="form-control" id="numero" type="text" v-model="client.numero">
@@ -35,12 +36,52 @@
             <input class="form-control" id="contact" type="text" v-model="client.contact">
         </div>
     </b-modal>
+
+    <b-modal @hidden="resetModal" @ok="updateEvent" id="modal-update">
+        <div class="form-group">
+            <label for="nom">Nom:</label>
+            <input class="form-control" id="nom" type="text" v-model="client.nom">
+            <label for="prenom">Prenom:</label>
+            <input class="form-control" id="prenom" type="text" v-model="client.prenom">
+            <label for="type">Piece:</label>
+            <b-form-select v-model="client.piece">
+                <option id="type" v-for="typePiece in typePieces" :key="typePiece.id" :value="typePiece.id">{{typePiece.libelle}}</option>
+            </b-form-select>
+            <label for="batiment">Batiments:</label>
+            <b-form-select @change="getChambres" id="batiment" v-model="batiment">
+                <option v-for="bat in batiments" :key="bat.id" :value="bat.id">{{bat.libelle}}</option>
+            </b-form-select>
+            <label for="chambre">Ancienne Chambre:</label>
+            <p>{{onUse.libelle}}</p>
+            <label for="chambre">Nouvelle Chambre:</label>
+            <b-form-select id="chambre" v-model="chambre">
+                <option v-for="room in chambres" :key="room.id" :value="room.id">{{room.libelle}}</option>
+            </b-form-select>
+            <label for="remise">Remise:</label>
+            <b-form-select id="remise" class="form-control" v-model="remise">
+                <option v-for="remise in pourcentages" :key="remise.valeur" :value="remise.valeur">{{remise.libelle}}</option>
+            </b-form-select>
+            <label for="avance">Avance:</label>
+            <b-form-select id="avance" v-model="avance">
+                <option v-for="avance in pourcentages" :key="avance.valeur" :value="avance.valeur">{{avance.libelle}}</option>
+            </b-form-select>
+            <label for="numero">Numero de la pièce:</label>
+            <input class="form-control" id="numero" type="text" v-model="client.numero">
+            <label for="contact">Contact du client:</label>
+            <input class="form-control" id="contact" type="text" v-model="client.contact">
+            <label for="debut">Debut:</label>
+            <input id="debut" v-model="timeInterval.debut" type="text" class="form-control">
+            <label for="contact">Fin:</label>
+            <input id="fin" v-model="timeInterval.fin" type="text" class="form-control">
+        </div>
+    </b-modal>
 </div>
 </template>
 
 <script>
 import {
-    BModal
+    BModal,
+    BFormSelect
 } from 'bootstrap-vue'
 import moment from 'moment'
 import FullCalendar from '@fullcalendar/vue'
@@ -49,7 +90,8 @@ import interactionPlugin from '@fullcalendar/interaction'
 export default {
     components: {
         FullCalendar,
-        BModal
+        BModal,
+        BFormSelect
     },
     data() {
         return {
@@ -80,7 +122,11 @@ export default {
             batiments: null,
             batiment: null,
             typePieces: null,
-            delais: null
+            delais: null,
+            onUse: {
+                id: null,
+                libelle: null
+            }
         }
     },
     mounted() {
@@ -113,7 +159,7 @@ export default {
             this.getType()
             this.getBatiments()
             this.getModalInfos()
-            this.$bvModal.show('modal')
+            this.$bvModal.show('modal-update')
         },
         randomColor() {
             const colors = ['#00cbb5', '#fec83c', '#c2cf86', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700']
@@ -184,7 +230,27 @@ export default {
         },
         getModalInfos() {
             axios.get('/api/sejour/infos/' + this.idSejourAttribution).then((response) => {
-                console.log(response.data.infos)
+                let {
+                    encaissement,
+                    sejour_linked
+                } = response.data.infos
+                let {
+                    chambre_linked,
+                    client_linked
+                } = sejour_linked
+                this.client.nom = client_linked.nom
+                this.client.prenom = client_linked.prenom
+                this.client.contact = client_linked.contact
+                this.client.numero = client_linked.numero_piece
+                this.timeInterval.debut = sejour_linked.debut
+                this.timeInterval.fin = sejour_linked.fin
+                this.client.piece = client_linked.piece
+                this.batiment = chambre_linked.batiment
+                this.chambres = this.getChambres()
+                this.onUse.id = chambre_linked.id
+                this.onUse.libelle = chambre_linked.libelle
+                this.remise = encaissement.remise / 100
+                this.avance = encaissement.avance / 100
             }).catch((error) => {
                 console.log(error)
             })
@@ -246,6 +312,8 @@ export default {
             this.chambre = null
             this.message.details = null
             this.message.net = null
+            this.timeInterval.debut = null
+            this.timeInterval.fin = null
         },
         prixNet() {
 

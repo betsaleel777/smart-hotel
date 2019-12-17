@@ -15,18 +15,18 @@ class Client extends Model
                     'piece.required' => 'le choix du type de pièce est requis',
                     'numero_piece.required' => 'Le numéro de la pièce est requis',
                     'numero_piece.unique' => 'Numero de pièce déjà utilisé ',
-                    'contact.required' => 'Le contact du client est requis' ,
-                    'contact.unique' => 'Contact déjà utilisé'
+                    'contact.required' => 'Le contact du client est requis',
+                    'contact.unique' => 'Contact déjà utilisé',
                   ] ;
     public static function rules(int $id)
     {
         return [
-          'nom' => 'required',
-          'prenom' => 'required',
-          'piece' => 'required',
-          'numero_piece' => 'required|unique:clients,numero_piece,'.$id,
-          'contact' => 'required|unique:clients,contact,'.$id
-          ] ;
+                'nom' => 'required',
+                'prenom' => 'required',
+                'piece' => 'required',
+                'numero_piece' => 'required|unique:clients,numero_piece,' . $id,
+                'contact' => 'required|unique:clients,contact,' . $id,
+               ] ;
     }
 
     public function pieceLinked()

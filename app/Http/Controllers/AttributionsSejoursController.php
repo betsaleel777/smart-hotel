@@ -59,6 +59,9 @@ class AttributionsSejoursController extends Controller
 
     public function infos(int $attribution)
     {
-        return response()->json(['infos' => 'on rentre bien!']) ;
+      $att = AttributionSejour::with('sejourLinked.chambreLinked','sejourLinked.clientLinked','encaissement')
+                                ->findOrfail($attribution) ;
+
+      return response()->json(['infos' => $att]) ;
     }
 }

@@ -15059,6 +15059,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -15067,7 +15107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     FullCalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    BModal: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"]
+    BModal: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BModal"],
+    BFormSelect: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormSelect"]
   },
   data: function data() {
     return {
@@ -15098,7 +15139,11 @@ __webpack_require__.r(__webpack_exports__);
       batiments: null,
       batiment: null,
       typePieces: null,
-      delais: null
+      delais: null,
+      onUse: {
+        id: null,
+        libelle: null
+      }
     };
   },
   mounted: function mounted() {
@@ -15130,7 +15175,7 @@ __webpack_require__.r(__webpack_exports__);
       this.getType();
       this.getBatiments();
       this.getModalInfos();
-      this.$bvModal.show('modal');
+      this.$bvModal.show('modal-update');
     },
     randomColor: function randomColor() {
       var colors = ['#00cbb5', '#fec83c', '#c2cf86', '#31367e', '#ff6652', '#ffa500', '#d3191c', '#d549c4', '#ffd700'];
@@ -15206,8 +15251,27 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getModalInfos: function getModalInfos() {
+      var _this6 = this;
+
       axios.get('/api/sejour/infos/' + this.idSejourAttribution).then(function (response) {
-        console.log(response.data.infos);
+        var _response$data$infos = response.data.infos,
+            encaissement = _response$data$infos.encaissement,
+            sejour_linked = _response$data$infos.sejour_linked;
+        var chambre_linked = sejour_linked.chambre_linked,
+            client_linked = sejour_linked.client_linked;
+        _this6.client.nom = client_linked.nom;
+        _this6.client.prenom = client_linked.prenom;
+        _this6.client.contact = client_linked.contact;
+        _this6.client.numero = client_linked.numero_piece;
+        _this6.timeInterval.debut = sejour_linked.debut;
+        _this6.timeInterval.fin = sejour_linked.fin;
+        _this6.client.piece = client_linked.piece;
+        _this6.batiment = chambre_linked.batiment;
+        _this6.chambres = _this6.getChambres();
+        _this6.onUse.id = chambre_linked.id;
+        _this6.onUse.libelle = chambre_linked.libelle;
+        _this6.remise = encaissement.remise / 100;
+        _this6.avance = encaissement.avance / 100;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -15215,7 +15279,7 @@ __webpack_require__.r(__webpack_exports__);
     updateEvent: function updateEvent() {//la méthode à utiliser pour lancer une modification des évenement
     },
     saveEvent: function saveEvent() {
-      var _this6 = this;
+      var _this7 = this;
 
       console.log(document.querySelector("meta[name='csrf-token']").getAttribute('content'));
       axios.post('/api/sejour/add', {
@@ -15238,13 +15302,13 @@ __webpack_require__.r(__webpack_exports__);
         if (errors) {
           console.log(errors);
         } else {
-          _this6.$bvModal.hide('modal');
+          _this7.$bvModal.hide('modal');
 
-          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                  du:").concat(_this6.timeInterval.debut, " midi au ").concat(_this6.timeInterval.fin, " midi, pour le\n                  client ").concat(_this6.client.nom, " ").concat(_this6.client.prenom);
+          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                  du:").concat(_this7.timeInterval.debut, " midi au ").concat(_this7.timeInterval.fin, " midi, pour le\n                  client ").concat(_this7.client.nom, " ").concat(_this7.client.prenom);
 
-          _this6.getEvents();
+          _this7.getEvents();
 
-          _this6.$awn.success(message);
+          _this7.$awn.success(message);
         }
       })["catch"](function (err) {
         console.log(err);
@@ -15269,6 +15333,8 @@ __webpack_require__.r(__webpack_exports__);
       this.chambre = null;
       this.message.details = null;
       this.message.net = null;
+      this.timeInterval.debut = null;
+      this.timeInterval.fin = null;
     },
     prixNet: function prixNet() {
       if (this.message.details) {
@@ -98940,331 +99006,550 @@ var render = function() {
           on: { hidden: _vm.resetModal, ok: _vm.handleOk }
         },
         [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.client.nom,
-                  expression: "client.nom"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { id: "nom", type: "text" },
-              domProps: { value: _vm.client.nom },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.client, "nom", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.client.prenom,
-                  expression: "client.prenom"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { id: "prenom", type: "text" },
-              domProps: { value: _vm.client.prenom },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.client, "prenom", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
+              _vm._v(" "),
+              _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
+                    value: _vm.client.nom,
+                    expression: "client.nom"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "nom", type: "text" },
+                domProps: { value: _vm.client.nom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "nom", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.prenom,
+                    expression: "client.prenom"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "prenom", type: "text" },
+                domProps: { value: _vm.client.prenom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "prenom", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  model: {
                     value: _vm.client.piece,
+                    callback: function($$v) {
+                      _vm.$set(_vm.client, "piece", $$v)
+                    },
                     expression: "client.piece"
                   }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "type" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.client,
-                      "piece",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.typePieces, function(typePiece) {
-                return _c(
-                  "option",
-                  { key: typePiece, domProps: { value: typePiece.id } },
-                  [_vm._v(_vm._s(typePiece.libelle))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "batiment" } }, [_vm._v("Batiments:")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
+                },
+                _vm._l(_vm.typePieces, function(typePiece) {
+                  return _c(
+                    "option",
+                    {
+                      key: typePiece.id,
+                      attrs: { id: "type" },
+                      domProps: { value: typePiece.id }
+                    },
+                    [_vm._v(_vm._s(typePiece.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "batiment" } }, [
+                _vm._v("Batiments:")
+              ]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "batiment" },
+                  on: { change: _vm.getChambres },
+                  model: {
                     value: _vm.batiment,
+                    callback: function($$v) {
+                      _vm.batiment = $$v
+                    },
                     expression: "batiment"
                   }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "batiment" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.batiment = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.getChambres
-                  ]
-                }
-              },
-              _vm._l(_vm.batiments, function(bat) {
-                return _c("option", { key: bat, domProps: { value: bat.id } }, [
-                  _vm._v(_vm._s(bat.libelle))
-                ])
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "chambre" } }, [_vm._v("Chambre:")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
+                },
+                _vm._l(_vm.batiments, function(bat) {
+                  return _c(
+                    "option",
+                    { key: bat.id, domProps: { value: bat.id } },
+                    [_vm._v(_vm._s(bat.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "chambre" } }, [_vm._v("Chambre:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "chambre" },
+                  on: { change: _vm.getRoomDetails },
+                  model: {
                     value: _vm.chambre,
+                    callback: function($$v) {
+                      _vm.chambre = $$v
+                    },
                     expression: "chambre"
                   }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "chambre" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.chambre = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.getRoomDetails
-                  ]
-                }
-              },
-              _vm._l(_vm.chambres, function(room) {
-                return _c(
-                  "option",
-                  { key: room, domProps: { value: room.id } },
-                  [_vm._v(_vm._s(room.libelle))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("small", { staticClass: "text-muted" }, [
-              _vm._v(_vm._s(_vm.message.details))
-            ]),
-            _c("br"),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
+                },
+                _vm._l(_vm.chambres, function(room) {
+                  return _c(
+                    "option",
+                    { key: room.id, domProps: { value: room.id } },
+                    [_vm._v(_vm._s(room.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("small", { staticClass: "text-muted" }, [
+                _vm._v(_vm._s(_vm.message.details))
+              ]),
+              _c("br"),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  staticClass: "form-control",
+                  attrs: { id: "remise" },
+                  model: {
                     value: _vm.remise,
+                    callback: function($$v) {
+                      _vm.remise = $$v
+                    },
                     expression: "remise"
                   }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "remise" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.remise = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
+                },
+                _vm._l(_vm.pourcentages, function(remise) {
+                  return _c(
+                    "option",
+                    { key: remise.valeur, domProps: { value: remise.valeur } },
+                    [_vm._v(_vm._s(remise.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "avance" },
+                  on: { change: _vm.prixNet },
+                  model: {
+                    value: _vm.avance,
+                    callback: function($$v) {
+                      _vm.avance = $$v
+                    },
+                    expression: "avance"
                   }
-                }
-              },
-              _vm._l(_vm.pourcentages, function(remise) {
-                return _c(
-                  "option",
-                  { key: remise, domProps: { value: remise.valeur } },
-                  [_vm._v(_vm._s(remise.libelle))]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
+                },
+                _vm._l(_vm.pourcentages, function(avance) {
+                  return _c(
+                    "option",
+                    { key: avance.valeur, domProps: { value: avance.valeur } },
+                    [_vm._v(_vm._s(avance.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("small", { staticClass: "text-muted" }, [
+                _vm._v(_vm._s(_vm.message.net))
+              ]),
+              _c("br"),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "numero" } }, [
+                _vm._v("Numero de la pièce:")
+              ]),
+              _vm._v(" "),
+              _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.avance,
-                    expression: "avance"
+                    value: _vm.client.numero,
+                    expression: "client.numero"
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { id: "avance" },
+                attrs: { id: "numero", type: "text" },
+                domProps: { value: _vm.client.numero },
                 on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.avance = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.prixNet
-                  ]
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "numero", $event.target.value)
+                  }
                 }
-              },
-              _vm._l(_vm.pourcentages, function(avance) {
-                return _c(
-                  "option",
-                  { key: avance, domProps: { value: avance.valeur } },
-                  [_vm._v(_vm._s(avance.libelle))]
-                )
               }),
-              0
-            ),
-            _vm._v(" "),
-            _c("small", { staticClass: "text-muted" }, [
-              _vm._v(_vm._s(_vm.message.net))
-            ]),
-            _c("br"),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "numero" } }, [
-              _vm._v("Numero de la pièce:")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.client.numero,
-                  expression: "client.numero"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { id: "numero", type: "text" },
-              domProps: { value: _vm.client.numero },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+              _vm._v(" "),
+              _c("label", { attrs: { for: "contact" } }, [
+                _vm._v("Contact du client:")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.contact,
+                    expression: "client.contact"
                   }
-                  _vm.$set(_vm.client, "numero", $event.target.value)
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "contact" } }, [
-              _vm._v("Contact du client:")
-            ]),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.client.contact,
-                  expression: "client.contact"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { id: "contact", type: "text" },
-              domProps: { value: _vm.client.contact },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                ],
+                staticClass: "form-control",
+                attrs: { id: "contact", type: "text" },
+                domProps: { value: _vm.client.contact },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "contact", $event.target.value)
                   }
-                  _vm.$set(_vm.client, "contact", $event.target.value)
                 }
-              }
-            })
-          ])
+              })
+            ],
+            1
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          attrs: { id: "modal-update" },
+          on: { hidden: _vm.resetModal, ok: _vm.updateEvent }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.nom,
+                    expression: "client.nom"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "nom", type: "text" },
+                domProps: { value: _vm.client.nom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "nom", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.prenom,
+                    expression: "client.prenom"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "prenom", type: "text" },
+                domProps: { value: _vm.client.prenom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "prenom", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  model: {
+                    value: _vm.client.piece,
+                    callback: function($$v) {
+                      _vm.$set(_vm.client, "piece", $$v)
+                    },
+                    expression: "client.piece"
+                  }
+                },
+                _vm._l(_vm.typePieces, function(typePiece) {
+                  return _c(
+                    "option",
+                    {
+                      key: typePiece.id,
+                      attrs: { id: "type" },
+                      domProps: { value: typePiece.id }
+                    },
+                    [_vm._v(_vm._s(typePiece.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "batiment" } }, [
+                _vm._v("Batiments:")
+              ]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "batiment" },
+                  on: { change: _vm.getChambres },
+                  model: {
+                    value: _vm.batiment,
+                    callback: function($$v) {
+                      _vm.batiment = $$v
+                    },
+                    expression: "batiment"
+                  }
+                },
+                _vm._l(_vm.batiments, function(bat) {
+                  return _c(
+                    "option",
+                    { key: bat.id, domProps: { value: bat.id } },
+                    [_vm._v(_vm._s(bat.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "chambre" } }, [
+                _vm._v("Ancienne Chambre:")
+              ]),
+              _vm._v(" "),
+              _c("p", [_vm._v(_vm._s(_vm.onUse.libelle))]),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "chambre" } }, [
+                _vm._v("Nouvelle Chambre:")
+              ]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "chambre" },
+                  model: {
+                    value: _vm.chambre,
+                    callback: function($$v) {
+                      _vm.chambre = $$v
+                    },
+                    expression: "chambre"
+                  }
+                },
+                _vm._l(_vm.chambres, function(room) {
+                  return _c(
+                    "option",
+                    { key: room.id, domProps: { value: room.id } },
+                    [_vm._v(_vm._s(room.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  staticClass: "form-control",
+                  attrs: { id: "remise" },
+                  model: {
+                    value: _vm.remise,
+                    callback: function($$v) {
+                      _vm.remise = $$v
+                    },
+                    expression: "remise"
+                  }
+                },
+                _vm._l(_vm.pourcentages, function(remise) {
+                  return _c(
+                    "option",
+                    { key: remise.valeur, domProps: { value: remise.valeur } },
+                    [_vm._v(_vm._s(remise.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
+              _vm._v(" "),
+              _c(
+                "b-form-select",
+                {
+                  attrs: { id: "avance" },
+                  model: {
+                    value: _vm.avance,
+                    callback: function($$v) {
+                      _vm.avance = $$v
+                    },
+                    expression: "avance"
+                  }
+                },
+                _vm._l(_vm.pourcentages, function(avance) {
+                  return _c(
+                    "option",
+                    { key: avance.valeur, domProps: { value: avance.valeur } },
+                    [_vm._v(_vm._s(avance.libelle))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "numero" } }, [
+                _vm._v("Numero de la pièce:")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.numero,
+                    expression: "client.numero"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "numero", type: "text" },
+                domProps: { value: _vm.client.numero },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "numero", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "contact" } }, [
+                _vm._v("Contact du client:")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.client.contact,
+                    expression: "client.contact"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "contact", type: "text" },
+                domProps: { value: _vm.client.contact },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.client, "contact", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "debut" } }, [_vm._v("Debut:")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.timeInterval.debut,
+                    expression: "timeInterval.debut"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "debut", type: "text" },
+                domProps: { value: _vm.timeInterval.debut },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.timeInterval, "debut", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "contact" } }, [_vm._v("Fin:")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.timeInterval.fin,
+                    expression: "timeInterval.fin"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { id: "fin", type: "text" },
+                domProps: { value: _vm.timeInterval.fin },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.timeInterval, "fin", $event.target.value)
+                  }
+                }
+              })
+            ],
+            1
+          )
         ]
       )
     ],
