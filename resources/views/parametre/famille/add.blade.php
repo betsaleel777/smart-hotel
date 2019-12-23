@@ -8,20 +8,21 @@
     <!-- general form elements -->
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Modifier Famille</h3>
+            <h3 class="card-title">Ajouter Famille</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form role="form" method="post" action="{{route('famille_update',$famille)}}">
+        <form role="form" method="post" action="{{route('famille_store')}}">
             <div class="card-body">
               @csrf
                 <div class="form-group">
                     <label for="exampleInputEmail1">Libelle:</label>
-                    <input value="{{$famille->libelle}}" name="libelle" class="form-control" id="exampleInputEmail1">
+                    <input name="libelle" class="form-control" id="exampleInputEmail1">
                 </div>
                 {!!$errors->first('libelle','<p  style="color:#a94442">:message</p>')!!}
             </div>
             <!-- /.card-body -->
+
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Envoyer</button>
             </div>
