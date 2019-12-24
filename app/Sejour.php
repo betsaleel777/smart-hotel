@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sejour extends Model
 {
+  use SoftDeletes ;
   protected $fillable = ['debut','fin','chambre','client'] ;
   protected $dates = ['created_at','updated_at','debut','fin'] ;
 

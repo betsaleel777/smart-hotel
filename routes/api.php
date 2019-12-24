@@ -27,6 +27,8 @@ Route::post('/liberation/passage', 'ApiPassageController@liberer')->name('libera
 Route::post('/sejour/add', 'AttributionsSejoursController@add')->name('attributions_sejour_add') ;
 Route::get('/sejour/infos/{attribution}', 'AttributionsSejoursController@infos')->name('attributions_sejour_infos') ;
 Route::get('/sejour/all', 'AttributionsSejoursController@getAll')->name('attributions_sejour_all') ;
-
+Route::post('/sejour/update', 'AttributionsSejoursController@update')->name('attributions_sejour_update') ;
+Route::post('/sejour/liberer', 'AttributionsSejoursController@liberer')->name('attributions_sejour_liberation') ;
+Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete')->name('attributions_sejour_delete') ;
 
 Route::get('/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces') ;

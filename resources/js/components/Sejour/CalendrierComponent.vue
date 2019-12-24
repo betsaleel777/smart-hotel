@@ -2,7 +2,7 @@
 <div class="">
     <FullCalendar @eventClick="handleEventClick" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :weekends="true" />
 
-    <b-modal @hidden="resetModal" @ok="handleOk" id="modal">
+    <b-modal @hidden="resetModal" @ok="saveEvent" id="modal">
         <div class="form-group">
             <label for="nom">Nom:</label>
             <input class="form-control" id="nom" type="text" v-model="client.nom">
@@ -43,20 +43,6 @@
             <input class="form-control" id="nom" type="text" v-model="client.nom">
             <label for="prenom">Prenom:</label>
             <input class="form-control" id="prenom" type="text" v-model="client.prenom">
-            <label for="type">Piece:</label>
-            <b-form-select v-model="client.piece">
-                <option id="type" v-for="typePiece in typePieces" :key="typePiece.id" :value="typePiece.id">{{typePiece.libelle}}</option>
-            </b-form-select>
-            <label for="batiment">Batiments:</label>
-            <b-form-select @change="getChambres" id="batiment" v-model="batiment">
-                <option v-for="bat in batiments" :key="bat.id" :value="bat.id">{{bat.libelle}}</option>
-            </b-form-select>
-            <label for="chambre">Ancienne Chambre:</label>
-            <p>{{onUse.libelle}}</p>
-            <label for="chambre">Nouvelle Chambre:</label>
-            <b-form-select id="chambre" v-model="chambre">
-                <option v-for="room in chambres" :key="room.id" :value="room.id">{{room.libelle}}</option>
-            </b-form-select>
             <label for="remise">Remise:</label>
             <b-form-select id="remise" class="form-control" v-model="remise">
                 <option v-for="remise in pourcentages" :key="remise.valeur" :value="remise.valeur">{{remise.libelle}}</option>
@@ -65,14 +51,21 @@
             <b-form-select id="avance" v-model="avance">
                 <option v-for="avance in pourcentages" :key="avance.valeur" :value="avance.valeur">{{avance.libelle}}</option>
             </b-form-select>
-            <label for="numero">Numero de la pièce:</label>
-            <input class="form-control" id="numero" type="text" v-model="client.numero">
-            <label for="contact">Contact du client:</label>
-            <input class="form-control" id="contact" type="text" v-model="client.contact">
             <label for="debut">Debut:</label>
             <input id="debut" v-model="timeInterval.debut" type="text" class="form-control">
             <label for="contact">Fin:</label>
             <input id="fin" v-model="timeInterval.fin" type="text" class="form-control">
+            <div class="row form-group">
+                <div class="col-md-4">
+                    <button @click="liberer" class="btn btn-light"><i class="fas fa-door-open"></i>libération</button>
+                </div>
+                <div class="col-md-4">
+                    <button @click="supprimer" class="btn btn-light"><i class="fas fa-trash"></i>suppression</button>
+                </div>
+                <div class="col-md-4">
+                    <button @click="runRestaurantPage" class="btn btn-light"><i class="fas fa-drumstick-bite"></i>restauration</button>
+                </div>
+            </div>
         </div>
     </b-modal>
 </div>
@@ -123,16 +116,15 @@ export default {
             batiment: null,
             typePieces: null,
             delais: null,
-            onUse: {
-                id: null,
-                libelle: null
-            }
         }
     },
     mounted() {
         this.getEvents()
     },
     methods: {
+        runRestaurantPage() {
+            location.href = '/home/restauration/add/' + this.idSejourAttribution
+        },
         handleSelect(info) {
             const end = moment(info.endStr).subtract(1, 'days')
             const start = moment(info.startStr)
@@ -153,8 +145,6 @@ export default {
             let {
                 event
             } = info
-            let realEnd = moment(event.end).subtract(1, 'days')
-            //console.log(moment().isBefore(realEnd));
             this.idSejourAttribution = event.id
             this.getType()
             this.getBatiments()
@@ -223,7 +213,6 @@ export default {
                     calebasse.backgroundColor = this.randomColor()
                     return calebasse
                 })
-
             }).catch((err) => {
                 console.log(err);
             })
@@ -235,31 +224,78 @@ export default {
                     sejour_linked
                 } = response.data.infos
                 let {
-                    chambre_linked,
                     client_linked
                 } = sejour_linked
                 this.client.nom = client_linked.nom
                 this.client.prenom = client_linked.prenom
-                this.client.contact = client_linked.contact
-                this.client.numero = client_linked.numero_piece
                 this.timeInterval.debut = sejour_linked.debut
                 this.timeInterval.fin = sejour_linked.fin
-                this.client.piece = client_linked.piece
-                this.batiment = chambre_linked.batiment
                 this.chambres = this.getChambres()
-                this.onUse.id = chambre_linked.id
-                this.onUse.libelle = chambre_linked.libelle
                 this.remise = encaissement.remise / 100
                 this.avance = encaissement.avance / 100
             }).catch((error) => {
                 console.log(error)
             })
         },
+        liberer() {
+            axios.post('/api/sejour/liberer', {
+                attribution: this.idSejourAttribution
+            }).then((response) => {
+                const chambre = response.data.chambre
+                const message = `la chmabre ${chambre.libelle} a été libérée avec succès !!`
+                this.getEvents()
+                this.$awn.success(message)
+            }).catch((error) => {
+                console.log(error);
+            })
+
+        },
+        supprimer() {
+            axios.post('/api/sejour/supprimer', {
+                attribution: this.idSejourAttribution
+            }).then((response) => {
+                const {chambre} = response.data
+                const {client} = response.data
+                const {sejour} = response.data
+                const message = `la réservation du client:${client.nom} ${client.prenom}
+                                 pour la chambre ${chambre.libelle}, réservée du
+                                 ${sejour.debut} midi à ${sejour.fin} midi a été supprimée avec succès!!`
+                this.getEvents()
+                this.$awn.success(message)
+            }).catch((error) => {
+                console.log(error);
+            })
+
+        },
         updateEvent() {
-            //la méthode à utiliser pour lancer une modification des évenement
+            const end = moment(this.timeInterval.fin)
+            const start = moment(this.timeInterval.debut)
+            this.delais = end.diff(start, 'days')
+            if (this.delais === 0) {
+                this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage')
+            }
+            axios.post('/api/sejour/update', {
+                nom: this.client.nom,
+                prenom: this.client.prenom,
+                debut: this.timeInterval.debut,
+                fin: this.timeInterval.fin,
+                attribution: this.idSejourAttribution,
+                remise: this.remise,
+                avance: this.avance,
+                delais: this.delais,
+                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+            }).then((response) => {
+                    const message =
+                    `la chambre ${response.data.chambre.libelle} a été attribuée
+                     du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
+                     client ${this.client.nom} ${this.client.prenom}`
+                    this.getEvents()
+                    this.$awn.success(message)
+            }).catch((err) => {
+                console.log(err)
+            })
         },
         saveEvent() {
-            console.log(document.querySelector("meta[name='csrf-token']").getAttribute('content'));
             axios.post('/api/sejour/add', {
                 nom: this.client.nom,
                 prenom: this.client.prenom,
@@ -281,24 +317,15 @@ export default {
                 if (errors) {
                     console.log(errors);
                 } else {
-                    this.$bvModal.hide('modal')
-                    const message =
-                        `la chambre ${response.data.chambre.libelle} a été attribuée
-                  du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
-                  client ${this.client.nom} ${this.client.prenom}`
+                    const message =`la chambre ${response.data.chambre.libelle} a été attribuée
+                                    du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
+                                    client ${this.client.nom} ${this.client.prenom}`
                     this.getEvents()
                     this.$awn.success(message)
                 }
             }).catch((err) => {
                 console.log(err)
             })
-        },
-        handleOk() {
-            if (this.idSejourAttribution) {
-                this.updateEvent()
-            } else {
-                this.saveEvent()
-            }
         },
         resetModal() {
             this.client.nom = null
@@ -314,6 +341,7 @@ export default {
             this.message.net = null
             this.timeInterval.debut = null
             this.timeInterval.fin = null
+            this.idSejourAttribution = null
         },
         prixNet() {
 

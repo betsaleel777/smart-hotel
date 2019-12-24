@@ -24,12 +24,24 @@ class Chambre extends Model
                       'type' => 'le choix du type de batiment est requis',
                      ] ;
 
-    public function statutChange(){
+    public function statutChange():void{
       if($this->attributes['statut'] === 'occupée'){
         $this->attributes['statut'] = 'inoccupée' ;
       }else{
         $this->attributes['statut'] = 'occupée' ;
       }
+    }
+
+    public function setClosed():void{
+      $this->attributes['statut'] = 'occupée' ;
+    }
+
+    public function setReserved():void{
+      $this->attributes['statut'] = 'reservée' ;
+    }
+
+    public function setOpen():void{
+      $this->attributes['statut'] = 'inoccupée' ;
     }
 
     public function batimentLinked(){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\AttributionSejour ;
+use App\LiberationSejour ;
 use App\Sejour ;
 use App\Client ;
 use App\Chambre ;
@@ -52,7 +53,7 @@ class AttributionsSejoursController extends Controller
 
     public function getAll()
     {
-        $attributions = AttributionSejour::with('sejourLinked.clientLinked')->get()->all() ;
+        $attributions = AttributionSejour::with('sejourLinked.clientLinked')->whereNull('etat')->get()->all() ;
 
         return response()->json(['events' => $attributions]) ;
     }
@@ -63,5 +64,53 @@ class AttributionsSejoursController extends Controller
                                 ->findOrfail($attribution) ;
 
       return response()->json(['infos' => $att]) ;
+    }
+
+    public function update(Request $request){
+      $attribution = AttributionSejour::findOrFail($request->attribution) ;
+      $sejour = Sejour::findOrFail($attribution->sejour);
+      $sejour->debut = $request->debut ;
+      $sejour->fin = $request->fin ;
+      $sejour->save() ;
+      $encaissement = Encaissement::where('sejour', $request->attribution)->get()->all()[0] ;
+      $encaissement->remise = $request->remise*100 ;
+      $encaissement->avance = $request->avance*100 ;
+      $encaissement->quantite = $request->delais ;
+      $chambre = Chambre::with('typeLinked')->findOrFail($sejour->chambre) ;
+      $encaissement->prix_unitaire = $chambre->typeLinked->cout_reservation  ;
+      $encaissement->save() ;
+      $client = Client::findOrFail($sejour->client) ;
+      $client->nom = $request->nom ;
+      $client->prenom = $request->prenom ;
+      $client->save() ;
+
+      return response()->json(['chambre' => $chambre]) ;
+    }
+
+    public function liberer(Request $request){
+      //changer état attribution sejour
+      $attribution = AttributionSejour::with('sejourLinked')->findOrFail($request->attribution) ;
+      $attribution->etat = 'libérer' ;
+      $attribution->save() ;
+      //enregistré libération
+      LiberationSejour::create($request->all()) ;
+      //changé de chambre status
+      $chambre = Chambre::findOrFail($attribution->sejourLinked->chambre) ;
+      $chambre->statutChange() ;
+      $chambre->save() ;
+      return response()->json(['chambre' => $chambre]) ;
+    }
+
+    public function delete(Request $request){
+      $attribution = AttributionSejour::findOrFail($request->attribution) ;
+      $sejour = Sejour::findOrFail($attribution->sejour) ;
+      $encaissement = Encaissement::where('sejour', $request->attribution)->get()->all()[0] ;
+      $client = Client::findOrFail($sejour->client) ;
+      $chambre = Chambre::findOrFail($sejour->chambre) ;
+      $encaissement->delete() ;
+      $sejour->delete() ;
+      $attribution->delete() ;
+      $chambre->statutChange() ;
+      return response()->json(['client' => $client,'chambre' => $chambre,'sejour' => $sejour]) ;
     }
 }

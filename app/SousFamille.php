@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SousFamille extends Model
 {
+  use SoftDeletes ;
   protected $fillable = ['libelle','famille'];
   const RULES = ['libelle' => 'required|max:100',
                  'famille' => 'required|numeric'] ;

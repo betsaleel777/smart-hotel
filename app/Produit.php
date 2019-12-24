@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Produit extends Model
 {
+    use SoftDeletes ;
     protected $fillable = ['libelle','sous_famille','reference','seuil','image','prix'] ;
     const RULES = [
                    'libelle' => 'required|max:100' ,

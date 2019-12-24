@@ -84,4 +84,7 @@ Route::prefix('home')->group(function () {
   Route::get('/client/index', 'ClientsController@index')->name('client_index') ;
   Route::get('/client/edit/{id}', 'ClientsController@edit')->name('client_edit') ;
   Route::post('/client/update/{id}', 'ClientsController@update')->name('client_update') ;
+
+  Route::get('/restaurations','RestaurationsController@index')->name('resto_index') ;
+  Route::get('/restauration/add/{attribution}','RestaurationsController@add')->name('resto_add') ;
 });

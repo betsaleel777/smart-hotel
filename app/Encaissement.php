@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Encaissement extends Model
 {
+    use SoftDeletes ;
     protected $fillable = ['passage_nature','quantite','prix_unitaire','remise','avance','reference','sejour','client','passage'] ;
 
     public function immatriculer():void{

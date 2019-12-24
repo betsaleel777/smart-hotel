@@ -15092,13 +15092,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -15139,17 +15132,16 @@ __webpack_require__.r(__webpack_exports__);
       batiments: null,
       batiment: null,
       typePieces: null,
-      delais: null,
-      onUse: {
-        id: null,
-        libelle: null
-      }
+      delais: null
     };
   },
   mounted: function mounted() {
     this.getEvents();
   },
   methods: {
+    runRestaurantPage: function runRestaurantPage() {
+      location.href = '/home/restauration/add/' + this.idSejourAttribution;
+    },
     handleSelect: function handleSelect(info) {
       var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.endStr).subtract(1, 'days');
       var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.startStr);
@@ -15169,8 +15161,6 @@ __webpack_require__.r(__webpack_exports__);
       //si la date de fin n'est pas déjà passé
       //changer la valeur de idSejourAttribution
       var event = info.event;
-      var realEnd = moment__WEBPACK_IMPORTED_MODULE_1___default()(event.end).subtract(1, 'days'); //console.log(moment().isBefore(realEnd));
-
       this.idSejourAttribution = event.id;
       this.getType();
       this.getBatiments();
@@ -15257,31 +15247,86 @@ __webpack_require__.r(__webpack_exports__);
         var _response$data$infos = response.data.infos,
             encaissement = _response$data$infos.encaissement,
             sejour_linked = _response$data$infos.sejour_linked;
-        var chambre_linked = sejour_linked.chambre_linked,
-            client_linked = sejour_linked.client_linked;
+        var client_linked = sejour_linked.client_linked;
         _this6.client.nom = client_linked.nom;
         _this6.client.prenom = client_linked.prenom;
-        _this6.client.contact = client_linked.contact;
-        _this6.client.numero = client_linked.numero_piece;
         _this6.timeInterval.debut = sejour_linked.debut;
         _this6.timeInterval.fin = sejour_linked.fin;
-        _this6.client.piece = client_linked.piece;
-        _this6.batiment = chambre_linked.batiment;
         _this6.chambres = _this6.getChambres();
-        _this6.onUse.id = chambre_linked.id;
-        _this6.onUse.libelle = chambre_linked.libelle;
         _this6.remise = encaissement.remise / 100;
         _this6.avance = encaissement.avance / 100;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    updateEvent: function updateEvent() {//la méthode à utiliser pour lancer une modification des évenement
-    },
-    saveEvent: function saveEvent() {
+    liberer: function liberer() {
       var _this7 = this;
 
-      console.log(document.querySelector("meta[name='csrf-token']").getAttribute('content'));
+      axios.post('/api/sejour/liberer', {
+        attribution: this.idSejourAttribution
+      }).then(function (response) {
+        var chambre = response.data.chambre;
+        var message = "la chmabre ".concat(chambre.libelle, " a \xE9t\xE9 lib\xE9r\xE9e avec succ\xE8s !!");
+
+        _this7.getEvents();
+
+        _this7.$awn.success(message);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    supprimer: function supprimer() {
+      var _this8 = this;
+
+      axios.post('/api/sejour/supprimer', {
+        attribution: this.idSejourAttribution
+      }).then(function (response) {
+        var chambre = response.data.chambre;
+        var client = response.data.client;
+        var sejour = response.data.sejour;
+        var message = "la r\xE9servation du client:".concat(client.nom, " ").concat(client.prenom, "\n                                 pour la chambre ").concat(chambre.libelle, ", r\xE9serv\xE9e du\n                                 ").concat(sejour.debut, " midi \xE0 ").concat(sejour.fin, " midi a \xE9t\xE9 supprim\xE9e avec succ\xE8s!!");
+
+        _this8.getEvents();
+
+        _this8.$awn.success(message);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    updateEvent: function updateEvent() {
+      var _this9 = this;
+
+      var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(this.timeInterval.fin);
+      var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(this.timeInterval.debut);
+      this.delais = end.diff(start, 'days');
+
+      if (this.delais === 0) {
+        this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage');
+      }
+
+      axios.post('/api/sejour/update', {
+        nom: this.client.nom,
+        prenom: this.client.prenom,
+        debut: this.timeInterval.debut,
+        fin: this.timeInterval.fin,
+        attribution: this.idSejourAttribution,
+        remise: this.remise,
+        avance: this.avance,
+        delais: this.delais,
+        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+      }).then(function (response) {
+        var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                     du:").concat(_this9.timeInterval.debut, " midi au ").concat(_this9.timeInterval.fin, " midi, pour le\n                     client ").concat(_this9.client.nom, " ").concat(_this9.client.prenom);
+
+        _this9.getEvents();
+
+        _this9.$awn.success(message);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    saveEvent: function saveEvent() {
+      var _this10 = this;
+
       axios.post('/api/sejour/add', {
         nom: this.client.nom,
         prenom: this.client.prenom,
@@ -15302,24 +15347,15 @@ __webpack_require__.r(__webpack_exports__);
         if (errors) {
           console.log(errors);
         } else {
-          _this7.$bvModal.hide('modal');
+          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                                    du:").concat(_this10.timeInterval.debut, " midi au ").concat(_this10.timeInterval.fin, " midi, pour le\n                                    client ").concat(_this10.client.nom, " ").concat(_this10.client.prenom);
 
-          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                  du:").concat(_this7.timeInterval.debut, " midi au ").concat(_this7.timeInterval.fin, " midi, pour le\n                  client ").concat(_this7.client.nom, " ").concat(_this7.client.prenom);
+          _this10.getEvents();
 
-          _this7.getEvents();
-
-          _this7.$awn.success(message);
+          _this10.$awn.success(message);
         }
       })["catch"](function (err) {
         console.log(err);
       });
-    },
-    handleOk: function handleOk() {
-      if (this.idSejourAttribution) {
-        this.updateEvent();
-      } else {
-        this.saveEvent();
-      }
     },
     resetModal: function resetModal() {
       this.client.nom = null;
@@ -15335,6 +15371,7 @@ __webpack_require__.r(__webpack_exports__);
       this.message.net = null;
       this.timeInterval.debut = null;
       this.timeInterval.fin = null;
+      this.idSejourAttribution = null;
     },
     prixNet: function prixNet() {
       if (this.message.details) {
@@ -99003,7 +99040,7 @@ var render = function() {
         "b-modal",
         {
           attrs: { id: "modal" },
-          on: { hidden: _vm.resetModal, ok: _vm.handleOk }
+          on: { hidden: _vm.resetModal, ok: _vm.saveEvent }
         },
         [
           _c(
@@ -99313,92 +99350,6 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
-              _vm._v(" "),
-              _c(
-                "b-form-select",
-                {
-                  model: {
-                    value: _vm.client.piece,
-                    callback: function($$v) {
-                      _vm.$set(_vm.client, "piece", $$v)
-                    },
-                    expression: "client.piece"
-                  }
-                },
-                _vm._l(_vm.typePieces, function(typePiece) {
-                  return _c(
-                    "option",
-                    {
-                      key: typePiece.id,
-                      attrs: { id: "type" },
-                      domProps: { value: typePiece.id }
-                    },
-                    [_vm._v(_vm._s(typePiece.libelle))]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "batiment" } }, [
-                _vm._v("Batiments:")
-              ]),
-              _vm._v(" "),
-              _c(
-                "b-form-select",
-                {
-                  attrs: { id: "batiment" },
-                  on: { change: _vm.getChambres },
-                  model: {
-                    value: _vm.batiment,
-                    callback: function($$v) {
-                      _vm.batiment = $$v
-                    },
-                    expression: "batiment"
-                  }
-                },
-                _vm._l(_vm.batiments, function(bat) {
-                  return _c(
-                    "option",
-                    { key: bat.id, domProps: { value: bat.id } },
-                    [_vm._v(_vm._s(bat.libelle))]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "chambre" } }, [
-                _vm._v("Ancienne Chambre:")
-              ]),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(_vm.onUse.libelle))]),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "chambre" } }, [
-                _vm._v("Nouvelle Chambre:")
-              ]),
-              _vm._v(" "),
-              _c(
-                "b-form-select",
-                {
-                  attrs: { id: "chambre" },
-                  model: {
-                    value: _vm.chambre,
-                    callback: function($$v) {
-                      _vm.chambre = $$v
-                    },
-                    expression: "chambre"
-                  }
-                },
-                _vm._l(_vm.chambres, function(room) {
-                  return _c(
-                    "option",
-                    { key: room.id, domProps: { value: room.id } },
-                    [_vm._v(_vm._s(room.libelle))]
-                  )
-                }),
-                0
-              ),
-              _vm._v(" "),
               _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
               _vm._v(" "),
               _c(
@@ -99448,58 +99399,6 @@ var render = function() {
                 0
               ),
               _vm._v(" "),
-              _c("label", { attrs: { for: "numero" } }, [
-                _vm._v("Numero de la pièce:")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.numero,
-                    expression: "client.numero"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "numero", type: "text" },
-                domProps: { value: _vm.client.numero },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "numero", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "contact" } }, [
-                _vm._v("Contact du client:")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.contact,
-                    expression: "client.contact"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "contact", type: "text" },
-                domProps: { value: _vm.client.contact },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "contact", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
               _c("label", { attrs: { for: "debut" } }, [_vm._v("Debut:")]),
               _vm._v(" "),
               _c("input", {
@@ -99546,7 +99445,51 @@ var render = function() {
                     _vm.$set(_vm.timeInterval, "fin", $event.target.value)
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "row form-group" }, [
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-light",
+                      on: { click: _vm.liberer }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-door-open" }),
+                      _vm._v("libération")
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-light",
+                      on: { click: _vm.supprimer }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-trash" }),
+                      _vm._v("suppression")
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-light",
+                      on: { click: _vm.runRestaurantPage }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-drumstick-bite" }),
+                      _vm._v("restauration")
+                    ]
+                  )
+                ])
+              ])
             ],
             1
           )
