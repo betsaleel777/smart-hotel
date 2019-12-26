@@ -40,6 +40,12 @@ class FamillesController extends Controller
       return redirect()->route('famille_index')->with('success',$message) ;
     }
 
+    public function show(int $id){
+      $famille = Famille::with('sous_familles')->findOrFail($id) ;
+      $titre = 'Sous Famille '.$famille->libelle ;
+      return view('parametre.famille.show',compact('famille','titre')) ;
+    }
+
     public function delete(int $id){
       $famille = Famille::findOrFail($id) ;
       $famille->delete() ;

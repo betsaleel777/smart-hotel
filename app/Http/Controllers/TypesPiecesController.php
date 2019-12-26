@@ -52,4 +52,11 @@ class TypesPiecesController extends Controller
       $message = 'la modification du libelle de la pièce a bien été enregistrée' ;
       redirect()->route('type_piece_index')->with('success', $message) ;
     }
+
+    public function delete(int $id){
+      $piece = TypePiece::findOrFail($id) ;
+      $piece->delete() ;
+      $message = 'Le type de pièce:'.$piece->libelle.' a été supprimé avec succès!!' ;
+      return redirect()->route('type_piece_index')->with('success',$message) ;
+    }
 }

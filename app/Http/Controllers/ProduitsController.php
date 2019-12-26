@@ -29,6 +29,20 @@ class ProduitsController extends Controller
       return redirect()->route('produit_index')->with('success',$message) ;
     }
 
+    public function plug(Request $request){
+      $this->validate($request,Produit::RULES,Produit::MESSAGES) ;
+      $produit = new Produit($request->all()) ;
+      if(!empty($request->image)){
+        $imageName = time().'.'.$request->image->getClientOriginalExtension();
+        $request->image->move(public_path('images'), $imageName) ;
+        $produit->image = $imageName ;
+      }
+      $produit->immatriculer() ;
+      $produit->save() ;
+      $message = 'le produit '.$produit->libelle.'a été enregistré avec succès';
+      return redirect()->route('sous_famille_show',$request->sous_famille)->with('success',$message) ;
+    }
+
     public function add(){
        $sous_familles = SousFamille::get()->pluck('libelle','id') ;
        $titre = 'Ajouter Produit' ;
@@ -66,5 +80,11 @@ class ProduitsController extends Controller
        $produit->delete() ;
        $message = 'le produit: '.$produit->libelle.'a été supprimé avec succès!!' ;
        return redirect()->route('produit_index')->with('success',$message) ;
+    }
+
+    public function associer(int $id){
+      $sous_famille = SousFamille::findOrFail($id) ;
+      $titre = 'Associer à '.$sous_famille->libelle ;
+      return view('parametre.produit.plug',compact('titre','sous_famille')) ;
     }
 }

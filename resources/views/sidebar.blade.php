@@ -108,18 +108,6 @@
                                 <p>Familles</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{route('sous_famille_index')}}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Sous Familles</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('produit_index')}}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Produits</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
             </ul>

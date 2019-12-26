@@ -41,7 +41,7 @@ class TypesController extends Controller
 
     public function delete($id){
       $type = Type::findOrFail($id) ;
-      $message = 'Le type "'.$type->libelle.'" a été supprimé avec succes !!' ;
+      $message = 'Le type de chambre"'.$type->libelle.'" a été supprimé avec succes !!' ;
       $type->delete() ;
       return \redirect()->route('type_index')->with('success',$message) ;
     }

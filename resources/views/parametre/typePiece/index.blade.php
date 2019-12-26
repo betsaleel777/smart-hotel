@@ -33,6 +33,7 @@
                 <td>{{$piece->libelle}}</td>
                 <td>
                   <a href="{{route('type_piece_edit',$piece)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
+                  <a href="{{route('type_piece_delete',$piece)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
                 </td>
               </tr>
             @endforeach

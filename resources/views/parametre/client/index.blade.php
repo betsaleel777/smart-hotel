@@ -38,6 +38,7 @@
                 <td>{{$client->numero_piece}}</td>
                 <td>
                   <a href="{{route('client_edit',$client)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
+                  <a href="{{route('client_delete',$client)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
                 </td>
               </tr>
             @endforeach

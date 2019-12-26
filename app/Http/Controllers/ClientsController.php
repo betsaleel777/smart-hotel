@@ -37,4 +37,11 @@ class ClientsController extends Controller
       $message = 'la modification du client '.$client->nom.' '.$client->prenom.' à été enregistrée avec succès !' ;
       return \redirect()->route('client_index')->with('success',$message) ;
     }
+
+    public function delete(int $id){
+      $client = Client::findOrFail($id) ;
+      $client->delete() ;
+      $message = 'Le type de pièce:'.$client->nom.' '.$client->prenom.' a été supprimé avec succès!!' ;
+      return redirect()->route('type_piece_index')->with('success',$message) ;
+    }
 }

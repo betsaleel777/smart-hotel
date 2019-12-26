@@ -46,6 +46,7 @@ Route::prefix('parametre')->group(function () {
   Route::get('/famille/edit/{id}', 'FamillesController@edit')->name('famille_edit') ;
   Route::post('/famille/update/{id}', 'FamillesController@update')->name('famille_update') ;
   Route::get('/famille/delete/{id}', 'FamillesController@delete')->name('famille_delete') ;
+  Route::get('/famille/show/{id}', 'FamillesController@show')->name('famille_show') ;
 
   Route::get('/sous_familles', 'SousFamillesController@index')->name('sous_famille_index') ;
   Route::get('/sous_famille/add', 'SousFamillesController@add')->name('sous_famille_add') ;
@@ -53,10 +54,15 @@ Route::prefix('parametre')->group(function () {
   Route::get('/sous_famille/edit/{id}', 'SousFamillesController@edit')->name('sous_famille_edit') ;
   Route::post('/sous_famille/update/{id}', 'SousFamillesController@update')->name('sous_famille_update') ;
   Route::get('/sous_famille/delete/{id}', 'SousFamillesController@delete')->name('sous_famille_delete') ;
+  Route::get('/sous_famille/show/{id}', 'SousFamillesController@show')->name('sous_famille_show') ;
+  Route::get('/sous_famille/associer/{id}', 'SousFamillesController@associer')->name('sous_famille_associer') ;
+  Route::post('/sous_famille/plug', 'SousFamillesController@plug')->name('sous_famille_plug') ;
 
   Route::get('/produits', 'ProduitsController@index')->name('produit_index') ;
   Route::get('/produit/add', 'ProduitsController@add')->name('produit_add') ;
   Route::post('/produit/store', 'ProduitsController@store')->name('produit_store') ;
+  Route::get('/produit/associer/{id}', 'ProduitsController@associer')->name('produit_associer') ;
+  Route::post('/produit/plug', 'ProduitsController@plug')->name('produit_plug') ;
   Route::get('/produit/edit/{id}', 'ProduitsController@edit')->name('produit_edit') ;
   Route::post('/produit/update/{id}', 'ProduitsController@update')->name('produit_update') ;
   Route::get('/produit/delete/{id}', 'ProduitsController@delete')->name('produit_delete') ;
@@ -79,11 +85,13 @@ Route::prefix('home')->group(function () {
   Route::get('/pieces/add', 'TypesPiecesController@add')->name('type_piece_add') ;
   Route::post('/pieces/store', 'TypesPiecesController@store')->name('type_piece_store') ;
   Route::get('/pieces/edit/{id}', 'TypesPiecesController@edit')->name('type_piece_edit') ;
+  Route::get('/pieces/delete/{id}', 'TypesPiecesController@delete')->name('type_piece_delete') ;
   Route::post('/pieces/update/{id}', 'TypesPiecesController@update')->name('type_piece_update') ;
 
   Route::get('/client/index', 'ClientsController@index')->name('client_index') ;
   Route::get('/client/edit/{id}', 'ClientsController@edit')->name('client_edit') ;
   Route::post('/client/update/{id}', 'ClientsController@update')->name('client_update') ;
+  Route::get('/client/delete/{id}', 'ClientsController@delete')->name('client_delete') ;
 
   Route::get('/restaurations','RestaurationsController@index')->name('resto_index') ;
   Route::get('/restauration/add/{attribution}','RestaurationsController@add')->name('resto_add') ;

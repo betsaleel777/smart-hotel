@@ -27,6 +27,13 @@ class SousFamillesController extends Controller
     return redirect()->route('sous_famille_index')->with('success',$message) ;
   }
 
+  public function plug(Request $request){
+    $this->validate($request,SousFamille::RULES,SousFamille::MESSAGES) ;
+    SousFamille::create($request->all()) ;
+    $message = 'la sous famille '.$request->libelle.' a été enregistrée avec succèss' ;
+    return redirect()->route('famille_show',$request->famille)->with('success',$message) ;
+  }
+
   public function edit(int $id){
     $sous_famille = SousFamille::with('familleLinked')->findOrFail($id) ;
     $familles = Famille::get()->pluck('libelle','id') ;
@@ -49,5 +56,17 @@ class SousFamillesController extends Controller
     $sous_famille->delete() ;
     $message = 'la sous famille: '.$sous_famille->libelle.' a été supprimée avec succès' ;
     return redirect()->route('sous_famille_index')->with('success',$message) ;
+  }
+
+  public function show(int $id){
+    $sous_famille = SousFamille::with('produits')->findOrFail($id) ;
+    $titre = 'Produits de '.$sous_famille->libelle ;
+    return view('parametre.sous_famille.show',compact('titre','sous_famille')) ;
+  }
+
+  public function associer(int $id){
+    $famille = Famille::findOrFail($id) ;
+    $titre = 'Associer à '.$famille->libelle ;
+    return view('parametre.sous_famille.plug',compact('titre','famille')) ;
   }
 }
