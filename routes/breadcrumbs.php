@@ -87,7 +87,82 @@ Breadcrumbs::for('type_piece_edit', function ($trail,$piece) {
     $trail->push('Modifier '.$piece->libelle, route('type_piece_edit',$piece));
 });
 
+//Acceuil > clients
+Breadcrumbs::for('clients',function($trail){
+  $trail->parent('dashboard') ;
+  $trail->push('Clients',route('client_index')) ;
+});
+//Acceuil > clients > ajouter
+Breadcrumbs::for('client_add',function($trail){
+  $trail->parent('clients') ;
+  $trail->push('Ajouter Client',route('client_add')) ;
+});
+//Acceuil > client > edit
+Breadcrumbs::for('client_edit',function($trail,$client){
+  $trail->parent('clients') ;
+  $trail->push('Modifier '.$client->nom,route('client_edit',$client)) ;
+});
 
+//Acceuil > familles
+Breadcrumbs::for('familles',function($trail){
+  $trail->parent('dashboard') ;
+  $trail->push('Familles',route('famille_index')) ;
+});
+//Acceuil > familles > ajouter
+Breadcrumbs::for('famille_add',function($trail){
+  $trail->parent('familles') ;
+  $trail->push('Ajouter Familles',route('famille_add')) ;
+});
+//Acceuil > familles > edit
+Breadcrumbs::for('famille_edit',function($trail,$famille){
+  $trail->parent('familles') ;
+  $trail->push('Modifier '.$famille->libelle,route('famille_edit',$famille)) ;
+});
+//Acceuil > familles > show
+Breadcrumbs::for('famille_show',function($trail,$famille){
+  $trail->parent('familles') ;
+  $trail->push('Détails '.$famille->libelle,route('famille_show',$famille)) ;
+});
+//Acceuil > famille > show >  associer sous famille
+Breadcrumbs::for('sous_famille_associer',function($trail,$famille){
+  $trail->parent('famille_show',$famille) ;
+  $trail->push('Ajouter dans '.$famille->libelle,route('sous_famille_associer',$famille)) ;
+});
+
+
+
+
+//Acceuil > sous_familles
+Breadcrumbs::for('sous_familles',function($trail){
+  $trail->parent('dashboard') ;
+  $trail->push('Sous familles',route('sous_famille_index')) ;
+});
+//Acceuil > sous_familles > add
+Breadcrumbs::for('sous_famille_add',function($trail){
+  $trail->parent('sous_familles') ;
+  $trail->push('Sous familles',route('sous_famille_add')) ;
+});
+//Acceuil > sous_familles > edit
+Breadcrumbs::for('sous_famille_edit',function($trail,$sous_famille){
+  $trail->parent('sous_familles') ;
+  $trail->push('Modifier '.$sous_famille->libelle,route('sous_famille_edit',$sous_famille)) ;
+});
+
+//Acceuil > produits
+Breadcrumbs::for('produits',function($trail){
+  $trail->parent('dashboard') ;
+  $trail->push('Produits',route('produit_index')) ;
+});
+//Acceuil > produits > add
+Breadcrumbs::for('produit_add',function($trail){
+  $trail->parent('produits') ;
+  $trail->push('Ajouter Produit',route('produit_add')) ;
+});
+//Acceuil > produits > edit
+Breadcrumbs::for('produit_edit',function($trail,$produit){
+  $trail->parent('produits') ;
+  $trail->push('Modifier '.$produit->libelle,route('produit_edit',$produit)) ;
+});
 
 
 

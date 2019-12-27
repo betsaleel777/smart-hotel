@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-{{-- {{Breadcrumbs::render('chambre_add')}} --}}
+{{Breadcrumbs::render('sous_famille_edit',$sous_famille)}}
 @endsection
 @section('content')
 <div class="col-md-1"></div>

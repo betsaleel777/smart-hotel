@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-  {{-- {{ Breadcrumbs::render('pieces') }} --}}
+  {{ Breadcrumbs::render('clients') }}
 @endsection
 @section('content')
   <div class="col-lg-12">

@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-  {{-- {{ Breadcrumbs::render('batiments') }} --}}
+  {{ Breadcrumbs::render('famille_show',$famille) }}
 @endsection
 @section('content')
   <div class="col-lg-12">

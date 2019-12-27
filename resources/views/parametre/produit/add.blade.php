@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-{{-- {{Breadcrumbs::render('chambre_add')}} --}}
+{{Breadcrumbs::render('produit_add')}}
 @endsection
 @section('content')
 <div class="col-md-1"></div>

@@ -15227,6 +15227,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       axios.get('/api/sejour/all').then(function (response) {
+        console.log(response.data.events);
         _this5.evenement = response.data.events.map(function (event) {
           var calebasse = {};
           calebasse.id = event.id;
@@ -99031,6 +99032,7 @@ var render = function() {
           events: _vm.evenement,
           plugins: _vm.calendarPlugins,
           selectable: true,
+          eventLimit: true,
           weekends: true
         },
         on: { eventClick: _vm.handleEventClick, select: _vm.handleSelect }

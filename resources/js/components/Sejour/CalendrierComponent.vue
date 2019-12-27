@@ -1,6 +1,6 @@
 <template>
 <div class="">
-    <FullCalendar @eventClick="handleEventClick" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :weekends="true" />
+    <FullCalendar @eventClick="handleEventClick" @select="handleSelect" defaultView="dayGridMonth" :events="evenement" :plugins="calendarPlugins" :selectable="true" :eventLimit="true" :weekends="true" />
 
     <b-modal @hidden="resetModal" @ok="saveEvent" id="modal">
         <div class="form-group">
@@ -204,6 +204,7 @@ export default {
         },
         getEvents() {
             axios.get('/api/sejour/all').then((response) => {
+                console.log(response.data.events);
                 this.evenement = response.data.events.map((event) => {
                     let calebasse = {}
                     calebasse.id = event.id
@@ -254,10 +255,17 @@ export default {
             axios.post('/api/sejour/supprimer', {
                 attribution: this.idSejourAttribution
             }).then((response) => {
-                const {chambre} = response.data
-                const {client} = response.data
-                const {sejour} = response.data
-                const message = `la réservation du client:${client.nom} ${client.prenom}
+                const {
+                    chambre
+                } = response.data
+                const {
+                    client
+                } = response.data
+                const {
+                    sejour
+                } = response.data
+                const message =
+                    `la réservation du client:${client.nom} ${client.prenom}
                                  pour la chambre ${chambre.libelle}, réservée du
                                  ${sejour.debut} midi à ${sejour.fin} midi a été supprimée avec succès!!`
                 this.getEvents()
@@ -285,12 +293,12 @@ export default {
                 delais: this.delais,
                 _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
-                    const message =
+                const message =
                     `la chambre ${response.data.chambre.libelle} a été attribuée
                      du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
                      client ${this.client.nom} ${this.client.prenom}`
-                    this.getEvents()
-                    this.$awn.success(message)
+                this.getEvents()
+                this.$awn.success(message)
             }).catch((err) => {
                 console.log(err)
             })
@@ -317,7 +325,8 @@ export default {
                 if (errors) {
                     console.log(errors);
                 } else {
-                    const message =`la chambre ${response.data.chambre.libelle} a été attribuée
+                    const message =
+                        `la chambre ${response.data.chambre.libelle} a été attribuée
                                     du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
                                     client ${this.client.nom} ${this.client.prenom}`
                     this.getEvents()
