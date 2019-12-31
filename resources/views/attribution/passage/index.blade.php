@@ -9,7 +9,7 @@
 @php
 $badge = ['inoccupée' => 'badge badge-success' ,
           'occupée' => 'badge badge-danger',
-          'réservée' => 'badge badge-primary']
+          'reservée' => 'badge badge-primary']
 @endphp
 <div class="col-lg-12">
     <div class="card">
@@ -80,5 +80,5 @@ $badge = ['inoccupée' => 'badge badge-success' ,
         $('#attr').DataTable();
     });
 </script>
-<script src="../../js/app.js" type="text/javascript"></script>
+<script src="{{asset('js/app.js')}}" type="text/javascript"></script>
 @endsection

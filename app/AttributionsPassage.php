@@ -31,4 +31,8 @@ class AttributionsPassage extends Model
       return $this->hasOne(Encaissement::class,'passage') ;
     }
 
+    public function produits(){
+      return $this->belongsToMany(AttributionSejour::class,'restaurations' ,'produit','passage')->withPivot('quantite','etat') ;
+    }
+
 }

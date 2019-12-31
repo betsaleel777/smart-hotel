@@ -43,7 +43,7 @@ class AttributionsPassagesController extends Controller
       $liberation->attribution = $attribution->id ;
       $liberation->save() ;
       $chambre = Chambre::findOrFail($attribution->passageLinked->chambre) ;
-      $chambre->statutChange() ;
+      $chambre->setOpen() ;
       $chambre->save() ;
       $message = 'la chambre '.$chambre->libelle.'a été libérée avec succès !!' ;
       return redirect()->route('attributions_pass_index')->with('success',$message) ;

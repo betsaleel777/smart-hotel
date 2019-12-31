@@ -36,7 +36,7 @@ class AttributionsSejoursController extends Controller
         $attribution->batiment = $request->batiment ;
         $attribution->save() ;
         $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
-        $chambre->statutChange() ;
+        $chambre->setReserved() ;
         $chambre->save() ;
         $encaissement = new Encaissement() ;
         $encaissement->remise = $request->remise*100 ;
@@ -96,7 +96,7 @@ class AttributionsSejoursController extends Controller
       LiberationSejour::create($request->all()) ;
       //changé de chambre status
       $chambre = Chambre::findOrFail($attribution->sejourLinked->chambre) ;
-      $chambre->statutChange() ;
+      $chambre->setOpen() ;
       $chambre->save() ;
       return response()->json(['chambre' => $chambre]) ;
     }
@@ -110,7 +110,7 @@ class AttributionsSejoursController extends Controller
       $encaissement->delete() ;
       $sejour->delete() ;
       $attribution->delete() ;
-      $chambre->statutChange() ;
+      $chambre->setOpen() ;
       return response()->json(['client' => $client,'chambre' => $chambre,'sejour' => $sejour]) ;
     }
 }

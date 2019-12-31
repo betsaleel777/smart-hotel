@@ -32,3 +32,9 @@ Route::post('/sejour/liberer', 'AttributionsSejoursController@liberer')->name('a
 Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete')->name('attributions_sejour_delete') ;
 
 Route::get('/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces') ;
+
+Route::get('/produit/all', 'ProduitsController@getAll')->name('all_produit') ;
+Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit') ;
+
+Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas') ;
+Route::post('/restauration/save', 'RestaurationsController@saveProformas')->name('save_proformas') ;

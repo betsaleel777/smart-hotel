@@ -1,7 +1,7 @@
 @extends('layouts.default')
-{{-- @section('breadcrumb')
-  {{Breadcrumbs::render('attributions')}}
-@endsection --}}
+@section('breadcrumb')
+  {{Breadcrumbs::render('sejours')}}
+@endsection
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -15,5 +15,5 @@
 </div>
 @endsection
 @section('script')
-<script src="../../js/app.js" type="text/javascript"></script>
+<script src="{{asset('js/app.js')}}" type="text/javascript"></script>
 @endsection

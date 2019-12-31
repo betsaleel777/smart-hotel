@@ -58,7 +58,7 @@ class ApiPassageController extends Controller
         }
         $passage->save() ;
         //modification du statut de la chambre deviendra "occupée"
-        $chambre->statutChange() ;
+        $chambre->setClosed() ;
         $chambre->save() ;
         //insertion de l'attribution de passage dans la table attributions_passages
         $attribution = new AttributionsPassage() ;
@@ -98,7 +98,7 @@ class ApiPassageController extends Controller
         $liberation->save() ;
         //changement du statut de la chambre
         $chambre = Chambre::findOrFail($chambre) ;
-        $chambre->statutChange() ;
+        $chambre->setOpen() ;
         $chambre->save() ;
 
         return response()->json([$attribution->id]) ;

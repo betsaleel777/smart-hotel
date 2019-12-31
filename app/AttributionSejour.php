@@ -30,4 +30,8 @@ class AttributionSejour extends Model
     public function encaissement(){
       return $this->hasOne(Encaissement::class,'sejour') ;
     }
+
+    public function produits(){
+        return $this->belongsToMany(Produit::class,'restaurations' ,'sejour','produit')->withPivot('quantite','etat')->withTimestamps() ;
+    }
 }

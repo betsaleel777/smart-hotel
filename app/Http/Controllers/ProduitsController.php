@@ -87,4 +87,16 @@ class ProduitsController extends Controller
       $titre = 'Associer à '.$sous_famille->libelle ;
       return view('parametre.produit.plug',compact('titre','sous_famille')) ;
     }
+
+    //-------------------------------- api function ----------------------------------------------
+    public function getAll(){
+      $produits = Produit::select('id','libelle')->get()->all() ;
+      return response()->json(['products' => $produits]) ;
+    }
+
+    public function getDetails(Request $request){
+      $produit = Produit::with('sous_familleLinked')->findOrFail($request->produit) ;
+      $produit->image = asset('images').'/'.$produit->image ;
+      return response()->json(['produit' => $produit]) ;
+    }
 }

@@ -164,6 +164,11 @@ Breadcrumbs::for('produit_edit',function($trail,$produit){
   $trail->push('Modifier '.$produit->libelle,route('produit_edit',$produit)) ;
 });
 
+//Acceuil > sejours
+Breadcrumbs::for('sejours',function($trail){
+  $trail->parent('dashboard') ;
+  $trail->push('Sejours & reservation',route('attributions_sejour_index')) ;
+});
 
 
 

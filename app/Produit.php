@@ -38,4 +38,12 @@ class Produit extends Model
     public function sous_familleLinked(){
       return $this->belongsTo(SousFamille::class,'sous_famille') ;
     }
+
+    public function sejours(){
+      return $this->belongsToMany(AttributionSejour::class,'restaurations' ,'produit','sejour')->withPivot('quantite','etat') ;
+    }
+
+    public function passages(){
+      return $this->belongsToMany(AttributionsPassage::class,'restaurations','produit','passage')->withPivot('quantite','etat') ;
+    }
 }
