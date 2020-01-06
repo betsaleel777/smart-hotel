@@ -10,9 +10,9 @@
         </ul>
       </b-card-text>
       <div class="row">
-        <div class="col-md-4"><button @click="saveProforma()"  class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button></div>
-        <div class="col-md-4"><button class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
-        <div class="col-md-4"><button class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> facturer</button></div>
+        <div class="col-md-4"><button @click="saveProforma"  class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button></div>
+        <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
+        <div class="col-md-4"><button @click="facturer" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> facturer</button></div>
       </div>
     </b-card>
   </div>
@@ -38,7 +38,7 @@ export default {
         if(produit && quantite){
           let elt = {}
           let found = false
-          if(this.list){
+          if(this.list.length>0){
             let newTab = this.list.map((line) =>{
               if(line.id === produit.id){
                 line.quantite = Number(line.quantite) + Number(quantite)
@@ -76,18 +76,48 @@ export default {
         this.total = total
       },
       getProformas(){
-        axios.post('/api/restauration/proformas',{client:this.client}).then((response) => {
-           console.log(response.data)
+        axios.post('/api/restauration/proformas',{sejour:this.sejour}).then((response) => {
+           this.list = response.data.proformas
+           this.totaliser()
         }).catch((err) => {
            console.log(err);
         })
       },
       saveProforma(){
-        axios.post('/api/restauration/save',{proformas:this.list,sejour:this.sejour}).then((response) =>{
-          this.$awn.success('la commande vient d\'être enregistrée avec succès!!')
-        }).catch((err) => {
-          console.log(err);
-        })
+        if(this.list.length>0){
+          axios.post('/api/restauration/save',{proformas:this.list,sejour:this.sejour}).then((response) =>{
+            this.$awn.success('la commande vient d\'être enregistrée avec succès!!')
+          }).catch((err) => {
+            console.log(err);
+          })
+        }else{
+          this.$awn.info('aucun produit selectionné')
+        }
+      },
+      supprimer(){
+        if(this.list.length>0){
+          axios.post('/api/restauration/delete',{sejour:this.sejour}).then((response) =>{
+            this.$awn.success('la suppression de la commande vient d\'être éffectuée avec succès!!' )
+            this.list = null
+          }).catch((err) =>{
+            console.log(err);
+          })
+        }else{
+          this.$awn.info('aucune commande de restauration enregistrée')
+        }
+      },
+      facturer(){
+        if(this.list.length>0){
+          axios.post('/api/restauration/facturer',{sejour:this.sejour}).then((response) =>{
+            const {facture} = response.data.facture
+            this.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: '+ facture.reference)
+            this.list = null
+          }).catch((err) =>{
+            console.log(err);
+          })
+        }else{
+            this.$awn.info('aucune commande de restauration enregistrée')
+        }
       }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTableSejours extends Migration
+class AlterTableSejoursPrix extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AlterTableSejours extends Migration
     public function up()
     {
         Schema::table('sejours', function (Blueprint $table) {
-            $table->unsignedBigInteger('client') ;
-            $table->foreign('client')->references('id')->on('clients')->onDelete('cascade') ;
+          $table->unsignedMediumInteger('prix')->nullable() ;
         });
     }
 

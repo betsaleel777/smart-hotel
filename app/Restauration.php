@@ -11,6 +11,11 @@ class Restauration extends Model
     public function sejourLinked(){
       return $this->belongsTo(AttributionSejour::class,'sejour') ;
     }
+
+    public function produitLinked(){
+      return $this->belongsTo(Produit::class,'produit') ;
+    }
+
     public function passageLinked(){
       return $this->belongsTo(AttributionsPassage::class,'passage') ;
     }

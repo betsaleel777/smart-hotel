@@ -15103,7 +15103,7 @@ __webpack_require__.r(__webpack_exports__);
         var elt = {};
         var found = false;
 
-        if (_this.list) {
+        if (_this.list.length > 0) {
           var newTab = _this.list.map(function (line) {
             if (line.id === produit.id) {
               line.quantite = Number(line.quantite) + Number(quantite);
@@ -15147,25 +15147,69 @@ __webpack_require__.r(__webpack_exports__);
       this.total = total;
     },
     getProformas: function getProformas() {
+      var _this2 = this;
+
       axios.post('/api/restauration/proformas', {
-        client: this.client
+        sejour: this.sejour
       }).then(function (response) {
-        console.log(response.data);
+        _this2.list = response.data.proformas;
+
+        _this2.totaliser();
       })["catch"](function (err) {
         console.log(err);
       });
     },
     saveProforma: function saveProforma() {
-      var _this2 = this;
+      var _this3 = this;
 
-      axios.post('/api/restauration/save', {
-        proformas: this.list,
-        sejour: this.sejour
-      }).then(function (response) {
-        _this2.$awn.success('la commande vient d\'être enregistrée avec succès!!');
-      })["catch"](function (err) {
-        console.log(err);
-      });
+      if (this.list.length > 0) {
+        axios.post('/api/restauration/save', {
+          proformas: this.list,
+          sejour: this.sejour
+        }).then(function (response) {
+          _this3.$awn.success('la commande vient d\'être enregistrée avec succès!!');
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      } else {
+        this.$awn.info('aucun produit selectionné');
+      }
+    },
+    supprimer: function supprimer() {
+      var _this4 = this;
+
+      if (this.list.length > 0) {
+        axios.post('/api/restauration/delete', {
+          sejour: this.sejour
+        }).then(function (response) {
+          _this4.$awn.success('la suppression de la commande vient d\'être éffectuée avec succès!!');
+
+          _this4.list = null;
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      } else {
+        this.$awn.info('aucune commande de restauration enregistrée');
+      }
+    },
+    facturer: function facturer() {
+      var _this5 = this;
+
+      if (this.list.length > 0) {
+        axios.post('/api/restauration/facturer', {
+          sejour: this.sejour
+        }).then(function (response) {
+          var facture = response.data.facture.facture;
+
+          _this5.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: ' + facture.reference);
+
+          _this5.list = null;
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      } else {
+        this.$awn.info('aucune commande de restauration enregistrée');
+      }
     }
   }
 }); // arranger le style des listes
@@ -15514,17 +15558,11 @@ __webpack_require__.r(__webpack_exports__);
         delais: this.delais,
         _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
       }).then(function (response) {
-        var errors = response.data.errors;
+        var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                                    du:").concat(_this10.timeInterval.debut, " midi au ").concat(_this10.timeInterval.fin, " midi, pour le\n                                    client ").concat(_this10.client.nom, " ").concat(_this10.client.prenom);
 
-        if (errors) {
-          console.log(errors);
-        } else {
-          var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                                    du:").concat(_this10.timeInterval.debut, " midi au ").concat(_this10.timeInterval.fin, " midi, pour le\n                                    client ").concat(_this10.client.nom, " ").concat(_this10.client.prenom);
+        _this10.getEvents();
 
-          _this10.getEvents();
-
-          _this10.$awn.success(message);
-        }
+        _this10.$awn.success(message);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -99330,11 +99368,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-primary",
-                  on: {
-                    click: function($event) {
-                      return _vm.saveProforma()
-                    }
-                  }
+                  on: { click: _vm.saveProforma }
                 },
                 [
                   _c("i", { staticClass: "fas fa-file-invoice" }),
@@ -99344,17 +99378,25 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4" }, [
-              _c("button", { staticClass: "btn btn-danger" }, [
-                _c("i", { staticClass: "fas fa-trash-alt" }),
-                _vm._v(" supprimer")
-              ])
+              _c(
+                "button",
+                { staticClass: "btn btn-danger", on: { click: _vm.supprimer } },
+                [
+                  _c("i", { staticClass: "fas fa-trash-alt" }),
+                  _vm._v(" supprimer")
+                ]
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4" }, [
-              _c("button", { staticClass: "btn btn-success" }, [
-                _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
-                _vm._v(" facturer")
-              ])
+              _c(
+                "button",
+                { staticClass: "btn btn-success", on: { click: _vm.facturer } },
+                [
+                  _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
+                  _vm._v(" facturer")
+                ]
+              )
             ])
           ])
         ],

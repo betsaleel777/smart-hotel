@@ -38,3 +38,4 @@ Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produi
 
 Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas') ;
 Route::post('/restauration/save', 'RestaurationsController@saveProformas')->name('save_proformas') ;
+Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas') ;

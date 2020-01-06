@@ -319,19 +319,12 @@ export default {
                 delais: this.delais,
                 _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
-                let {
-                    errors
-                } = response.data
-                if (errors) {
-                    console.log(errors);
-                } else {
                     const message =
                         `la chambre ${response.data.chambre.libelle} a été attribuée
                                     du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
                                     client ${this.client.nom} ${this.client.prenom}`
                     this.getEvents()
                     this.$awn.success(message)
-                }
             }).catch((err) => {
                 console.log(err)
             })

@@ -21,6 +21,7 @@ class AttributionsSejoursController extends Controller
 
     public function add(Request $request)
     {
+        $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
         $client = new Client() ;
         $client->nom = $request->nom ;
         $client->prenom = $request->prenom ;
@@ -30,12 +31,12 @@ class AttributionsSejoursController extends Controller
         $client->save() ;
         $sejour = new Sejour($request->all()) ;
         $sejour->client = $client->id ;
+        $sejour->prix = $chambre->typeLinked->cout_reservation ;
         $sejour->save() ;
         $attribution = new AttributionSejour() ;
         $attribution->sejour = $sejour->id ;
         $attribution->batiment = $request->batiment ;
         $attribution->save() ;
-        $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
         $chambre->setReserved() ;
         $chambre->save() ;
         $encaissement = new Encaissement() ;
