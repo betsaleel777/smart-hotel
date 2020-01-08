@@ -32,6 +32,6 @@ class AttributionSejour extends Model
     }
 
     public function produits(){
-        return $this->belongsToMany(Produit::class,'restaurations' ,'sejour','produit')->withPivot('quantite','etat')->withTimestamps() ;
+        return $this->belongsToMany(Produit::class,'restaurations' ,'sejour','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
     }
 }

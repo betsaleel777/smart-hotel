@@ -39,11 +39,31 @@ class RestaurationsController extends Controller
       $attribution = AttributionSejour::findOrFail($request->sejour) ;
       $synchrone = [] ;
       foreach ($request->proformas as $proforma) {
-        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite']]] ;
+        $produit = Produit::findOrFail($proforma['id']) ;
+        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix ]] ;
         $synchrone += $calebasse ;
       }
       $attribution->produits()->sync($synchrone) ;
       return response()->json([$synchrone]) ;
+    }
+
+    public function passageFacturePdf(int $attribution){
+
+    }
+
+    public function passageProformaPdf(int $attribution){
+
+    }
+
+    public function sejourProformaPdf(int $attribution){
+      $attribution = AttributionSejour::with('encaissement','produits','sejourLinked.clientLinked.pieceLinked','sejourLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
+      $pdf = PDF::loadView('restauration.sejour.proforma',compact('attribution')) ;
+      $nom = time().'proforma.pdf' ;
+      return $pdf->download($nom) ;
+    }
+
+    public function sejourFacturePdf(int $attribution){
+
     }
 
     public function delete(Request $request){

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restauration extends Model
 {
-    protected $fillable = ['quantite','sejour','passage','produit','etat'] ;
+    protected $fillable = ['quantite','sejour','passage','produit','etat','prix'] ;
 
     public function sejourLinked(){
       return $this->belongsTo(AttributionSejour::class,'sejour') ;
