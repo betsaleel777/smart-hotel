@@ -15081,6 +15081,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -15199,7 +15208,7 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/api/restauration/facturer', {
           sejour: this.sejour
         }).then(function (response) {
-          var facture = response.data.facture.facture;
+          var facture = response.data.facture;
 
           _this5.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: ' + facture.reference);
 
@@ -15210,12 +15219,12 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.$awn.info('aucune commande de restauration enregistrée');
       }
-    }
+    },
+    proformaPdf: function proformaPdf() {},
+    facturerPdf: function facturerPdf() {}
   }
 }); // arranger le style des listes
 // envoyer le client en props
-// utiliser la table restauration comme pivot laravel model config
-//
 
 /***/ }),
 
@@ -99333,49 +99342,116 @@ var render = function() {
           attrs: {
             "border-variant": "warning",
             header: "total:" + _vm.total,
-            footer: "total:" + _vm.total,
-            align: "center"
+            footer: "total:" + _vm.total
           }
         },
         [
           _c("b-card-text", [
             _c(
               "ul",
+              { staticClass: "list-group list-group-flush" },
               _vm._l(_vm.list, function(line) {
-                return _c("li", { key: line.id }, [
-                  _vm._v(_vm._s(line.libelle + ":") + "\n           "),
-                  _c("strong", [
-                    _vm._v(_vm._s(line.prix + "x" + line.quantite))
-                  ]),
-                  _vm._v(" "),
-                  _c("i", {
-                    staticClass: "red fas fa-trash",
-                    on: {
-                      click: function($event) {
-                        return _vm.removeIt(line.id)
-                      }
-                    }
-                  })
-                ])
+                return _c(
+                  "li",
+                  { key: line.id, staticClass: "list-group-item" },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _vm._v(_vm._s(line.libelle + " "))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c("strong", [
+                          _vm._v(_vm._s(line.prix + "x" + line.quantite))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-1" }, [
+                        _c("button", { staticClass: "btn btn-danger btn-sm" }, [
+                          _c("i", {
+                            staticClass: "fas fa-trash-alt",
+                            on: {
+                              click: function($event) {
+                                return _vm.removeIt(line.id)
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    ])
+                  ]
+                )
               }),
               0
             )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-md-4" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  on: { click: _vm.saveProforma }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-file-invoice" }),
-                  _vm._v(" proforma")
-                ]
-              )
-            ]),
+            _c(
+              "div",
+              {
+                staticClass: " btn-group-vertical col-md-4",
+                attrs: { role: "group" }
+              },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    on: { click: _vm.saveProforma }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-file-invoice" }),
+                    _vm._v(" proforma")
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-warning",
+                    on: { click: _vm.proformaPdf }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-print" }),
+                    _vm._v(" exporter pdf")
+                  ]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "btn-group-vertical col-md-4",
+                attrs: { role: "group" }
+              },
+              [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    on: { click: _vm.facturer }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
+                    _vm._v(" facturer")
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-warning",
+                    on: { click: _vm.facturerPdf }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-print" }),
+                    _vm._v(" exporter pdf")
+                  ]
+                )
+              ]
+            ),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-4" }, [
               _c(
@@ -99384,17 +99460,6 @@ var render = function() {
                 [
                   _c("i", { staticClass: "fas fa-trash-alt" }),
                   _vm._v(" supprimer")
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-4" }, [
-              _c(
-                "button",
-                { staticClass: "btn btn-success", on: { click: _vm.facturer } },
-                [
-                  _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
-                  _vm._v(" facturer")
                 ]
               )
             ])

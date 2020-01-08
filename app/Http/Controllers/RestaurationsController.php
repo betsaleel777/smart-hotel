@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Restauration ;
 use App\AttributionSejour ;
+use App\AttributionsPassage ;
+use PDF;
 
 class RestaurationsController extends Controller
 {
@@ -16,7 +18,13 @@ class RestaurationsController extends Controller
     public function add(int $attribution){
       $titre = 'Plats & Boissons' ;
       $attribution = AttributionSejour::with('sejourLinked')->findOrFail($attribution) ;
-      return \view('restauration.add',compact('titre','attribution')) ;
+      return \view('restauration.sejour.add',compact('titre','attribution')) ;
+    }
+
+    public function new(int $attribution){
+      $titre = 'Plats & Boissons' ;
+      $attribution = AttributionsPassage::with('passageLinked')->findOrFail($attribution) ;
+      return view('restauration.passage.add',compact('titre','attribution')) ;
     }
 
     public function getProformas(Request $request){
@@ -44,6 +52,26 @@ class RestaurationsController extends Controller
       }
       $attribution->produits()->sync($synchrone) ;
       return response()->json([$synchrone]) ;
+    }
+
+    public function passageFacturePdf(int $attribution){
+
+
+    }
+
+    public function passageProformaPdf(int $attribution){
+
+    }
+
+    public function sejourProformaPdf(int $attribution){
+      $attribution = AttributionSejour::with('sejourLinked.clientLinked','sejourLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
+      $pdf = PDF::loadView('restauration.sejour.proforma',compact('attribution')) ;
+      $nom = time().'proforma.pdf' ;
+      return $pdf->download($nom) ;
+    }
+
+    public function sejourFacturePdf(int $attribution){
+
     }
 
     public function delete(Request $request){

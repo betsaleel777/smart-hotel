@@ -95,4 +95,9 @@ Route::prefix('home')->group(function () {
 
   Route::get('/restaurations','RestaurationsController@index')->name('resto_index') ;
   Route::get('/restauration/add/{attribution}','RestaurationsController@add')->name('resto_add') ;
+  Route::get('/restauration/new/{attribution}','RestaurationsController@new')->name('resto_new') ;
+  Route::get('/restauration/sejour/pdf/proforma/{attribution}','RestaurationsController@sejourProformaPdf')->name('resto_sejour_proforma_pdf') ;
+  Route::get('/restauration/sejour/pdf/facture/{attribution}','RestaurationsController@sejourFacturePdf')->name('resto_sejour_facture_pdf') ;
+  Route::get('/restauration/passage/pdf/proforma/{attribution}','RestaurationsController@passageProformaPdf')->name('resto_passage_proforma_pdf') ;
+  Route::get('/restauration/passage/pdf/facture/{attribution}','RestaurationsController@passageFacturePdf')->name('resto_passage_facture_pdf') ;
 });

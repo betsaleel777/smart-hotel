@@ -9,7 +9,8 @@
 @php
 $badge = ['inoccupée' => 'badge badge-success' ,
           'occupée' => 'badge badge-danger',
-          'reservée' => 'badge badge-primary']
+          'reservée' => 'badge badge-primary'
+         ]
 @endphp
 <div class="col-lg-12">
     <div class="card">
@@ -59,6 +60,7 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             <td>
                                 @if (!Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
                                 <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
+                                <a href="{{route('resto_new',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-drumstick-bite"></i></a>
                                 @endif
                                 <a href="{{route('attributions_pass_liberer',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>libérer</a>
                             </td>

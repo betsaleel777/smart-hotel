@@ -1,18 +1,27 @@
 <template>
   <div class="container">
-    <b-card border-variant="warning" :header="`total:${total}`" :footer="`total:${total}`" align="center">
+    <b-card border-variant="warning" :header="`total:${total}`" :footer="`total:${total}`">
       <b-card-text>
-        <ul >
-          <li v-for="line in list" :key="line.id">{{`${line.libelle}:`}}
-             <strong>{{`${line.prix}x${line.quantite}`}}</strong>
-             <i @click="removeIt(line.id)" class="red fas fa-trash"></i>
-           </li>
+        <ul class="list-group list-group-flush" >
+          <li class="list-group-item" v-for="line in list" :key="line.id">
+            <div class="row">
+              <div class="col-md-7">{{`${line.libelle} `}}</div>
+              <div class="col-md-4"><strong>{{`${line.prix}x${line.quantite}`}}</strong></div>
+              <div class="col-md-1"><button class="btn btn-danger btn-sm"><i @click="removeIt(line.id)" class="fas fa-trash-alt"></i></button></div>
+            </div>
+          </li>
         </ul>
       </b-card-text>
       <div class="row">
-        <div class="col-md-4"><button @click="saveProforma"  class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button></div>
+        <div role="group" class=" btn-group-vertical col-md-4">
+          <button @click="saveProforma"  class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button>
+          <button @click="proformaPdf"  class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
+        </div>
+        <div role="group" class="btn-group-vertical col-md-4">
+          <button @click="facturer" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> facturer</button>
+          <button @click="facturerPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
+        </div>
         <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
-        <div class="col-md-4"><button @click="facturer" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> facturer</button></div>
       </div>
     </b-card>
   </div>
@@ -109,7 +118,7 @@ export default {
       facturer(){
         if(this.list.length>0){
           axios.post('/api/restauration/facturer',{sejour:this.sejour}).then((response) =>{
-            const {facture} = response.data.facture
+            const {facture} = response.data
             this.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: '+ facture.reference)
             this.list = null
           }).catch((err) =>{
@@ -118,13 +127,17 @@ export default {
         }else{
             this.$awn.info('aucune commande de restauration enregistrée')
         }
+      },
+      proformaPdf(){
+
+      },
+      facturerPdf(){
+
       }
     }
 }
 // arranger le style des listes
 // envoyer le client en props
-// utiliser la table restauration comme pivot laravel model config
-//
 </script>
 <style>
 

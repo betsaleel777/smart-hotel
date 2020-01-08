@@ -30,9 +30,17 @@ class AttributionsPassagesController extends Controller
     }
 
     public function update(Request $request,int $id){
-      //mofifier le batiment de l'attribution
-      //modifier le passage associé
-      //redirection
+      $attribution = AttributionsPassage::with('passageLinked')->findOrFail($id) ;
+      $this->validate($request,AttributionsPassage::RULES,AttributionsPassage::MESSAGES) ;
+      if($request->type === 'passage'){
+        $attribution->passageLinked->passage = true ;
+      }elseif ($request->type === 'repos') {
+        $attribution->passageLinked->repos = true ;
+      }
+      $attribution->passageLinked->heure = $request->heure ;
+      $attribution->passageLinked->save() ;
+      $message = 'les modifications ont été enregistrées avec succèss' ;
+      return redirect()->route('attributions_pass_index')->with('success',$message) ;
     }
 
     public function liberer($id){
