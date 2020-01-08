@@ -117,22 +117,24 @@ export default {
       },
       facturer(){
         if(this.list.length>0){
-          axios.post('/api/restauration/facturer',{sejour:this.sejour}).then((response) =>{
-            const {facture} = response.data
-            this.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: '+ facture.reference)
-            this.list = null
-          }).catch((err) =>{
-            console.log(err);
-          })
+          this.$awn.info('le bouuton n\'est pas encore fonctionnel')
+          // axios.post('/api/restauration/facturer',{sejour:this.sejour}).then((response) =>{
+          //   const {facture} = response.data
+          //   this.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: '+ facture.reference)
+          //   this.list = null
+          // }).catch((err) =>{
+          //   console.log(err);
+          // })
         }else{
             this.$awn.info('aucune commande de restauration enregistrée')
         }
       },
       proformaPdf(){
-
+        location.href='/home/restauration/sejour/pdf/proforma/'+this.sejour
       },
       facturerPdf(){
-
+        // location.href='/home/restauration/sejour/pdf/facture/'+this.sejour
+        this.$awn.info('le boutton n\'est pas encore fonctionnel')
       }
     }
 }

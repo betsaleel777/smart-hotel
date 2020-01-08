@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title></title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <style>
+    <style >
         #invoice {
             padding: 30px;
         }
@@ -61,7 +61,8 @@
         .invoice main .thanks {
             margin-top: -100px;
             font-size: 2em;
-            margin-bottom: 50px
+            margin-bottom: 50px ;
+            color: red
         }
 
         .invoice main .notices {
@@ -176,7 +177,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="invoice">
         <div class="invoice overflow-auto">
@@ -191,28 +191,27 @@
                         <div class="col company-details">
                             <h2 class="name">
                                 <a target="_blank" href="https://lobianijs.com">
-                                    Arboshiki
+                                    Nom d'hotel
                                 </a>
                             </h2>
                             <div>455 Foggy Heights, AZ 85004, US</div>
                             <div>(123) 456-789</div>
-                            <div>company
-                                @example.com</div>
+                            <div>hotel@example.com</div>
                             </div>
                         </div>
                 </header>
                 <main>
                     <div class="row contacts">
                         <div class="col invoice-to">
-                            <div class="text-gray-light">INVOICE TO:</div>
-                            <h2 class="to">John Doe</h2>
-                            <div class="address">796 Silver Harbour, TX 79273, US</div>
-                            <div class="email"><a href="mailto:john@example.com">john@example.com</a></div>
+                            <div class="text-gray-light">FACTURE POUR:</div>
+                            <h2 class="to">{{$attribution->sejourLinked->clientLinked->nom.' '.$attribution->sejourLinked->clientLinked->prenom}}</h2>
+                            <div class="address">{{$attribution->sejourLinked->clientLinked->pieceLinked->libelle.': '.$attribution->sejourLinked->clientLinked->numero_piece}}</div>
+                            <div class="email"><a href=""></a>{{$attribution->sejourLinked->clientLinked->contact}}</div>
                         </div>
                         <div class="col invoice-details">
-                            <h1 class="invoice-id">INVOICE 3-2-1</h1>
-                            <div class="date">Date of Invoice: 01/10/2018</div>
-                            <div class="date">Due Date: 30/10/2018</div>
+                            <h1 class="invoice-id">PROFORMA CODE</h1>
+                            <div class="date">Date de proforma: {{Carbon::now()->format('D-M-Y')}}</div>
+                            <div class="date">échéance: {{$attribution->sejourLinked->add(5,'days')->format('D-M-Y')}}</div>
                         </div>
                     </div>
                     <table border="0" cellspacing="0" cellpadding="0">
@@ -226,84 +225,67 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="no">04</td>
-                                <td class="text-left">
-                                    <h3>
-                                        <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                            Youtube channel
-                                        </a>
-                                    </h3>
-                                    <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                        Useful videos
-                                    </a>
-                                    to improve your Javascript skills. Subscribe and stay tuned :)
-                                </td>
-                                <td class="unit">$0.00</td>
-                                <td class="qty">100</td>
-                                <td class="total">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">01</td>
-                                <td class="text-left">
-                                    <h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">30</td>
-                                <td class="total">$1,200.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">02</td>
-                                <td class="text-left">
-                                    <h3>Website Development</h3>Developing a Content Management System-based Website
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">80</td>
-                                <td class="total">$3,200.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">03</td>
-                                <td class="text-left">
-                                    <h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">20</td>
-                                <td class="total">$800.00</td>
-                            </tr>
+                            @foreach ($attribution->produits as $key => $produit)
+                              <tr>
+                                  <td class="no">{{$key+1}}</td>
+                                  <td class="text-left">
+                                      <h3>
+                                          <a target="" href="">
+                                              {{$produit->libelle}}
+                                          </a>
+                                      </h3>
+                                      <a target="" href="">
+                                          {{$produit->reference}}
+                                      </a>
+                                      {{-- to improve your Javascript skills. Subscribe and stay tuned :) --}}
+                                  </td>
+                                  <td class="unit">{{$produit->pivot->prix}}</td>
+                                  <td class="qty">{{$produit->pivot->quantite}}</td>
+                                  <td class="total">{{$produit->pivot->prix*$produit->pivot->quantite}}</td>
+                              </tr>
+                            @endforeach
                         </tbody>
+                         @php
+                           $subtotal = 0 ;
+                           $taxe = 0 ;
+                           $grand_total = 0 ;
+                           foreach ($attribution->produits as $produit) {
+                              $subtotal += $produit->pivot->prix*$produit->pivot->quantite ;
+                           }
+                           $taxe = (18/100)*$subtotal ;
+                           $grand_total = $subtotal + $taxe ;
+                         @endphp
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
                                 <td colspan="2">SUBTOTAL</td>
-                                <td>$5,200.00</td>
+                                <td>{{$subtotal.'Fcfa'}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">TAX 25%</td>
-                                <td>$1,300.00</td>
+                                <td colspan="2">TVA 18%</td>
+                                <td>{{$taxe}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
                                 <td colspan="2">GRAND TOTAL</td>
-                                <td>$6,500.00</td>
+                                <td>{{$grand_total}}</td>
                             </tr>
                         </tfoot>
                     </table>
-                    <div class="thanks">Thank you!</div>
+                    <div class="thanks">IMPAYER!</div>
                     <div class="notices">
-                        <div>NOTICE:</div>
-                        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                        <div>NB:</div>
+                        <div class="notice">Après la date de validité si la facture est impayé, le client sera amendé de 1.5% du total par jour de retard.</div>
                     </div>
                 </main>
                 <footer>
-                    Invoice was created on a computer and is valid without the signature and seal.
+                    Cette facture a été crée à l'ordinateur, une signature écrite doit y être pour confirmer sa validité
                 </footer>
             </div>
             <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
-            <div>
-            </div>
+            <div></div>
         </div>
     </div>
 </body>
-
 </html>

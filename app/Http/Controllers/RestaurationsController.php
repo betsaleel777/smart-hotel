@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Restauration ;
 use App\AttributionSejour ;
+use App\Produit ;
 use App\AttributionsPassage ;
 use PDF;
 
@@ -47,7 +48,8 @@ class RestaurationsController extends Controller
       $attribution = AttributionSejour::findOrFail($request->sejour) ;
       $synchrone = [] ;
       foreach ($request->proformas as $proforma) {
-        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite']]] ;
+        $produit = Produit::findOrFail($proforma['id']) ;
+        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix ]] ;
         $synchrone += $calebasse ;
       }
       $attribution->produits()->sync($synchrone) ;
@@ -56,7 +58,6 @@ class RestaurationsController extends Controller
 
     public function passageFacturePdf(int $attribution){
 
-
     }
 
     public function passageProformaPdf(int $attribution){
@@ -64,7 +65,7 @@ class RestaurationsController extends Controller
     }
 
     public function sejourProformaPdf(int $attribution){
-      $attribution = AttributionSejour::with('sejourLinked.clientLinked','sejourLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
+      $attribution = AttributionSejour::with('encaissement','produits','sejourLinked.clientLinked.pieceLinked','sejourLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
       $pdf = PDF::loadView('restauration.sejour.proforma',compact('attribution')) ;
       $nom = time().'proforma.pdf' ;
       return $pdf->download($nom) ;

@@ -15202,26 +15202,25 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     facturer: function facturer() {
-      var _this5 = this;
-
       if (this.list.length > 0) {
-        axios.post('/api/restauration/facturer', {
-          sejour: this.sejour
-        }).then(function (response) {
-          var facture = response.data.facture;
-
-          _this5.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: ' + facture.reference);
-
-          _this5.list = null;
-        })["catch"](function (err) {
-          console.log(err);
-        });
+        this.$awn.info('le bouuton n\'est pas encore fonctionnel'); // axios.post('/api/restauration/facturer',{sejour:this.sejour}).then((response) =>{
+        //   const {facture} = response.data
+        //   this.$awn.success('la commande de restauration a bien été facturer définitivement \n reférence: '+ facture.reference)
+        //   this.list = null
+        // }).catch((err) =>{
+        //   console.log(err);
+        // })
       } else {
         this.$awn.info('aucune commande de restauration enregistrée');
       }
     },
-    proformaPdf: function proformaPdf() {},
-    facturerPdf: function facturerPdf() {}
+    proformaPdf: function proformaPdf() {
+      location.href = '/home/restauration/sejour/pdf/proforma/' + this.sejour;
+    },
+    facturerPdf: function facturerPdf() {
+      // location.href='/home/restauration/sejour/pdf/facture/'+this.sejour
+      this.$awn.info('le boutton n\'est pas encore fonctionnel');
+    }
   }
 }); // arranger le style des listes
 // envoyer le client en props
@@ -15455,7 +15454,7 @@ __webpack_require__.r(__webpack_exports__);
         _this5.evenement = response.data.events.map(function (event) {
           var calebasse = {};
           calebasse.id = event.id;
-          calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.numero_piece;
+          calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.contact;
           calebasse.start = event.sejour_linked.debut;
           calebasse.end = moment__WEBPACK_IMPORTED_MODULE_1___default()(event.sejour_linked.fin).add(1, 'days').format('YYYY-MM-DD').toString();
           calebasse.backgroundColor = _this5.randomColor();

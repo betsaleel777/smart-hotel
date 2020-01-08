@@ -208,7 +208,7 @@ export default {
                 this.evenement = response.data.events.map((event) => {
                     let calebasse = {}
                     calebasse.id = event.id
-                    calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.numero_piece
+                    calebasse.title = event.sejour_linked.client_linked.nom + '-' + event.sejour_linked.client_linked.contact
                     calebasse.start = event.sejour_linked.debut
                     calebasse.end = moment(event.sejour_linked.fin).add(1, 'days').format('YYYY-MM-DD').toString()
                     calebasse.backgroundColor = this.randomColor()
