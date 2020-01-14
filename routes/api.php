@@ -37,5 +37,10 @@ Route::get('/produit/all', 'ProduitsController@getAll')->name('all_produit') ;
 Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit') ;
 
 Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas') ;
+Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas')->name('resto_passage_proformas') ;
 Route::post('/restauration/save', 'RestaurationsController@saveProformas')->name('save_proformas') ;
+Route::post('/restauration/passage/save', 'RestaurationsController@savePassageProformas')->name('save_passage_proformas') ;
+Route::post('/restauration/solder', 'RestaurationsController@solder')->name('solde_proforma') ;
+Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder')->name('solde_passage_proforma') ;
 Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas') ;
+Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma') ;

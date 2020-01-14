@@ -17,7 +17,7 @@
                <input-product></input-product>
             </div>
             <div class="col-md-6">
-               <synthese-product :sejour="'{{$attribution->id}}'"></synthese-product>
+               <synthese-product :passage="true" :attribution="'{{$attribution->id}}'"></synthese-product>
             </div>
           </div>
         </div>

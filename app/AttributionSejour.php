@@ -15,6 +15,14 @@ class AttributionSejour extends Model
     const RULES = ['batiment' => 'required'] ;
     const MESSAGES = ['batiment.required' => 'le choix du batiment est requis'] ;
 
+    public function setFree():void{
+      $this->attributes['etat'] = 'libérer' ;
+    }
+
+    public function setPay():void{
+      $this->attributes['etat'] = 'facturer' ;
+    }
+
     public function batimentLinked(){
       return $this->belongsTo(Batiment::class,'batiment') ;
     }

@@ -62,7 +62,7 @@
             margin-top: -100px;
             font-size: 2em;
             margin-bottom: 50px ;
-            color: red
+            color: green
         }
 
         .invoice main .notices {
@@ -203,15 +203,15 @@
                 <main>
                     <div class="row contacts">
                         <div class="col invoice-to">
-                            <div class="text-gray-light">FACTURE POUR:</div>
+                            <div class="text-gray-light">PROFORMA POUR:</div>
                             <h2 class="to">{{$attribution->sejourLinked->clientLinked->nom.' '.$attribution->sejourLinked->clientLinked->prenom}}</h2>
                             <div class="address">{{$attribution->sejourLinked->clientLinked->pieceLinked->libelle.': '.$attribution->sejourLinked->clientLinked->numero_piece}}</div>
                             <div class="email"><a href=""></a>{{$attribution->sejourLinked->clientLinked->contact}}</div>
                         </div>
                         <div class="col invoice-details">
-                            <h1 class="invoice-id">PROFORMA CODE</h1>
+                            <h1 class="invoice-id">{{$attribution->encaissement->reference}}</h1>
                             <div class="date">Date de proforma: {{Carbon::now()->format('D-M-Y')}}</div>
-                            <div class="date">échéance: {{$attribution->sejourLinked->add(5,'days')->format('D-M-Y')}}</div>
+                            <div class="date">échéance: {{$attribution->sejourLinked->fin->format('D-M-Y')}}</div>
                         </div>
                     </div>
                     <table border="0" cellspacing="0" cellpadding="0">
@@ -219,8 +219,8 @@
                             <tr>
                                 <th>#</th>
                                 <th class="text-left">DESCRIPTION</th>
-                                <th class="text-right">HOUR PRICE</th>
-                                <th class="text-right">HOURS</th>
+                                <th class="text-right">PRIX UNITAIRE</th>
+                                <th class="text-right">QUANTITE</th>
                                 <th class="text-right">TOTAL</th>
                             </tr>
                         </thead>
@@ -244,36 +244,81 @@
                                   <td class="total">{{$produit->pivot->prix*$produit->pivot->quantite}}</td>
                               </tr>
                             @endforeach
+                            <tr>
+                                <td class="no">-</td>
+                                <td class="text-left">
+                                    <h3>
+                                        <a target="" href="">
+                                            {{$attribution->sejourLinked->chambreLinked->libelle}}
+                                        </a>
+                                    </h3>
+                                    <a target="" href="">
+                                        {{$attribution->sejourLinked->chambreLinked->typeLinked->libelle}}
+                                    </a>
+                                    {{-- to improve your Javascript skills. Subscribe and stay tuned :) --}}
+                                </td>
+                                <td class="unit">{{$attribution->encaissement->prix_unitaire}}</td>
+                                <td class="qty">{{$attribution->encaissement->quantite}}Jours</td>
+                                <td class="total">{{$attribution->encaissement->quantite*$attribution->encaissement->prix_unitaire}}</td>
+                            </tr>
                         </tbody>
                          @php
+                           $brute = $attribution->encaissement->quantite*$attribution->encaissement->prix_unitaire ;
+                           $remise = ($attribution->encaissement->remise/100)*$brute ;
+                           $payer_chambre = (double)$brute - (double)$remise ;
+                           $avance = ($attribution->encaissement->avance/100)*$brute ;
+                           $reste_chambre = (double)$payer_chambre - (double)$avance ;
                            $subtotal = 0 ;
-                           $taxe = 0 ;
                            $grand_total = 0 ;
                            foreach ($attribution->produits as $produit) {
                               $subtotal += $produit->pivot->prix*$produit->pivot->quantite ;
                            }
-                           $taxe = (18/100)*$subtotal ;
-                           $grand_total = $subtotal + $taxe ;
+                           $grand_total = $subtotal + $reste_chambre ;
                          @endphp
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">SUBTOTAL</td>
+                                <td colspan="2">TOTAL ARTICLES CONSOMME</td>
                                 <td>{{$subtotal.'Fcfa'}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">TVA 18%</td>
-                                <td>{{$taxe}}</td>
+                                <td colspan="2">COUT BRUTE CHAMBRE </td>
+                                <td>{{$brute}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">GRAND TOTAL</td>
+                                <td colspan="2">REMISE</td>
+                                <td>-{{$remise.'('.$attribution->encaissement->remise.'%)'}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">PRIX NET CHAMBRE</td>
+                                <td>{{$payer_chambre}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">AVANCE CHAMBRE</td>
+                                <td>{{$avance}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">NET A PAYER CHAMBRE</td>
+                                <td>{{$reste_chambre}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">VERSEMENT CAISSE</td>
+                                <td>{{$reste_chambre}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">TOTAL VERSEMENT</td>
                                 <td>{{$grand_total}}</td>
                             </tr>
                         </tfoot>
                     </table>
-                    <div class="thanks">IMPAYER!</div>
+                    <div class="thanks">PAYER</div>
                     <div class="notices">
                         <div>NB:</div>
                         <div class="notice">Après la date de validité si la facture est impayé, le client sera amendé de 1.5% du total par jour de retard.</div>

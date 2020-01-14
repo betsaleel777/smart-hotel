@@ -78,7 +78,7 @@ export default {
     methods: {
         getDetails() {
             axios.post('/api/produit/show', {
-                produit: this.choice
+                produit: this.choice,
             }).then((response) => {
                 const {
                     produit

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title></title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <style>
+    <style >
         #invoice {
             padding: 30px;
         }
@@ -61,7 +61,8 @@
         .invoice main .thanks {
             margin-top: -100px;
             font-size: 2em;
-            margin-bottom: 50px
+            margin-bottom: 50px ;
+            color: red
         }
 
         .invoice main .notices {
@@ -176,7 +177,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="invoice">
         <div class="invoice overflow-auto">
@@ -191,28 +191,27 @@
                         <div class="col company-details">
                             <h2 class="name">
                                 <a target="_blank" href="https://lobianijs.com">
-                                    Arboshiki
+                                    Nom d'hotel
                                 </a>
                             </h2>
                             <div>455 Foggy Heights, AZ 85004, US</div>
                             <div>(123) 456-789</div>
-                            <div>company
-                                @example.com</div>
+                            <div>hotel@example.com</div>
                             </div>
                         </div>
                 </header>
                 <main>
                     <div class="row contacts">
                         <div class="col invoice-to">
-                            <div class="text-gray-light">INVOICE TO:</div>
+                            <div class="text-gray-light">PROFORMA POUR:</div>
                             <h2 class="to">Client X</h2>
-                            <div class="address">no adress</div>
-                            <div class="email"><a href="mailto:john@example.com">no mail</a></div>
+                            {{-- <div class="address">{{$attribution->sejourLinked->clientLinked->pieceLinked->libelle.': '.$attribution->sejourLinked->clientLinked->numero_piece}}</div>
+                            <div class="email"><a href=""></a>{{$attribution->sejourLinked->clientLinked->contact}}</div> --}}
                         </div>
                         <div class="col invoice-details">
-                            <h1 class="invoice-id">référence</h1>
-                            <div class="date">Date</div>
-                            <div class="date">Due Date: 30/10/2018</div>
+                            <h1 class="invoice-id">{{$attribution->encaissement->reference}}</h1>
+                            <div class="date">Date de proforma: {{Carbon::now()->format('D-M-Y')}}</div>
+                            {{-- <div class="date">échéance: {{$attribution->sejourLinked->fin->format('D-M-Y')}}</div> --}}
                         </div>
                     </div>
                     <table border="0" cellspacing="0" cellpadding="0">
@@ -220,83 +219,109 @@
                             <tr>
                                 <th>#</th>
                                 <th class="text-left">DESCRIPTION</th>
-                                <th class="text-right">HOUR PRICE</th>
-                                <th class="text-right">HOURS</th>
+                                <th class="text-right">PRIX UNITAIRE</th>
+                                <th class="text-right">QUANTITE</th>
                                 <th class="text-right">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($attribution->produits as $key => $produit)
+                              <tr>
+                                  <td class="no">{{$key+1}}</td>
+                                  <td class="text-left">
+                                      <h3>
+                                          <a target="" href="">
+                                              {{$produit->libelle}}
+                                          </a>
+                                      </h3>
+                                      <a target="" href="">
+                                          {{$produit->reference}}
+                                      </a>
+                                      {{-- to improve your Javascript skills. Subscribe and stay tuned :) --}}
+                                  </td>
+                                  <td class="unit">{{$produit->pivot->prix}}</td>
+                                  <td class="qty">{{$produit->pivot->quantite}}</td>
+                                  <td class="total">{{$produit->pivot->prix*$produit->pivot->quantite}}</td>
+                              </tr>
+                            @endforeach
                             <tr>
-                                <td class="no">04</td>
+                                <td class="no">-</td>
                                 <td class="text-left">
                                     <h3>
-                                        <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                            Youtube channel
+                                        <a target="" href="">
+                                            {{$attribution->passageLinked->chambreLinked->libelle}}
                                         </a>
                                     </h3>
-                                    <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
-                                        Useful videos
+                                    <a target="" href="">
+                                        {{$attribution->passageLinked->chambreLinked->typeLinked->libelle}}
                                     </a>
-                                    to improve your Javascript skills. Subscribe and stay tuned :)
+                                    {{-- to improve your Javascript skills. Subscribe and stay tuned :) --}}
                                 </td>
-                                <td class="unit">$0.00</td>
-                                <td class="qty">100</td>
-                                <td class="total">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">01</td>
-                                <td class="text-left">
-                                    <h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">30</td>
-                                <td class="total">$1,200.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">02</td>
-                                <td class="text-left">
-                                    <h3>Website Development</h3>Developing a Content Management System-based Website
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">80</td>
-                                <td class="total">$3,200.00</td>
-                            </tr>
-                            <tr>
-                                <td class="no">03</td>
-                                <td class="text-left">
-                                    <h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)
-                                </td>
-                                <td class="unit">$40.00</td>
-                                <td class="qty">20</td>
-                                <td class="total">$800.00</td>
+                                <td class="unit">{{$attribution->encaissement->prix_unitaire}}</td>
+                                <td class="qty">{{$attribution->encaissement->quantite}}Heures</td>
+                                <td class="total">{{$attribution->encaissement->quantite*$attribution->encaissement->prix_unitaire}}</td>
                             </tr>
                         </tbody>
+                         @php
+                           $brute = $attribution->encaissement->quantite*$attribution->encaissement->prix_unitaire ;
+                           $remise = ($attribution->encaissement->remise/100)*$brute ;
+                           $payer_chambre = (double)$brute - (double)$remise ;
+                           $avance = ($attribution->encaissement->avance/100)*$brute ;
+                           $reste_chambre = (double)$payer_chambre - (double)$avance ;
+                           $subtotal = 0 ;
+                           $grand_total = 0 ;
+                           foreach ($attribution->produits as $produit) {
+                              $subtotal += $produit->pivot->prix*$produit->pivot->quantite ;
+                           }
+                           $taxe = (18/100)*$subtotal ;
+                           $grand_total = $subtotal + $reste_chambre ;
+                         @endphp
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">SUBTOTAL</td>
-                                <td>$5,200.00</td>
+                                <td colspan="2">TOTAL PRODUIT</td>
+                                <td>{{$subtotal.'Fcfa'}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">TAX 25%</td>
-                                <td>$1,300.00</td>
+                                <td colspan="2">COUT BRUTE CHAMBRE </td>
+                                <td>{{$brute}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">REMISE</td>
+                                <td>-{{$remise.'('.$attribution->encaissement->remise.'%)'}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">PRIX NET</td>
+                                <td>{{$payer_chambre}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">AVANCE</td>
+                                <td>{{$avance}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">NET A PAYER CHAMBRE</td>
+                                <td>{{$reste_chambre}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
                                 <td colspan="2">GRAND TOTAL</td>
-                                <td>$6,500.00</td>
+                                <td>{{$grand_total}}</td>
                             </tr>
                         </tfoot>
                     </table>
-                    <div class="thanks">Merci !</div>
+                    <div class="thanks">IMPAYER!</div>
                     <div class="notices">
-                        <div>NOTICE:</div>
-                        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                        <div>NB:</div>
+                        <div class="notice">Après la date de validité si la facture est impayé, le client sera amendé de 1.5% du total par jour de retard.</div>
                     </div>
                 </main>
                 <footer>
-                    Cette facture créer à l'ordinateur sera valide après une signature écrite
+                    Cette facture proforma a été crée à l'ordinateur, une signature écrite doit y être pour confirmer sa validité
                 </footer>
             </div>
             <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
@@ -304,5 +329,4 @@
         </div>
     </div>
 </body>
-
 </html>

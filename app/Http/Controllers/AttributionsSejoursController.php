@@ -54,7 +54,7 @@ class AttributionsSejoursController extends Controller
 
     public function getAll()
     {
-        $attributions = AttributionSejour::with('sejourLinked.clientLinked')->whereNull('etat')->get()->all() ;
+        $attributions = AttributionSejour::with('sejourLinked.clientLinked')->where('etat','!=','libérer')->orWhereNull('etat')->get()->all() ;
 
         return response()->json(['events' => $attributions]) ;
     }

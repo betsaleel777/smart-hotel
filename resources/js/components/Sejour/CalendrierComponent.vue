@@ -204,7 +204,6 @@ export default {
         },
         getEvents() {
             axios.get('/api/sejour/all').then((response) => {
-                console.log(response.data.events);
                 this.evenement = response.data.events.map((event) => {
                     let calebasse = {}
                     calebasse.id = event.id
@@ -240,7 +239,8 @@ export default {
         },
         liberer() {
             axios.post('/api/sejour/liberer', {
-                attribution: this.idSejourAttribution
+                attribution: this.idSejourAttribution,
+                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
                 const chambre = response.data.chambre
                 const message = `la chmabre ${chambre.libelle} a été libérée avec succès !!`
@@ -253,7 +253,8 @@ export default {
         },
         supprimer() {
             axios.post('/api/sejour/supprimer', {
-                attribution: this.idSejourAttribution
+                attribution: this.idSejourAttribution,
+                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
                 const {
                     chambre

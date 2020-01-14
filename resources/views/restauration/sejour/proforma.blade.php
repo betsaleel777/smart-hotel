@@ -258,7 +258,7 @@
                                     {{-- to improve your Javascript skills. Subscribe and stay tuned :) --}}
                                 </td>
                                 <td class="unit">{{$attribution->encaissement->prix_unitaire}}</td>
-                                <td class="qty">{{$attribution->encaissement->quantite}}</td>
+                                <td class="qty">{{$attribution->encaissement->quantite}}Jours</td>
                                 <td class="total">{{$attribution->encaissement->quantite*$attribution->encaissement->prix_unitaire}}</td>
                             </tr>
                         </tbody>
@@ -269,24 +269,18 @@
                            $avance = ($attribution->encaissement->avance/100)*$brute ;
                            $reste_chambre = (double)$payer_chambre - (double)$avance ;
                            $subtotal = 0 ;
-                           $taxe = 0 ;
                            $grand_total = 0 ;
                            foreach ($attribution->produits as $produit) {
                               $subtotal += $produit->pivot->prix*$produit->pivot->quantite ;
                            }
                            $taxe = (18/100)*$subtotal ;
-                           $grand_total = $subtotal + $taxe ;
+                           $grand_total = $subtotal + $reste_chambre ;
                          @endphp
                         <tfoot>
                             <tr>
                                 <td colspan="2"></td>
                                 <td colspan="2">TOTAL PRODUIT</td>
                                 <td>{{$subtotal.'Fcfa'}}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td colspan="2">TVA 18%</td>
-                                <td>{{$taxe}}</td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
@@ -316,7 +310,7 @@
                             <tr>
                                 <td colspan="2"></td>
                                 <td colspan="2">GRAND TOTAL</td>
-                                <td>{{$grand_total + $reste_chambre}}</td>
+                                <td>{{$grand_total}}</td>
                             </tr>
                         </tfoot>
                     </table>
