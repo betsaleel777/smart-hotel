@@ -63,6 +63,7 @@ class ProduitsController extends Controller
       $produit->seuil = $request->seuil ;
       $produit->prix = $request->prix ;
       $produit->sous_famille = $request->sous_famille ;
+      $produit->genre = $request->genre ;
       if(!empty($request->image)){
         $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
         File::delete($oldpath) ;

@@ -6,7 +6,7 @@
 @php
 $badge = ['inoccupée' => 'badge badge-success' ,
           'occupée' => 'badge badge-danger',
-          'réservée' => 'badge badge-primary']
+          'reservée' => 'badge badge-primary']
 @endphp
 <div class="col-lg-12">
     <div class="card">

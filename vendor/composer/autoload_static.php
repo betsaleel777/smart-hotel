@@ -428,6 +428,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
     );
 
     public static $classMap = array (
+        'App\\Approvisionnement' => __DIR__ . '/../..' . '/app/Approvisionnement.php',
         'App\\AttributionSejour' => __DIR__ . '/../..' . '/app/AttributionSejour.php',
         'App\\AttributionsPassage' => __DIR__ . '/../..' . '/app/AttributionsPassage.php',
         'App\\Batiment' => __DIR__ . '/../..' . '/app/Batiment.php',
@@ -438,6 +439,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Famille' => __DIR__ . '/../..' . '/app/Famille.php',
         'App\\Http\\Controllers\\ApiPassageController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiPassageController.php',
+        'App\\Http\\Controllers\\ApprovisionnementsController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApprovisionnementsController.php',
         'App\\Http\\Controllers\\AttributionsPassagesController' => __DIR__ . '/../..' . '/app/Http/Controllers/AttributionsPassagesController.php',
         'App\\Http\\Controllers\\AttributionsSejoursController' => __DIR__ . '/../..' . '/app/Http/Controllers/AttributionsSejoursController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',

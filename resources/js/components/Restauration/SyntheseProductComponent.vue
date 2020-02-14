@@ -45,7 +45,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.passage);
         this.getProformas()
         this.$root.$on('add', (produit, quantite) => {
             if (produit && quantite) {
@@ -158,6 +157,3 @@ export default {
 // arranger le style des listes
 // envoyer le client en props
 </script>
-<style>
-
-</style>

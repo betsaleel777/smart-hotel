@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-{{-- {{Breadcrumbs::render('')}} --}}
+{{Breadcrumbs::render('restauration_add',$attribution)}}
 @endsection
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">

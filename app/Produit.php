@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Produit extends Model
 {
     use SoftDeletes ;
-    protected $fillable = ['libelle','sous_famille','reference','seuil','image','prix'] ;
+    protected $fillable = ['libelle','sous_famille','reference','seuil','image','prix','genre'] ;
     const RULES = [
                    'libelle' => 'required|max:100' ,
                    'sous_famille' => 'required' ,

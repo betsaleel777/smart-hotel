@@ -130,8 +130,6 @@ Breadcrumbs::for('sous_famille_associer',function($trail,$famille){
 });
 
 
-
-
 //Acceuil > sous_familles
 Breadcrumbs::for('sous_familles',function($trail){
   $trail->parent('dashboard') ;
@@ -170,6 +168,15 @@ Breadcrumbs::for('sejours',function($trail){
   $trail->push('Sejours & reservation',route('attributions_sejour_index')) ;
 });
 
+//Acceuil > restauration
+Breadcrumbs::for('restauration_add',function($trail,$attribution){
+  $trail->parent('sejours') ;
+  $trail->push('Plats & boissons',route('resto_add',$attribution)) ;
+});
+Breadcrumbs::for('restauration_passage_add',function($trail,$attribution){
+  $trail->parent('attributions') ;
+  $trail->push('Plats & boissons',route('resto_add',$attribution)) ;
+});
 
 
 ?>

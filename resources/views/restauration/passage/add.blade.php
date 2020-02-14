@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('breadcrumb')
-{{-- {{Breadcrumbs::render('')}} --}}
+{{Breadcrumbs::render('restauration_passage_add',$attribution)}}
 @endsection
 @section('meta')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -25,6 +25,5 @@
 </div>
 @endsection
 @section('script')
-<script src="{{asset('js/app.js')}}">
-</script>
+<script src="{{asset('js/app.js')}}"></script>
 @endsection

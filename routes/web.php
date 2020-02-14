@@ -100,4 +100,7 @@ Route::prefix('home')->group(function () {
   Route::get('/restauration/sejour/pdf/facture/{attribution}','RestaurationsController@sejourFacturePdf')->name('resto_sejour_facture_pdf') ;
   Route::get('/restauration/passage/pdf/proforma/{attribution}','RestaurationsController@passageProformaPdf')->name('resto_passage_proforma_pdf') ;
   Route::get('/restauration/passage/pdf/facture/{attribution}','RestaurationsController@passageFacturePdf')->name('resto_passage_facture_pdf') ;
+
+  Route::get('/approvisionnement','ApprovisionnementsController@index')->name('approvisionnement_index') ;
+  
 });

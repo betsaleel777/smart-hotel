@@ -16,6 +16,7 @@ class RestaurationsController extends Controller
       $titre = 'Restaurations' ;
       return \view('restauration.index',compact('titre','restaurations')) ;
     }
+    
     public function add(int $attribution){
       $titre = 'Plats & Boissons' ;
       $attribution = AttributionSejour::with('sejourLinked')->findOrFail($attribution) ;
@@ -89,7 +90,7 @@ class RestaurationsController extends Controller
       $synchrone = [] ;
       foreach ($request->proformas as $proforma) {
         $produit = Produit::findOrFail($proforma['id']) ;
-        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix ]] ;
+        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix,'etat' => 'facturer']] ;
         $synchrone += $calebasse ;
       }
       $attribution->produits()->sync($synchrone) ;
@@ -104,7 +105,7 @@ class RestaurationsController extends Controller
       $synchrone = [] ;
       foreach ($request->proformas as $proforma) {
         $produit = Produit::findOrFail($proforma['id']) ;
-        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix ]] ;
+        $calebasse = [$proforma['id'] => ['quantite' => $proforma['quantite'], 'prix' => $produit->prix, 'etat' => 'facturer' ]] ;
         $synchrone += $calebasse ;
       }
       $attribution->produits()->sync($synchrone) ;
@@ -118,14 +119,14 @@ class RestaurationsController extends Controller
       $attribution = AttributionsPassage::with('encaissement','produits','passageLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
       $pdf = PDF::loadView('restauration.passage.proforma',compact('attribution')) ;
       $nom = time().'proforma.pdf' ;
-      return $pdf->download($nom) ;
+      return $pdf->stream($nom) ;
     }
 
     public function sejourProformaPdf(int $attribution){
       $attribution = AttributionSejour::with('encaissement','produits','sejourLinked.clientLinked.pieceLinked','sejourLinked.chambreLinked.typeLinked','batimentLinked')->findOrFail($attribution) ;
       $pdf = PDF::loadView('restauration.sejour.proforma',compact('attribution')) ;
       $nom = time().'proforma.pdf' ;
-      return $pdf->download($nom) ;
+      return $pdf->stream($nom) ;
     }
 
     public function sejourFacturePdf(int $attribution){
@@ -136,7 +137,7 @@ class RestaurationsController extends Controller
       }
       $pdf = PDF::loadView('restauration.sejour.facture',compact('attribution')) ;
       $nom = time().'facture.pdf' ;
-      return $pdf->download($nom) ;
+      return $pdf->stream($nom) ;
     }
 
     public function passageFacturePdf(int $attribution){
@@ -147,7 +148,7 @@ class RestaurationsController extends Controller
       }
       $pdf = PDF::loadView('restauration.passage.facture',compact('attribution')) ;
       $nom = time().'facture.pdf' ;
-      return $pdf->download($nom) ;
+      return $pdf->stream($nom) ;
     }
 
     public function delete(Request $request){
