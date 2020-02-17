@@ -11,10 +11,6 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::get('/', 'WelcomeController@dashboard')->name('dashboard') ;
 
 Route::prefix('parametre')->group(function () {
@@ -60,6 +56,9 @@ Route::prefix('parametre')->group(function () {
      Route::get('/','ProduitsController@accessoires')->name('accessoire_index') ;
      Route::get('/add', 'ProduitsController@accessoireAdd')->name('accessoire_add') ;
      Route::post('/store','ProduitsController@accessoireStore')->name('accessoire_store') ;
+     Route::get('/edit/{id}', 'ProduitsController@accessoireEdit')->name('accessoire_edit') ;
+     Route::post('/update/{id}', 'ProduitsController@accessoireUpdate')->name('accessoire_update') ;
+     Route::get('/delete/{id}', 'ProduitsController@accessoireDelete')->name('accessoire_delete') ;
   }) ;
 
   Route::prefix('/sous_famille')->group(function(){
@@ -126,11 +125,15 @@ Route::prefix('home')->group(function () {
 
   Route::get('/approvisionnement','ApprovisionnementsController@index')->name('approvisionnement_index') ;
 
-  Route::prefix('/factures')->group(function(){
+  Route::prefix('/facture')->group(function(){
     Route::get('/','Facturescontroller@index')->name('facture_index') ;
     Route::get('/show/{id}','Facturescontroller@show')->name('facture_index') ;
     Route::get('/edit/{id}','Facturescontroller@edit')->name('facture_edit') ;
     Route::get('/update/{id}','Facturescontroller@update')->name('facture_update') ;
     Route::get('/pdf/{id}','Facturescontroller@pdf')->name('facture_pdf') ;
   });
+
+  Route::get('/destockage/add/{id}','DestockagesController@add')->name('destockage_add') ;
+  Route::post('/destockage/store', 'DestockagesController@store')->name('destockage_store') ;
+
 });

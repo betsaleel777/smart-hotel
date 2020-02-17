@@ -56,13 +56,16 @@
             <label for="contact">Fin:</label>
             <input id="fin" v-model="timeInterval.fin" type="text" class="form-control">
             <div class="row form-group">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <button @click="liberer" class="btn btn-light"><i class="fas fa-door-open"></i>libération</button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <button @click="runAccessoirePage" class="btn btn-light"><i class="fas fa-door-open"></i>accessoire</button>
+                </div>
+                <div class="col-md-3">
                     <button @click="supprimer" class="btn btn-light"><i class="fas fa-trash"></i>suppression</button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <button @click="runRestaurantPage" class="btn btn-light"><i class="fas fa-drumstick-bite"></i>restauration</button>
                 </div>
             </div>
@@ -124,6 +127,9 @@ export default {
     methods: {
         runRestaurantPage() {
             location.href = '/home/restauration/add/' + this.idSejourAttribution
+        },
+        runAccessoirePage(){
+          location.href = '/home/destockage/add/' + this.idSejourAttribution
         },
         handleSelect(info) {
             const end = moment(info.endStr).subtract(1, 'days')
@@ -249,7 +255,6 @@ export default {
             }).catch((error) => {
                 console.log(error);
             })
-
         },
         supprimer() {
             axios.post('/api/sejour/supprimer', {

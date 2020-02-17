@@ -48,8 +48,8 @@
                   @endif
                 </td>
                 <td>
-                  <a href="{{route('produit_edit',$accessoire)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
-                  <a href="{{route('produit_delete',$accessoire)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
+                  <a href="{{route('accessoire_edit',$accessoire)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
+                  <a href="{{route('accessoire_delete',$accessoire)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
                 </td>
               </tr>
             @endforeach

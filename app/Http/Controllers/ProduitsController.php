@@ -25,7 +25,7 @@ class ProduitsController extends Controller
       }
       $produit->immatriculer() ;
       $produit->save() ;
-      $message = 'le produit '.$produit->libelle.'a été enregistré avec succès';
+      $message = 'le produit '.$produit->libelle.' a été enregistré avec succès';
       return redirect()->route('produit_index')->with('success',$message) ;
     }
 
@@ -39,7 +39,7 @@ class ProduitsController extends Controller
       }
       $produit->immatriculer() ;
       $produit->save() ;
-      $message = 'le produit '.$produit->libelle.'a été enregistré avec succès';
+      $message = 'le produit '.$produit->libelle.' a été enregistré avec succès';
       return redirect()->route('sous_famille_show',$request->sous_famille)->with('success',$message) ;
     }
 
@@ -72,14 +72,13 @@ class ProduitsController extends Controller
       }
       $produit->save() ;
       $message = 'le produit: '.$produit->getOriginal('libelle').' a été modifié avec succès!!' ;
-      // if(url()->previous() === '')
       return redirect()->route('produit_index')->with('success',$message) ;
     }
 
     public function delete(int $id){
        $produit = Produit::findOrFail($id) ;
        $produit->delete() ;
-       $message = 'le produit: '.$produit->libelle.'a été supprimé avec succès!!' ;
+       $message = 'le produit: '.$produit->libelle.' a été supprimé avec succès!!' ;
        return redirect()->route('produit_index')->with('success',$message) ;
     }
 
@@ -98,7 +97,7 @@ class ProduitsController extends Controller
 
      public function accessoireAdd(){
         $sous_familles = SousFamille::get()->pluck('libelle','id') ;
-        $titre = 'Ajouter Produit' ;
+        $titre = 'Ajouter Accessoire' ;
         return view('parametre.produit.accessoire.add',compact('sous_familles','titre')) ;
      }
 
@@ -113,7 +112,40 @@ class ProduitsController extends Controller
        $produit->genre = 'accessoire' ;
        $produit->immatriculer() ;
        $produit->save() ;
-       $message = 'le produit '.$produit->libelle.'a été enregistré avec succès';
+       $message = 'l\'accessoire '.$produit->libelle.' a été enregistré avec succès';
+       return redirect()->route('accessoire_index')->with('success',$message) ;
+     }
+
+     public function accessoireEdit(int $id){
+       $produit = Produit::with('sous_familleLinked')->findOrFail($id) ;
+       $sous_familles = SousFamille::get()->pluck('libelle','id') ;
+       $titre = 'Modifier Accessoire' ;
+       return view('parametre.produit.accessoire.edit',compact('sous_familles','titre','produit')) ;
+     }
+
+     public function accessoireUpdate(Request $request,int $id){
+       $this->validate($request,Produit::RULES,Produit::MESSAGES) ;
+       $produit = Produit::with('sous_familleLinked')->findOrFail($id) ;
+       $produit->libelle = $request->libelle ;
+       $produit->seuil = $request->seuil ;
+       $produit->prix = $request->prix ;
+       $produit->sous_famille = $request->sous_famille ;
+       if(!empty($request->image)){
+         $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
+         File::delete($oldpath) ;
+         $imageName = time().'.'.$request->image->getClientOriginalExtension();
+         $request->image->move(public_path('images'), $imageName) ;
+         $produit->image = $imageName ;
+       }
+       $produit->save() ;
+       $message = 'l\'accessoire: '.$produit->getOriginal('libelle').' a été modifié avec succès!!' ;
+       return redirect()->route('accessoire_index')->with('success',$message) ;
+     }
+
+     public function accessoireDelete(int $id){
+       $produit = Produit::findOrFail($id) ;
+       $produit->delete() ;
+       $message = 'l\'accessoire: '.$produit->libelle.' a été supprimé avec succès!!' ;
        return redirect()->route('accessoire_index')->with('success',$message) ;
      }
 

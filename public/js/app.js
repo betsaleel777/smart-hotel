@@ -15090,13 +15090,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     BCard: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BCard"],
     BCardText: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BCardText"]
   },
-  props: ['client', 'passage', 'attribution'],
+  props: ['client', 'passage', 'attribution', 'exporter', 'usingBy', 'simple'],
   data: function data() {
     return {
       total: '0',
@@ -15106,7 +15110,10 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.getProformas();
+    if (!this.simple) {
+      this.getProformas();
+    }
+
     this.$root.$on('add', function (produit, quantite) {
       if (produit && quantite) {
         var elt = {};
@@ -15159,7 +15166,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var url = this.passage ? '/api/restauration/passage/proformas' : '/api/restauration/proformas';
-      console.log(url);
       axios.post(url, {
         attribution: this.attribution
       }).then(function (response) {
@@ -15229,10 +15235,12 @@ __webpack_require__.r(__webpack_exports__);
     facturerPdf: function facturerPdf() {
       var url = this.passage ? '/home/restauration/passage/pdf/facture/' : '/home/restauration/sejour/pdf/facture/';
       location.href = url + this.attribution;
+    },
+    envoyer: function envoyer() {
+      console.log('running envoyer');
     }
   }
-}); // arranger le style des listes
-// envoyer le client en props
+});
 
 /***/ }),
 
@@ -15251,6 +15259,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/vue */ "./node_modules/@fullcalendar/vue/main.esm.js");
 /* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.esm.js");
 /* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.esm.js");
+//
+//
+//
 //
 //
 //
@@ -15373,6 +15384,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     runRestaurantPage: function runRestaurantPage() {
       location.href = '/home/restauration/add/' + this.idSejourAttribution;
+    },
+    runAccessoirePage: function runAccessoirePage() {
+      location.href = '/home/destockage/add/' + this.idSejourAttribution;
     },
     handleSelect: function handleSelect(info) {
       var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(info.endStr).subtract(1, 'days');
@@ -99395,81 +99409,109 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "row" }, [
-            _c(
-              "div",
-              {
-                staticClass: " btn-group-vertical col-md-4",
-                attrs: { role: "group" }
-              },
-              [
+          !_vm.exporter
+            ? _c("div", { staticClass: "row" }, [
                 _c(
-                  "button",
+                  "div",
                   {
-                    staticClass: "btn btn-primary",
-                    on: { click: _vm.saveProforma }
+                    staticClass: " btn-group-vertical col-md-4",
+                    attrs: { role: "group" }
                   },
                   [
-                    _c("i", { staticClass: "fas fa-file-invoice" }),
-                    _vm._v(" proforma")
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        on: { click: _vm.saveProforma }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-file-invoice" }),
+                        _vm._v(" proforma")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-warning",
+                        on: { click: _vm.proformaPdf }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-print" }),
+                        _vm._v(" exporter pdf")
+                      ]
+                    )
                   ]
                 ),
                 _vm._v(" "),
                 _c(
-                  "button",
+                  "div",
                   {
-                    staticClass: "btn btn-warning",
-                    on: { click: _vm.proformaPdf }
+                    staticClass: "btn-group-vertical col-md-4",
+                    attrs: { role: "group" }
                   },
                   [
-                    _c("i", { staticClass: "fas fa-print" }),
-                    _vm._v(" exporter pdf")
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "btn-group-vertical col-md-4",
-                attrs: { role: "group" }
-              },
-              [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-success", on: { click: _vm.solder } },
-                  [
-                    _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
-                    _vm._v(" solder")
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success",
+                        on: { click: _vm.solder }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-file-invoice-dollar" }),
+                        _vm._v(" solder")
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-warning",
+                        on: { click: _vm.facturerPdf }
+                      },
+                      [
+                        _c("i", { staticClass: "fas fa-print" }),
+                        _vm._v(" exporter pdf")
+                      ]
+                    )
                   ]
                 ),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-warning",
-                    on: { click: _vm.facturerPdf }
-                  },
-                  [
-                    _c("i", { staticClass: "fas fa-print" }),
-                    _vm._v(" exporter pdf")
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-4" }, [
-              _c(
-                "button",
-                { staticClass: "btn btn-danger", on: { click: _vm.supprimer } },
-                [
-                  _c("i", { staticClass: "fas fa-trash-alt" }),
-                  _vm._v(" supprimer")
-                ]
-              )
-            ])
-          ])
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: { click: _vm.supprimer }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-trash-alt" }),
+                      _vm._v(" supprimer")
+                    ]
+                  )
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.exporter
+            ? _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-8" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      on: { click: _vm.envoyer }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-trash-alt" }),
+                      _vm._v(" Envoyer")
+                    ]
+                  )
+                ])
+              ])
+            : _vm._e()
         ],
         1
       )
@@ -99927,7 +99969,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("div", { staticClass: "row form-group" }, [
-                _c("div", { staticClass: "col-md-4" }, [
+                _c("div", { staticClass: "col-md-3" }, [
                   _c(
                     "button",
                     {
@@ -99941,7 +99983,21 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-light",
+                      on: { click: _vm.runAccessoirePage }
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-door-open" }),
+                      _vm._v("accessoire")
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-3" }, [
                   _c(
                     "button",
                     {
@@ -99955,7 +100011,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-md-4" }, [
+                _c("div", { staticClass: "col-md-3" }, [
                   _c(
                     "button",
                     {

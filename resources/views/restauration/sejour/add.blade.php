@@ -17,7 +17,7 @@
                <input-product></input-product>
             </div>
             <div class="col-md-6">
-               <synthese-product :passage="false" :attribution="'{{$attribution->id}}'" :client="'{{$attribution->sejourLinked->client}}'"></synthese-product>
+               <synthese-product :simple="false" :exporter="false" :passage="false" :attribution="'{{$attribution->id}}'" :client="'{{$attribution->sejourLinked->client}}'"></synthese-product>
             </div>
           </div>
         </div>
