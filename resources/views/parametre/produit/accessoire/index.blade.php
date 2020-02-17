@@ -1,20 +1,20 @@
 @extends('layouts.default')
-@section('breadcrumb')
+{{-- @section('breadcrumb')
   {{ Breadcrumbs::render('produits') }}
-@endsection
+@endsection --}}
 @section('content')
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h5 class="m-0">Produits</h5>
+        <h5 class="m-0">Accéssoires</h5>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-10">
-            <h6 class="card-title">Liste des produits</h6>
+            <h6 class="card-title">Liste des Accéssoires</h6>
           </div>
           <div class="col-md-2">
-           <a style="width:100%" href="{{route('produit_add')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ajouter</a>
+           <a style="width:100%" href="{{route('accessoire_add')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ajouter</a>
           </div>
         </div>
         <p class="card-text">
@@ -32,24 +32,24 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($produits as $key => $produit)
+            @foreach ($accessoires as $key => $accessoire)
               <tr>
                 <td>{{$key+1}}</td>
-                <td>{{$produit->reference}}</td>
-                <td>{{$produit->libelle}}</td>
-                <td>{{$produit->sous_familleLinked->libelle}}</td>
-                <td>{{$produit->prix}}</td>
-                <td>{{$produit->seuil}}</td>
+                <td>{{$accessoire->reference}}</td>
+                <td>{{$accessoire->libelle}}</td>
+                <td>{{$accessoire->sous_familleLinked->libelle}}</td>
+                <td>{{$accessoire->prix}}</td>
+                <td>{{$accessoire->seuil}}</td>
                 <td>
-                  @if (empty($produit->image))
+                  @if (empty($accessoire->image))
                     {{'VIDE'}}
                   @else
-                    <img src="{{asset('images').'/'.$produit->image}}" width="60px" height="50px" alt="{{$produit->image}}">
+                    <img src="{{asset('images').'/'.$accessoire->image}}" width="60px" height="50px" alt="{{$accessoire->image}}">
                   @endif
                 </td>
                 <td>
-                  <a href="{{route('produit_edit',$produit)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
-                  <a href="{{route('produit_delete',$produit)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
+                  <a href="{{route('produit_edit',$accessoire)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i> modifier</a>
+                  <a href="{{route('produit_delete',$accessoire)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i> supprimer</a>
                 </td>
               </tr>
             @endforeach

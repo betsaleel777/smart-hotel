@@ -59,7 +59,9 @@ class SousFamillesController extends Controller
   }
 
   public function show(int $id){
-    $sous_famille = SousFamille::with('produits')->findOrFail($id) ;
+    $sous_famille = SousFamille::with(['produits' => function($query){
+      $query->where('genre','consommable') ;
+    }])->findOrFail($id) ;
     $titre = 'Produits de '.$sous_famille->libelle ;
     return view('parametre.sous_famille.show',compact('titre','sous_famille')) ;
   }

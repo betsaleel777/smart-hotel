@@ -10,7 +10,7 @@ use App\SousFamille ;
 class ProduitsController extends Controller
 {
     public function index(){
-       $produits = Produit::with('sous_familleLinked')->get() ;
+       $produits = Produit::with('sous_familleLinked')->get()->where('genre','consommable') ;
        $titre = 'Produits' ;
        return view('parametre.produit.index',compact('produits','titre')) ;
     }
@@ -63,7 +63,6 @@ class ProduitsController extends Controller
       $produit->seuil = $request->seuil ;
       $produit->prix = $request->prix ;
       $produit->sous_famille = $request->sous_famille ;
-      $produit->genre = $request->genre ;
       if(!empty($request->image)){
         $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
         File::delete($oldpath) ;
@@ -73,6 +72,7 @@ class ProduitsController extends Controller
       }
       $produit->save() ;
       $message = 'le produit: '.$produit->getOriginal('libelle').' a été modifié avec succès!!' ;
+      // if(url()->previous() === '')
       return redirect()->route('produit_index')->with('success',$message) ;
     }
 
@@ -88,6 +88,34 @@ class ProduitsController extends Controller
       $titre = 'Associer à '.$sous_famille->libelle ;
       return view('parametre.produit.plug',compact('titre','sous_famille')) ;
     }
+
+    //----------------------------------- accessoire stand ------------------------------
+     public function accessoires(){
+       $titre = 'Accéssoires' ;
+       $accessoires = Produit::get()->where('genre','accessoire') ;
+       return view('parametre.produit.accessoire.index', compact('accessoires','titre')) ;
+     }
+
+     public function accessoireAdd(){
+        $sous_familles = SousFamille::get()->pluck('libelle','id') ;
+        $titre = 'Ajouter Produit' ;
+        return view('parametre.produit.accessoire.add',compact('sous_familles','titre')) ;
+     }
+
+     public function accessoireStore(Request $request){
+       $this->validate($request,Produit::RULES,Produit::MESSAGES) ;
+       $produit = new Produit($request->all()) ;
+       if(!empty($request->image)){
+         $imageName = time().'.'.$request->image->getClientOriginalExtension();
+         $request->image->move(public_path('images'), $imageName) ;
+         $produit->image = $imageName ;
+       }
+       $produit->genre = 'accessoire' ;
+       $produit->immatriculer() ;
+       $produit->save() ;
+       $message = 'le produit '.$produit->libelle.'a été enregistré avec succès';
+       return redirect()->route('accessoire_index')->with('success',$message) ;
+     }
 
     //-------------------------------- api function ----------------------------------------------
     public function getAll(){

@@ -26,15 +26,9 @@
                     <input name="prix" class="form-control" id="prix">
                 </div>
                 {!!$errors->first('prix','<p style="color:#a94442">:message</p>')!!}
-
                 <div class="form-group">
-                   <label for="genre">Accéssoire:</label>
-                   <input id="genre" type="checkbox" name="genre" value="accéssoire">
-                </div>
-
-                <div class="form-group">
-                  <label for="seuil">Seuil:</label>
-                  <input name="seuil" class="form-control" id="seuil">
+                    <label for="seuil">Seuil:</label>
+                    <input name="seuil" class="form-control" id="seuil">
                 </div>
                 {!!$errors->first('seuil','<p style="color:#a94442">:message</p>')!!}
 

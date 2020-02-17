@@ -6,12 +6,12 @@
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h5 class="m-0">Familles</h5>
+        <h5 class="m-0">Sous Familles Détails</h5>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-8">
-            <h6 class="card-title">Liste des produits de {{$sous_famille->libelle}}</h6>
+            <h6 class="card-title">Liste des produits de {{$sous_famille->libelle}} (consommables)</h6>
           </div>
           <div class="col-md-2">
            <a style="width:100%" href="{{route('produit_index')}}" class="btn btn-outline-primary"><i class="fas fa-cube"></i> liste produits</a>
