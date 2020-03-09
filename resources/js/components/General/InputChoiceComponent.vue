@@ -48,6 +48,7 @@ export default {
         BFormText,
         BFormInvalidFeedback
     },
+    props: ['usingby','synchrone'],
     data() {
         return {
             choice: null,
@@ -58,7 +59,13 @@ export default {
         }
     },
     mounted() {
-        this.getConsommables()
+        if(this.usingby === 'destockage'){
+          this.getAccessoires()
+        }else if(this.usingby === 'appro'){
+          this.getProducts()
+        }else{
+          this.getConsommables()
+        }
     },
     computed:{
       quantiteState(){
@@ -98,6 +105,26 @@ export default {
             }).catch((err) => {
                 console.log(err)
             })
+        },
+        getProducts() {
+            axios.get('/api/produit/all').then((response) => {
+                const {
+                    products
+                } = response.data
+                this.produits = products
+            }).catch((err) => {
+                console.log(err)
+            })
+        },
+        getAccessoires(){
+          axios.get('/api/produit/accessoire/all').then((response) => {
+              const {
+                  accessoires
+              } = response.data
+              this.produits = accessoires
+          }).catch((err) => {
+              console.log(err)
+          })
         },
         addit(){
             this.$root.$emit('add',this.produit,this.quantite)

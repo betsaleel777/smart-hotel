@@ -30,6 +30,8 @@ Vue.component('progression', require('./components/Passage/AttributionIndexProgr
 Vue.component('calendrier', require('./components/Sejour/CalendrierComponent.vue').default)
 Vue.component('input-product', require('./components/Restauration/InputProductComponent.vue').default)
 Vue.component('synthese-product', require('./components/Restauration/SyntheseProductComponent.vue').default)
+Vue.component('input-choice', require('./components/General/InputChoiceComponent.vue').default)
+Vue.component('synthese-choice', require('./components/General/SyntheseChoiceComponent.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

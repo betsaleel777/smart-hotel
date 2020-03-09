@@ -32,7 +32,11 @@ class AttributionsPassage extends Model
     }
 
     public function produits(){
-      return $this->belongsToMany(Produit::class,'restaurations' ,'passage','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
+      return $this->belongsToMany(Produit::class,'restaurations','passage','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
     }
+
+    // public function destockes(){
+    //   return $this->belongsToMany(Produit::class,'destockages','attribution_passage','produit')->withPivot('quantite','user','attribution_sejour')->withTimestamps() ;
+    // }
 
 }

@@ -123,7 +123,13 @@ Route::prefix('home')->group(function () {
   Route::get('/restauration/passage/pdf/proforma/{attribution}','RestaurationsController@passageProformaPdf')->name('resto_passage_proforma_pdf') ;
   Route::get('/restauration/passage/pdf/facture/{attribution}','RestaurationsController@passageFacturePdf')->name('resto_passage_facture_pdf') ;
 
-  Route::get('/approvisionnement','ApprovisionnementsController@index')->name('approvisionnement_index') ;
+  Route::prefix('/approvisionnement')->group(function(){
+    Route::get('/','ApprovisionnementsController@index')->name('appro_index') ;
+    Route::get('/add','ApprovisionnementsController@add')->name('appro_add') ;
+    Route::get('/edit/{id}','ApprovisionnementsController@edit')->name('appro_edit') ;
+    Route::get('/update','ApprovisionnementsController@update')->name('appro_update') ;
+  });
+
 
   Route::prefix('/facture')->group(function(){
     Route::get('/','Facturescontroller@index')->name('facture_index') ;
@@ -133,7 +139,8 @@ Route::prefix('home')->group(function () {
     Route::get('/pdf/{id}','Facturescontroller@pdf')->name('facture_pdf') ;
   });
 
-  Route::get('/destockage/add/{id}','DestockagesController@add')->name('destockage_add') ;
+  Route::get('/destockage/add/sejour/{id}','DestockagesController@addFromSejour')->name('destockage_sejour_add') ;
+  Route::get('/destockage/add/passage/{id}','DestockagesController@addFromPassage')->name('destockage_passage_add') ;
   Route::post('/destockage/store', 'DestockagesController@store')->name('destockage_store') ;
 
 });

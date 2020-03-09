@@ -155,9 +155,20 @@ class ProduitsController extends Controller
       return response()->json(['products' => $produits]) ;
     }
 
+    public function getConsommables(){
+      $produits = Produit::select('id','libelle')->where('genre','consommable')->get()->all() ;
+      return response()->json(['products' => $produits]) ;
+    }
+
     public function getDetails(Request $request){
       $produit = Produit::with('sous_familleLinked')->findOrFail($request->produit) ;
       $produit->image = asset('images').'/'.$produit->image ;
       return response()->json(['produit' => $produit]) ;
     }
+
+    public function getAccessoires(){
+      $accessoires = Produit::select('id','libelle')->where('genre','accessoire')->get()->all();
+      return response()->json(['accessoires' => $accessoires]) ;
+    }
+
 }

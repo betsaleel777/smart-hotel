@@ -126,10 +126,10 @@ export default {
     },
     methods: {
         runRestaurantPage() {
-            location.href = '/home/restauration/add/' + this.idSejourAttribution
+          location.href = '/home/restauration/add/' + this.idSejourAttribution
         },
         runAccessoirePage(){
-          location.href = '/home/destockage/add/' + this.idSejourAttribution
+          location.href = '/home/destockage/add/sejour/' + this.idSejourAttribution
         },
         handleSelect(info) {
             const end = moment(info.endStr).subtract(1, 'days')

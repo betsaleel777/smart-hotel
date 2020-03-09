@@ -10,14 +10,13 @@ class ChambresController extends Controller
 {
   public function index(){
     $titre = 'Chambres' ;
-    $chambres = Chambre::with('typeLinked','batimentLinked')->get() ;
+    $chambres = Chambre::with('typeLinked','batimentLinked')->get()->all() ;
     return view('parametre.chambre.index',compact('titre','chambres')) ;
   }
 
   public function add(){
     $titre = 'Ajouter Chambre' ;
     $types = Type::get()->pluck('libelle','id') ;
-    // dd($types) ;
     $batiments = Batiment::get()->pluck('libelle','id') ;
     return view('parametre.chambre.add',compact('titre','types','batiments')) ;
   }

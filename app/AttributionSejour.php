@@ -42,4 +42,8 @@ class AttributionSejour extends Model
     public function produits(){
         return $this->belongsToMany(Produit::class,'restaurations' ,'sejour','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
     }
+
+    // public function destockes(){
+    //   return $this->belongsToMany(Produit::class,'destockages','attribution_sejour','produit')->withPivot('quantite','user','attribution_passage')->withTimestamps() ;
+    // }
 }

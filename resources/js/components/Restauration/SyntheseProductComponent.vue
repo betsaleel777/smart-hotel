@@ -12,7 +12,7 @@
                 </li>
             </ul>
         </b-card-text>
-        <div v-if="!exporter" class="row">
+        <div class="row">
             <div role="group" class=" btn-group-vertical col-md-4">
                 <button @click="saveProforma" class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button>
                 <button @click="proformaPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
@@ -22,10 +22,6 @@
                 <button @click="facturerPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
             </div>
             <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
-        </div>
-        <div v-if="exporter" class="row">
-           <div class="col-md-8"></div>
-           <div class="col-md-4"><button @click="envoyer" class="btn btn-primary"><i class="fas fa-trash-alt"></i> Envoyer</button></div>
         </div>
     </b-card>
 </div>
@@ -41,7 +37,7 @@ export default {
         BCard,
         BCardText
     },
-    props: [ 'client', 'passage', 'attribution' ,'exporter', 'usingBy' , 'simple'],
+    props: [ 'client', 'passage', 'attribution'],
     data() {
         return {
             total: '0',
@@ -49,9 +45,7 @@ export default {
         }
     },
     mounted() {
-        if(!this.simple){
-          this.getProformas()
-        }
+        this.getProformas()
         this.$root.$on('add', (produit, quantite) => {
             if (produit && quantite) {
                 let elt = {}
@@ -156,9 +150,6 @@ export default {
         facturerPdf() {
             const url = this.passage ? '/home/restauration/passage/pdf/facture/' : '/home/restauration/sejour/pdf/facture/'
             location.href = url + this.attribution
-        },
-        envoyer(){
-          console.log('running envoyer')
         }
     }
 }

@@ -9,15 +9,15 @@
   <div class="col-md-12">
       <div class="card card-primary">
           <div class="card-header">
-              <h3 class="card-title">Matériel de chambre</h3>
+              <h3 class="card-title">Approvisionnements de produits</h3>
           </div>
           <div class="container">
             <div class="row">
               <div class="col-md-6">
-                 <input-choice :usingby="'destockage'"></input-choice>
+                 <input-choice :usingby="'appro'"></input-choice>
               </div>
               <div class="col-md-6">
-                 <synthese-choice :synchrone="true" :from="'{{$origine}}'" :usingby="'destockage'" :attribution="{{$attribution}}"></synthese-choice>
+                 <synthese-choice :usingby="'appro'"></synthese-choice>
               </div>
             </div>
           </div>

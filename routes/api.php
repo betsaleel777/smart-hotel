@@ -34,7 +34,10 @@ Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete')->name('
 Route::get('/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces') ;
 
 Route::get('/produit/all', 'ProduitsController@getAll')->name('all_produit') ;
+Route::get('/produit/consommables/all', 'ProduitsController@getConsommables')->name('all_consommables') ;
+Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires')->name('all_accessoire') ;
 Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit') ;
+
 
 Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas') ;
 Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas')->name('resto_passage_proformas') ;
@@ -44,3 +47,9 @@ Route::post('/restauration/solder', 'RestaurationsController@solder')->name('sol
 Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder')->name('solde_passage_proforma') ;
 Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas') ;
 Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma') ;
+
+Route::post('/destockage/save', 'DestockagesController@save')->name('destockage_save') ;
+Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved')->name('produit_sejour_saved') ;
+Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved')->name('produit_passage_saved') ;
+
+Route::post('/approvisionnement/save','ApprovisionnementsController@save')->name('appro_save') ;
