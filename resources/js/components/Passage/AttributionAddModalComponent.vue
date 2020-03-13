@@ -48,7 +48,7 @@ export default {
             event.preventDefault()
             let current = this
             //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
-            axios.post('/api/attribution/passage', {
+            axios.post('/ajax/attribution/passage', {
                     batiment: current.batiment,
                     chambre: current.chambre,
                     heure: current.heure,

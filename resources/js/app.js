@@ -32,6 +32,7 @@ Vue.component('input-product', require('./components/Restauration/InputProductCo
 Vue.component('synthese-product', require('./components/Restauration/SyntheseProductComponent.vue').default)
 Vue.component('input-choice', require('./components/General/InputChoiceComponent.vue').default)
 Vue.component('synthese-choice', require('./components/General/SyntheseChoiceComponent.vue').default)
+Vue.component('modal-button-appro', require('./components/Appro/ModalButtonComponent.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

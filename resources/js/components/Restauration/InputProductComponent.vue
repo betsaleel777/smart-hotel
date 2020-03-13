@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         getDetails() {
-            axios.post('/api/produit/show', {
+            axios.post('/ajax/produit/show', {
                 produit: this.choice,
             }).then((response) => {
                 const {
@@ -90,7 +90,7 @@ export default {
             })
         },
         getConsommables() {
-            axios.get('/api/produit/consommables/all').then((response) => {
+            axios.get('/ajax/produit/consommables/all').then((response) => {
                 const {
                     products
                 } = response.data

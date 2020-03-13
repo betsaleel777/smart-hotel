@@ -9,7 +9,31 @@ class ApprovisionnementsController extends Controller
 {
   public function index(){
     $titre = 'Approvisionnement' ;
-    $appros = Approvisionnement::with('userLinked','produitLinked')->get() ;
+    $appros = Approvisionnement::with(['produitLinked' => function($query){
+      return $query->select('id','libelle','seuil') ;
+    } ])->get() ;
+    return view('stock.appro.index', compact('titre','appros')) ;
+  }
+
+  public function accessoires(){
+    $titre = 'Approvisionnement Accéssoire' ;
+    $appros = Approvisionnement::with(['produitLinked' => function($query){
+      return $query->where('genre','accessoire')->select('id','libelle','seuil') ;
+    } ])->get()->all() ;
+    $appros = array_values(array_filter($appros,function($appro){
+      return !empty($appro->produitLinked)??$appro ;
+    }));
+    return view('stock.appro.index', compact('titre','appros')) ;
+  }
+
+  public function consommables(){
+    $titre = 'Approvisionnement Consommables' ;
+    $appros = Approvisionnement::with(['produitLinked' => function($query){
+      return $query->where('genre','consommable')->select('id','libelle','seuil') ;
+    } ])->get()->all() ;
+    $appros = array_values(array_filter($appros,function($appro){
+      return !empty($appro->produitLinked)??$appro ;
+    }));
     return view('stock.appro.index', compact('titre','appros')) ;
   }
 
@@ -19,11 +43,21 @@ class ApprovisionnementsController extends Controller
   }
 
   public function save(Request $request){
-   return response()->json([$request->all()]) ;
+   foreach ($request->items as $produit) {
+     $data = ['produit' => $produit['id'],
+              'quantite' => $produit['quantite'],
+              'user' => null
+             ] ;
+     Approvisionnement::create($data) ;
+   }
+   return response()->json([$data]) ;
   }
 
-  public function edit(int $id){
-
+  public function edit(Request $request){
+    $appro = Approvisionnement::findOrFail($request->id) ;
+    $appro->quantite = $request->quantite ;
+    $appro->save() ;
+    return response()->json() ;
   }
 
   public function update(Request $request,int $id){

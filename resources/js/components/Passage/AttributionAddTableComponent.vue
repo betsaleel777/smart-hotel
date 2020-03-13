@@ -75,7 +75,7 @@ export default {
         },
         fetchAllRooms: function(batiment) {
             let current = this
-            axios.get('/api/chambres/all/' + batiment).then(function(response) {
+            axios.get('/ajax/chambres/all/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
@@ -83,7 +83,7 @@ export default {
         },
         fetchEmptyRooms: function(batiment) {
             let current = this
-            axios.get('/api/chambres/empty/' + batiment).then(function(response) {
+            axios.get('/ajax/chambres/empty/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
@@ -91,7 +91,7 @@ export default {
         },
         fetchUsedRooms: function(batiment) {
             let current = this
-            axios.get('/api/chambres/used/' + batiment).then(function(response) {
+            axios.get('/ajax/chambres/used/' + batiment).then(function(response) {
                 current.chambres = response.data.chambres
             }, function(response) {
                 console.log('une erreure a eu lieu', response);
@@ -107,7 +107,7 @@ export default {
             }
         },
         liberer(id_chambre) {
-            axios.post('/api/liberation/passage/', {
+            axios.post('/ajax/liberation/passage/', {
                 chambre:id_chambre
             }).then(function(response) {
                 location.href = '/home/attributions'

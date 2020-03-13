@@ -34,7 +34,7 @@
                 {!!$errors->first('cout_passage','<p  style="color:#a94442">:message</p>')!!}
 
                 <div class="form-group">
-                    <label for="exampleInputEmail4">Coût de Réservation:</label>
+                    <label for="exampleInputEmail4">Coût de Réservation (Fcfa/j):</label>
                     <input name="cout_reservation" class="form-control" id="exampleInputEmail4">
                 </div>
                 {!!$errors->first('cout_reservation','<p  style="color:#a94442">:message</p>')!!}

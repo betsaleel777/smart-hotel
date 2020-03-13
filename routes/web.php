@@ -61,6 +61,15 @@ Route::prefix('parametre')->group(function () {
      Route::get('/delete/{id}', 'ProduitsController@accessoireDelete')->name('accessoire_delete') ;
   }) ;
 
+  Route::prefix('/consommable')->group(function(){
+     Route::get('/','ProduitsController@consommables')->name('consommable_index') ;
+     Route::get('/add', 'ProduitsController@consommableAdd')->name('consommable_add') ;
+     Route::post('/store','ProduitsController@consommableStore')->name('consommable_store') ;
+     Route::get('/edit/{id}', 'ProduitsController@consommableEdit')->name('consommable_edit') ;
+     Route::post('/update/{id}', 'ProduitsController@consommableUpdate')->name('consommable_update') ;
+     Route::get('/delete/{id}', 'ProduitsController@consommableDelete')->name('consommable_delete') ;
+  }) ;
+
   Route::prefix('/sous_famille')->group(function(){
     Route::get('/', 'SousFamillesController@index')->name('sous_famille_index') ;
     Route::get('/add', 'SousFamillesController@add')->name('sous_famille_add') ;
@@ -125,6 +134,8 @@ Route::prefix('home')->group(function () {
 
   Route::prefix('/approvisionnement')->group(function(){
     Route::get('/','ApprovisionnementsController@index')->name('appro_index') ;
+    Route::get('/accessoires','ApprovisionnementsController@accessoires')->name('appro_accessioire_index') ;
+    Route::get('/consommables','ApprovisionnementsController@consommables')->name('appro_consommable_index') ;
     Route::get('/add','ApprovisionnementsController@add')->name('appro_add') ;
     Route::get('/edit/{id}','ApprovisionnementsController@edit')->name('appro_edit') ;
     Route::get('/update','ApprovisionnementsController@update')->name('appro_update') ;
@@ -132,11 +143,12 @@ Route::prefix('home')->group(function () {
 
 
   Route::prefix('/facture')->group(function(){
-    Route::get('/','Facturescontroller@index')->name('facture_index') ;
-    Route::get('/show/{id}','Facturescontroller@show')->name('facture_index') ;
-    Route::get('/edit/{id}','Facturescontroller@edit')->name('facture_edit') ;
-    Route::get('/update/{id}','Facturescontroller@update')->name('facture_update') ;
-    Route::get('/pdf/{id}','Facturescontroller@pdf')->name('facture_pdf') ;
+    Route::get('/','FacturesController@index')->name('facture_index') ;
+    Route::get('/show/{id}','FacturesController@show')->name('facture_show') ;
+    Route::get('/ticket/{id}','FacturesController@ticket')->name('facture_ticket') ;
+    Route::get('/print/{id}','FacturesController@print')->name('facture_print') ;
+    // Route::get('/edit/{id}','FacturesController@edit')->name('facture_edit') ;
+    // Route::get('/update/{id}','FacturesController@update')->name('facture_update') ;
   });
 
   Route::get('/destockage/add/sejour/{id}','DestockagesController@addFromSejour')->name('destockage_sejour_add') ;
@@ -144,3 +156,45 @@ Route::prefix('home')->group(function () {
   Route::post('/destockage/store', 'DestockagesController@store')->name('destockage_store') ;
 
 });
+
+Route::prefix('/ajax')->group(function(){
+
+  Route::get('/batiments/all/', 'BatimentsController@allBatiments')->name('all_batiment') ;
+  Route::get('/chambres/all/{batiment}', 'ApiPassageController@allRooms')->name('all_chambre') ;
+  Route::get('/chambres/empty/{batiment}', 'ApiPassageController@emptyRooms')->name('empty_chambre') ;
+  Route::get('/chambre/details/{chambre}', 'ChambresController@details')->name('chambre_details') ;
+  Route::get('/chambres/used/{batiment}', 'ApiPassageController@usedRooms')->name('used_chambre') ;
+  Route::post('/attribution/passage', 'ApiPassageController@attribuer')->name('attribution_passage') ;
+  Route::post('/liberation/passage', 'ApiPassageController@liberer')->name('liberation_passage') ;
+
+  Route::post('/sejour/add', 'AttributionsSejoursController@add')->name('attributions_sejour_add') ;
+  Route::get('/sejour/infos/{attribution}', 'AttributionsSejoursController@infos')->name('attributions_sejour_infos') ;
+  Route::get('/sejour/all', 'AttributionsSejoursController@getAll')->name('attributions_sejour_all') ;
+  Route::post('/sejour/update', 'AttributionsSejoursController@update')->name('attributions_sejour_update') ;
+  Route::post('/sejour/liberer', 'AttributionsSejoursController@liberer')->name('attributions_sejour_liberation') ;
+  Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete')->name('attributions_sejour_delete') ;
+
+  Route::get('/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces') ;
+
+  Route::get('/produit/all', 'ProduitsController@getAll')->name('all_produit') ;
+  Route::get('/produit/consommables/all', 'ProduitsController@getConsommables')->name('all_consommables') ;
+  Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires')->name('all_accessoire') ;
+  Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit') ;
+
+
+  Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas') ;
+  Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas')->name('resto_passage_proformas') ;
+  Route::post('/restauration/save', 'RestaurationsController@saveProformas')->name('save_proformas') ;
+  Route::post('/restauration/passage/save', 'RestaurationsController@savePassageProformas')->name('save_passage_proformas') ;
+  Route::post('/restauration/solder', 'RestaurationsController@solder')->name('solde_proforma') ;
+  Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder')->name('solde_passage_proforma') ;
+  Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas') ;
+  Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma') ;
+
+  Route::post('/destockage/save', 'DestockagesController@save')->name('destockage_save') ;
+  Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved')->name('produit_sejour_saved') ;
+  Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved')->name('produit_passage_saved') ;
+
+  Route::post('/approvisionnement/save','ApprovisionnementsController@save')->name('appro_save') ;
+  Route::post('/approvisionnement/edit','ApprovisionnementsController@edit')->name('appro_edit') ;
+}) ;

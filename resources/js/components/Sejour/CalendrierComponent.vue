@@ -60,7 +60,7 @@
                     <button @click="liberer" class="btn btn-light"><i class="fas fa-door-open"></i>libération</button>
                 </div>
                 <div class="col-md-3">
-                    <button @click="runAccessoirePage" class="btn btn-light"><i class="fas fa-door-open"></i>accessoire</button>
+                    <button @click="runAccessoirePage" class="btn btn-light"><i class="fas fa-box"></i>accessoire</button>
                 </div>
                 <div class="col-md-3">
                     <button @click="supprimer" class="btn btn-light"><i class="fas fa-trash"></i>suppression</button>
@@ -162,7 +162,7 @@ export default {
             return colors[Math.floor(Math.random() * 8)]
         },
         getType() {
-            axios.get('/api/typePiece/all').then((response) => {
+            axios.get('/ajax/typePiece/all').then((response) => {
                 this.typePieces = response.data.pieces
             }).catch((error) => {
                 console.log(error)
@@ -181,21 +181,21 @@ export default {
             return pourcentages
         },
         getChambres() {
-            axios.get('/api/chambres/empty/' + this.batiment).then((response) => {
+            axios.get('/ajax/chambres/empty/' + this.batiment).then((response) => {
                 this.chambres = response.data.chambres
             }).catch((error) => {
                 console.log(error)
             })
         },
         getBatiments() {
-            axios.get('/api/batiments/all/').then((response) => {
+            axios.get('/ajax/batiments/all/').then((response) => {
                 this.batiments = response.data.all
             }).catch((error) => {
                 console.log(error)
             })
         },
         getRoomDetails() {
-            axios.get('/api/chambre/details/' + this.chambre).then((response) => {
+            axios.get('/ajax/chambre/details/' + this.chambre).then((response) => {
                 let {
                     chambre
                 } = response.data
@@ -209,7 +209,7 @@ export default {
             })
         },
         getEvents() {
-            axios.get('/api/sejour/all').then((response) => {
+            axios.get('/ajax/sejour/all').then((response) => {
                 this.evenement = response.data.events.map((event) => {
                     let calebasse = {}
                     calebasse.id = event.id
@@ -224,7 +224,7 @@ export default {
             })
         },
         getModalInfos() {
-            axios.get('/api/sejour/infos/' + this.idSejourAttribution).then((response) => {
+            axios.get('/ajax/sejour/infos/' + this.idSejourAttribution).then((response) => {
                 let {
                     encaissement,
                     sejour_linked
@@ -244,7 +244,7 @@ export default {
             })
         },
         liberer() {
-            axios.post('/api/sejour/liberer', {
+            axios.post('/ajax/sejour/liberer', {
                 attribution: this.idSejourAttribution,
                 _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
@@ -257,7 +257,7 @@ export default {
             })
         },
         supprimer() {
-            axios.post('/api/sejour/supprimer', {
+            axios.post('/ajax/sejour/supprimer', {
                 attribution: this.idSejourAttribution,
                 _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
@@ -288,7 +288,7 @@ export default {
             if (this.delais === 0) {
                 this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage')
             }
-            axios.post('/api/sejour/update', {
+            axios.post('/ajax/sejour/update', {
                 nom: this.client.nom,
                 prenom: this.client.prenom,
                 debut: this.timeInterval.debut,
@@ -310,7 +310,7 @@ export default {
             })
         },
         saveEvent() {
-            axios.post('/api/sejour/add', {
+            axios.post('/ajax/sejour/add', {
                 nom: this.client.nom,
                 prenom: this.client.prenom,
                 piece: this.client.piece,

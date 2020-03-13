@@ -88,7 +88,7 @@ export default {
             this.total = total
         },
         getProformas() {
-            const url = this.passage ? '/api/restauration/passage/proformas' : '/api/restauration/proformas'
+            const url = this.passage ? '/ajax/restauration/passage/proformas' : '/ajax/restauration/proformas'
             axios.post(url, {
                 attribution: this.attribution,
             }).then((response) => {
@@ -100,7 +100,7 @@ export default {
         },
         saveProforma() {
             if (this.list.length > 0) {
-                const url = this.passage ? '/api/restauration/passage/save' : '/api/restauration/save'
+                const url = this.passage ? '/ajax/restauration/passage/save' : '/ajax/restauration/save'
                 axios.post(url, {
                     proformas: this.list,
                     attribution: this.attribution,
@@ -115,7 +115,7 @@ export default {
         },
         supprimer() {
             if (this.list.length > 0) {
-                const url = this.passage ? '/api/restauration/passage/save' : '/api/restauration/save'
+                const url = this.passage ? '/ajax/restauration/passage/save' : '/ajax/restauration/save'
                 axios.post(url, {
                     attribution: this.attribution,
                 }).then((response) => {
@@ -130,7 +130,7 @@ export default {
         },
         solder() {
             if (this.list.length > 0) {
-                const url = this.passage ? '/api/restauration/passage/solder' : '/api/restauration/solder'
+                const url = this.passage ? '/ajax/restauration/passage/solder' : '/ajax/restauration/solder'
                 axios.post(url, {
                     attribution: this.attribution,
                     proformas: this.list,

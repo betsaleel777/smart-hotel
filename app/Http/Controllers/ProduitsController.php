@@ -149,6 +149,68 @@ class ProduitsController extends Controller
        return redirect()->route('accessoire_index')->with('success',$message) ;
      }
 
+     //------------------------------consommable stand ----------------------------------------
+
+      public function consommables(){
+        $titre = 'Consommables' ;
+        $consommables = Produit::get()->where('genre','consommable') ;
+        return view('parametre.produit.consommable.index', compact('consommables','titre')) ;
+      }
+
+      public function consommableAdd(){
+         $sous_familles = SousFamille::get()->pluck('libelle','id') ;
+         $titre = 'Ajouter Accessoire' ;
+         return view('parametre.produit.consommable.add',compact('sous_familles','titre')) ;
+      }
+
+      public function consommableStore(Request $request){
+        $this->validate($request,Produit::RULES,Produit::MESSAGES) ;
+        $produit = new Produit($request->all()) ;
+        if(!empty($request->image)){
+          $imageName = time().'.'.$request->image->getClientOriginalExtension();
+          $request->image->move(public_path('images'), $imageName) ;
+          $produit->image = $imageName ;
+        }
+        $produit->genre = 'consommable' ;
+        $produit->immatriculer() ;
+        $produit->save() ;
+        $message = 'le consommable '.$produit->libelle.' a été enregistré avec succès';
+        return redirect()->route('consommable_index')->with('success',$message) ;
+      }
+
+      public function consommableEdit(int $id){
+        $produit = Produit::with('sous_familleLinked')->findOrFail($id) ;
+        $sous_familles = SousFamille::get()->pluck('libelle','id') ;
+        $titre = 'Modifier Consommable' ;
+        return view('parametre.produit.consommable.edit',compact('sous_familles','titre','produit')) ;
+      }
+
+      public function consommableUpdate(Request $request,int $id){
+        $this->validate($request,Produit::RULES,Produit::MESSAGES) ;
+        $produit = Produit::with('sous_familleLinked')->findOrFail($id) ;
+        $produit->libelle = $request->libelle ;
+        $produit->seuil = $request->seuil ;
+        $produit->prix = $request->prix ;
+        $produit->sous_famille = $request->sous_famille ;
+        if(!empty($request->image)){
+          $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
+          File::delete($oldpath) ;
+          $imageName = time().'.'.$request->image->getClientOriginalExtension();
+          $request->image->move(public_path('images'), $imageName) ;
+          $produit->image = $imageName ;
+        }
+        $produit->save() ;
+        $message = 'le consommable: '.$produit->getOriginal('libelle').' a été modifié avec succès!!' ;
+        return redirect()->route('consommable_index')->with('success',$message) ;
+      }
+
+      public function consommableDelete(int $id){
+        $produit = Produit::findOrFail($id) ;
+        $produit->delete() ;
+        $message = 'le consommable: '.$produit->libelle.' a été supprimé avec succès!!' ;
+        return redirect()->route('consommable_index')->with('success',$message) ;
+      }
+
     //-------------------------------- api function ----------------------------------------------
     public function getAll(){
       $produits = Produit::select('id','libelle')->get()->all() ;

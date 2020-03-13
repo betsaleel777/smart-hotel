@@ -14642,6 +14642,65 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    BButton: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BButton"],
+    VBModal: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["VBModal"]
+  },
+  props: ['id', 'produit', 'valeur'],
+  data: function data() {
+    return {
+      quantite: null
+    };
+  },
+  mounted: function mounted() {
+    this.quantite = this.valeur;
+  },
+  methods: {
+    runModal: function runModal(id) {
+      this.$bvModal.show(id);
+    },
+    send: function send() {
+      if (Number(this.quantite) === 0) {
+        this.$awn.warning('Aucune quantité renseignée !!');
+      } else {
+        axios.post('/ajax/approvisionnement/edit', {
+          quantite: Number(this.quantite),
+          id: Number(this.id)
+        }).then(function (response) {
+          location.reload();
+        })["catch"](function (err) {
+          console.log(err);
+        });
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/General/InputChoiceComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/General/InputChoiceComponent.vue?vue&type=script&lang=js& ***!
@@ -14657,6 +14716,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     BFormSelect: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormSelect"],
     BCard: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BCard"],
+    BFormRadioGroup: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormRadioGroup"],
     BCardText: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BCardText"],
     BFormInput: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormInput"],
     BFormText: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormText"],
@@ -14665,6 +14725,14 @@ __webpack_require__.r(__webpack_exports__);
   props: ['usingby', 'synchrone'],
   data: function data() {
     return {
+      selected: null,
+      options: [{
+        text: 'Consommable',
+        value: 'consommable'
+      }, {
+        text: 'Accéssoire',
+        value: 'accessoire'
+      }],
       choice: null,
       produits: null,
       produit: null,
@@ -14702,7 +14770,7 @@ __webpack_require__.r(__webpack_exports__);
     getDetails: function getDetails() {
       var _this = this;
 
-      axios.post('/api/produit/show', {
+      axios.post('/ajax/produit/show', {
         produit: this.choice
       }).then(function (response) {
         var produit = response.data.produit;
@@ -14715,7 +14783,7 @@ __webpack_require__.r(__webpack_exports__);
     getConsommables: function getConsommables() {
       var _this2 = this;
 
-      axios.get('/api/produit/consommables/all').then(function (response) {
+      axios.get('/ajax/produit/consommables/all').then(function (response) {
         var products = response.data.products;
         _this2.produits = products;
       })["catch"](function (err) {
@@ -14725,7 +14793,7 @@ __webpack_require__.r(__webpack_exports__);
     getProducts: function getProducts() {
       var _this3 = this;
 
-      axios.get('/api/produit/all').then(function (response) {
+      axios.get('/ajax/produit/all').then(function (response) {
         var products = response.data.products;
         _this3.produits = products;
       })["catch"](function (err) {
@@ -14735,12 +14803,15 @@ __webpack_require__.r(__webpack_exports__);
     getAccessoires: function getAccessoires() {
       var _this4 = this;
 
-      axios.get('/api/produit/accessoire/all').then(function (response) {
+      axios.get('/ajax/produit/accessoire/all').then(function (response) {
         var accessoires = response.data.accessoires;
         _this4.produits = accessoires;
       })["catch"](function (err) {
         console.log(err);
       });
+    },
+    getList: function getList() {
+      console.log('is running', this.selected);
     },
     addit: function addit() {
       this.$root.$emit('add', this.produit, this.quantite);
@@ -14844,7 +14915,7 @@ __webpack_require__.r(__webpack_exports__);
     getAccessoriesSaved: function getAccessoriesSaved() {
       var _this2 = this;
 
-      axios.get('/api/destockage/' + this.from + '/saved/' + this.attribution).then(function (response) {
+      axios.get('/ajax/destockage/' + this.from + '/saved/' + this.attribution).then(function (response) {
         _this2.list = response.data.produits.map(function (produit) {
           return {
             id: produit.produit_linked.id,
@@ -14864,10 +14935,10 @@ __webpack_require__.r(__webpack_exports__);
         var urlRedirect = null;
 
         if (this.usingby === 'destockage') {
-          url = '/api/destockage/save';
+          url = '/ajax/destockage/save';
           urlRedirect = '/home/sejour';
         } else if (this.usingby === 'appro') {
-          url = '/api/approvisionnement/save';
+          url = '/ajax/approvisionnement/save';
           urlRedirect = '/home/approvisionnement';
         }
 
@@ -14878,7 +14949,7 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         axios.post(url, {
-          accessoires: this.list,
+          items: this.list,
           passage: attributionPassage,
           sejour: attributionSejour
         }).then(function (response) {
@@ -14953,7 +15024,7 @@ __webpack_require__.r(__webpack_exports__);
       event.preventDefault();
       var current = this; //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
 
-      axios.post('/api/attribution/passage', {
+      axios.post('/ajax/attribution/passage', {
         batiment: current.batiment,
         chambre: current.chambre,
         heure: current.heure,
@@ -15101,7 +15172,7 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
     },
     fetchAllRooms: function fetchAllRooms(batiment) {
       var current = this;
-      axios.get('/api/chambres/all/' + batiment).then(function (response) {
+      axios.get('/ajax/chambres/all/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
       }, function (response) {
         console.log('une erreure a eu lieu', response);
@@ -15109,7 +15180,7 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
     },
     fetchEmptyRooms: function fetchEmptyRooms(batiment) {
       var current = this;
-      axios.get('/api/chambres/empty/' + batiment).then(function (response) {
+      axios.get('/ajax/chambres/empty/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
       }, function (response) {
         console.log('une erreure a eu lieu', response);
@@ -15117,7 +15188,7 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
     },
     fetchUsedRooms: function fetchUsedRooms(batiment) {
       var current = this;
-      axios.get('/api/chambres/used/' + batiment).then(function (response) {
+      axios.get('/ajax/chambres/used/' + batiment).then(function (response) {
         current.chambres = response.data.chambres;
       }, function (response) {
         console.log('une erreure a eu lieu', response);
@@ -15133,7 +15204,7 @@ Vue.component('attribution-add-modal', __webpack_require__(/*! ./AttributionAddM
       }
     },
     liberer: function liberer(id_chambre) {
-      axios.post('/api/liberation/passage/', {
+      axios.post('/ajax/liberation/passage/', {
         chambre: id_chambre
       }).then(function (response) {
         location.href = '/home/attributions';
@@ -15274,7 +15345,7 @@ __webpack_require__.r(__webpack_exports__);
     getDetails: function getDetails() {
       var _this = this;
 
-      axios.post('/api/produit/show', {
+      axios.post('/ajax/produit/show', {
         produit: this.choice
       }).then(function (response) {
         var produit = response.data.produit;
@@ -15287,7 +15358,7 @@ __webpack_require__.r(__webpack_exports__);
     getConsommables: function getConsommables() {
       var _this2 = this;
 
-      axios.get('/api/produit/consommables/all').then(function (response) {
+      axios.get('/ajax/produit/consommables/all').then(function (response) {
         var products = response.data.products;
         _this2.produits = products;
       })["catch"](function (err) {
@@ -15411,7 +15482,7 @@ __webpack_require__.r(__webpack_exports__);
     getProformas: function getProformas() {
       var _this2 = this;
 
-      var url = this.passage ? '/api/restauration/passage/proformas' : '/api/restauration/proformas';
+      var url = this.passage ? '/ajax/restauration/passage/proformas' : '/ajax/restauration/proformas';
       axios.post(url, {
         attribution: this.attribution
       }).then(function (response) {
@@ -15426,7 +15497,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       if (this.list.length > 0) {
-        var url = this.passage ? '/api/restauration/passage/save' : '/api/restauration/save';
+        var url = this.passage ? '/ajax/restauration/passage/save' : '/ajax/restauration/save';
         axios.post(url, {
           proformas: this.list,
           attribution: this.attribution
@@ -15443,7 +15514,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       if (this.list.length > 0) {
-        var url = this.passage ? '/api/restauration/passage/save' : '/api/restauration/save';
+        var url = this.passage ? '/ajax/restauration/passage/save' : '/ajax/restauration/save';
         axios.post(url, {
           attribution: this.attribution
         }).then(function (response) {
@@ -15461,7 +15532,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       if (this.list.length > 0) {
-        var url = this.passage ? '/api/restauration/passage/solder' : '/api/restauration/solder';
+        var url = this.passage ? '/ajax/restauration/passage/solder' : '/ajax/restauration/solder';
         axios.post(url, {
           attribution: this.attribution,
           proformas: this.list
@@ -15663,7 +15734,7 @@ __webpack_require__.r(__webpack_exports__);
     getType: function getType() {
       var _this = this;
 
-      axios.get('/api/typePiece/all').then(function (response) {
+      axios.get('/ajax/typePiece/all').then(function (response) {
         _this.typePieces = response.data.pieces;
       })["catch"](function (error) {
         console.log(error);
@@ -15686,7 +15757,7 @@ __webpack_require__.r(__webpack_exports__);
     getChambres: function getChambres() {
       var _this2 = this;
 
-      axios.get('/api/chambres/empty/' + this.batiment).then(function (response) {
+      axios.get('/ajax/chambres/empty/' + this.batiment).then(function (response) {
         _this2.chambres = response.data.chambres;
       })["catch"](function (error) {
         console.log(error);
@@ -15695,7 +15766,7 @@ __webpack_require__.r(__webpack_exports__);
     getBatiments: function getBatiments() {
       var _this3 = this;
 
-      axios.get('/api/batiments/all/').then(function (response) {
+      axios.get('/ajax/batiments/all/').then(function (response) {
         _this3.batiments = response.data.all;
       })["catch"](function (error) {
         console.log(error);
@@ -15704,7 +15775,7 @@ __webpack_require__.r(__webpack_exports__);
     getRoomDetails: function getRoomDetails() {
       var _this4 = this;
 
-      axios.get('/api/chambre/details/' + this.chambre).then(function (response) {
+      axios.get('/ajax/chambre/details/' + this.chambre).then(function (response) {
         var chambre = response.data.chambre;
         _this4.details = chambre;
         _this4.message.details = "Chambre:".concat(chambre.libelle, ", Type:").concat(chambre.type_linked.libelle, ",\n                     Co\xFBt/J:").concat(chambre.type_linked.cout_reservation, " jours, Delais:").concat(_this4.delais, ",\n                     Prix:").concat(chambre.type_linked.cout_reservation * _this4.delais);
@@ -15715,7 +15786,7 @@ __webpack_require__.r(__webpack_exports__);
     getEvents: function getEvents() {
       var _this5 = this;
 
-      axios.get('/api/sejour/all').then(function (response) {
+      axios.get('/ajax/sejour/all').then(function (response) {
         _this5.evenement = response.data.events.map(function (event) {
           var calebasse = {};
           calebasse.id = event.id;
@@ -15732,7 +15803,7 @@ __webpack_require__.r(__webpack_exports__);
     getModalInfos: function getModalInfos() {
       var _this6 = this;
 
-      axios.get('/api/sejour/infos/' + this.idSejourAttribution).then(function (response) {
+      axios.get('/ajax/sejour/infos/' + this.idSejourAttribution).then(function (response) {
         var _response$data$infos = response.data.infos,
             encaissement = _response$data$infos.encaissement,
             sejour_linked = _response$data$infos.sejour_linked;
@@ -15751,7 +15822,7 @@ __webpack_require__.r(__webpack_exports__);
     liberer: function liberer() {
       var _this7 = this;
 
-      axios.post('/api/sejour/liberer', {
+      axios.post('/ajax/sejour/liberer', {
         attribution: this.idSejourAttribution,
         _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
       }).then(function (response) {
@@ -15768,7 +15839,7 @@ __webpack_require__.r(__webpack_exports__);
     supprimer: function supprimer() {
       var _this8 = this;
 
-      axios.post('/api/sejour/supprimer', {
+      axios.post('/ajax/sejour/supprimer', {
         attribution: this.idSejourAttribution,
         _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
       }).then(function (response) {
@@ -15795,7 +15866,7 @@ __webpack_require__.r(__webpack_exports__);
         this.$awn.warning('le délais ainsi choisit ne nécessite pas l\'enregistrement d\'une réservation, attribuez plutôt une chambre de passage');
       }
 
-      axios.post('/api/sejour/update', {
+      axios.post('/ajax/sejour/update', {
         nom: this.client.nom,
         prenom: this.client.prenom,
         debut: this.timeInterval.debut,
@@ -15818,7 +15889,7 @@ __webpack_require__.r(__webpack_exports__);
     saveEvent: function saveEvent() {
       var _this10 = this;
 
-      axios.post('/api/sejour/add', {
+      axios.post('/ajax/sejour/add', {
         nom: this.client.nom,
         prenom: this.client.prenom,
         piece: this.client.piece,
@@ -98879,6 +98950,79 @@ var e=function(){return(e=Object.assign||function(e){for(var t,r=1,s=arguments.l
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "b-button",
+        {
+          attrs: { variant: "primary" },
+          on: {
+            click: function($event) {
+              return _vm.runModal(_vm.id)
+            }
+          }
+        },
+        [_c("i", { staticClass: "fas fa-edit" })]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        { attrs: { id: _vm.id, title: _vm.produit }, on: { ok: _vm.send } },
+        [
+          _c("p", { staticClass: "my-4" }, [
+            _c("label", { attrs: { for: "quantite" } }, [_vm._v("Quantité:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.quantite,
+                  expression: "quantite"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "quantite", type: "text" },
+              domProps: { value: _vm.quantite },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.quantite = $event.target.value
+                }
+              }
+            })
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/General/InputChoiceComponent.vue?vue&type=template&id=07d560f8&":
 /*!*******************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/General/InputChoiceComponent.vue?vue&type=template&id=07d560f8& ***!
@@ -98894,125 +99038,159 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "form-group" },
-    [
-      _c("label", { attrs: { for: "produit" } }, [_vm._v("Produit")]),
-      _vm._v(" "),
-      _c(
-        "b-form-select",
-        {
-          attrs: { id: "produit", search: "" },
-          on: { change: _vm.getDetails },
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c("b-form-radio-group", {
+          attrs: { options: _vm.options, name: "radio-inline" },
+          on: { change: _vm.getList },
           model: {
-            value: _vm.choice,
+            value: _vm.selected,
             callback: function($$v) {
-              _vm.choice = $$v
+              _vm.selected = $$v
             },
-            expression: "choice"
+            expression: "selected"
           }
-        },
-        _vm._l(_vm.produits, function(produit) {
-          return _c(
-            "option",
-            { key: produit.id, domProps: { value: produit.id } },
-            [_vm._v(_vm._s(produit.libelle))]
-          )
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c("label", { attrs: { for: "quantite" } }, [_vm._v("Quantite")]),
-      _vm._v(" "),
-      _c("b-form-input", {
-        attrs: {
-          id: "quantite",
-          state: _vm.quantiteState,
-          "aria-describedby": "input-live-help input-live-feedback"
-        },
-        model: {
-          value: _vm.quantite,
-          callback: function($$v) {
-            _vm.quantite = $$v
-          },
-          expression: "quantite"
-        }
-      }),
-      _vm._v(" "),
-      _c("b-form-invalid-feedback", { attrs: { id: "input-live-feedback" } }, [
-        _vm._v("\n      Quantite doit être un nombre , non vide !!\n    ")
-      ]),
-      _vm._v(" "),
-      _c("b-form-text", { attrs: { id: "input-live-help" } }, [
-        _vm._v("EX: 4")
-      ]),
-      _vm._v(" "),
-      _vm.showDetails
-        ? _c(
-            "div",
-            { staticClass: "container" },
-            [
-              _c(
-                "b-card",
-                {
-                  staticClass: "mb-3",
-                  attrs: {
-                    "img-width": "40%",
-                    "img-src": _vm.produit.image,
-                    alt: _vm.produit.image,
-                    "img-alt": "Card image",
-                    "img-left": ""
-                  }
-                },
-                [
-                  _c("b-card-text", [
-                    _c("strong", [_vm._v("Référence:")]),
-                    _vm._v(_vm._s(_vm.produit.reference)),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("strong", [_vm._v("Libellé:")]),
-                    _vm._v(_vm._s(_vm.produit.libelle)),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("strong", [_vm._v("Prix:")]),
-                    _vm._v(_vm._s(_vm.produit.prix)),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("strong", [_vm._v("Seuil:")]),
-                    _vm._v(_vm._s(_vm.produit.seuil)),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("strong", [_vm._v("Catégorie:")]),
-                    _vm._v(_vm._s(_vm.produit.sous_famille_linked.libelle)),
-                    _c("br")
-                  ])
-                ],
-                1
-              )
-            ],
-            1
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-9" }),
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c("label", { attrs: { for: "produit" } }, [_vm._v("Produit")]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-3" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              attrs: { width: "100%", type: "button" },
-              on: { click: _vm.addit }
+        _c(
+          "b-form-select",
+          {
+            attrs: { id: "produit", search: "" },
+            on: { change: _vm.getDetails },
+            model: {
+              value: _vm.choice,
+              callback: function($$v) {
+                _vm.choice = $$v
+              },
+              expression: "choice"
+            }
+          },
+          _vm._l(_vm.produits, function(produit) {
+            return _c(
+              "option",
+              { key: produit.id, domProps: { value: produit.id } },
+              [_vm._v(_vm._s(produit.libelle))]
+            )
+          }),
+          0
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c("label", { attrs: { for: "quantite" } }, [_vm._v("Quantite")]),
+        _vm._v(" "),
+        _c("b-form-input", {
+          attrs: {
+            id: "quantite",
+            state: _vm.quantiteState,
+            "aria-describedby": "input-live-help input-live-feedback"
+          },
+          model: {
+            value: _vm.quantite,
+            callback: function($$v) {
+              _vm.quantite = $$v
             },
-            [_vm._v("valider")]
-          )
+            expression: "quantite"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "b-form-invalid-feedback",
+          { attrs: { id: "input-live-feedback" } },
+          [
+            _vm._v(
+              "\n            Quantite doit être un nombre , non vide !!\n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("b-form-text", { attrs: { id: "input-live-help" } }, [
+          _vm._v("EX: 4")
         ])
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _vm.showDetails
+      ? _c(
+          "div",
+          { staticClass: "container" },
+          [
+            _c(
+              "b-card",
+              {
+                staticClass: "mb-3",
+                attrs: {
+                  "img-width": "40%",
+                  "img-src": _vm.produit.image,
+                  alt: _vm.produit.image,
+                  "img-alt": "Card image",
+                  "img-left": ""
+                }
+              },
+              [
+                _c("b-card-text", [
+                  _c("strong", [_vm._v("Référence:")]),
+                  _vm._v(_vm._s(_vm.produit.reference)),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Libellé:")]),
+                  _vm._v(_vm._s(_vm.produit.libelle)),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Prix:")]),
+                  _vm._v(_vm._s(_vm.produit.prix)),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Seuil:")]),
+                  _vm._v(_vm._s(_vm.produit.seuil)),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Catégorie:")]),
+                  _vm._v(_vm._s(_vm.produit.sous_famille_linked.libelle)),
+                  _c("br")
+                ])
+              ],
+              1
+            )
+          ],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-9" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { width: "100%", type: "button" },
+            on: { click: _vm.addit }
+          },
+          [_vm._v("valider")]
+        )
       ])
-    ],
-    1
-  )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -100438,7 +100616,7 @@ var render = function() {
                       on: { click: _vm.runAccessoirePage }
                     },
                     [
-                      _c("i", { staticClass: "fas fa-door-open" }),
+                      _c("i", { staticClass: "fas fa-box" }),
                       _vm._v("accessoire")
                     ]
                   )
@@ -112674,6 +112852,7 @@ vue__WEBPACK_IMPORTED_MODULE_2___default.a.component('input-product', __webpack_
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.component('synthese-product', __webpack_require__(/*! ./components/Restauration/SyntheseProductComponent.vue */ "./resources/js/components/Restauration/SyntheseProductComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.component('input-choice', __webpack_require__(/*! ./components/General/InputChoiceComponent.vue */ "./resources/js/components/General/InputChoiceComponent.vue")["default"]);
 vue__WEBPACK_IMPORTED_MODULE_2___default.a.component('synthese-choice', __webpack_require__(/*! ./components/General/SyntheseChoiceComponent.vue */ "./resources/js/components/General/SyntheseChoiceComponent.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.component('modal-button-appro', __webpack_require__(/*! ./components/Appro/ModalButtonComponent.vue */ "./resources/js/components/Appro/ModalButtonComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -112743,6 +112922,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/Appro/ModalButtonComponent.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/Appro/ModalButtonComponent.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ModalButtonComponent.vue?vue&type=template&id=49f1b41a& */ "./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a&");
+/* harmony import */ var _ModalButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalButtonComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ModalButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Appro/ModalButtonComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ModalButtonComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalButtonComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ModalButtonComponent.vue?vue&type=template&id=49f1b41a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Appro/ModalButtonComponent.vue?vue&type=template&id=49f1b41a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ModalButtonComponent_vue_vue_type_template_id_49f1b41a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

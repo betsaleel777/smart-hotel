@@ -28,7 +28,7 @@ class DestockagesController extends Controller
     }
 
     public function save(Request $request){
-      foreach ($request->accessoires as $accessoire)
+      foreach ($request->items as $accessoire)
       {
         $data = [$request->sejour =>
                   ['quantite' => $accessoire['quantite'],

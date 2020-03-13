@@ -25,7 +25,7 @@
               <th>Libelle</th>
               <th>Repos(Fcfa/h)</th>
               <th>Passage(Fcfa/h)</th>
-              <th>Réservation (Fcfa/h)</th>
+              <th>Réservation (Fcfa/j)</th>
               <th>Option</th>
             </tr>
           </thead>

@@ -22,13 +22,32 @@ class AttributionsSejoursController extends Controller
     public function add(Request $request)
     {
         $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
-        $client = new Client() ;
-        $client->nom = $request->nom ;
-        $client->prenom = $request->prenom ;
-        $client->contact = $request->contact ;
-        $client->numero_piece = $request->numero_piece ;
-        $client->piece = $request->piece ;
-        $client->save() ;
+        $client_with_piece = Client::where('numero_piece',$request->numero_piece)->get()->first() ;
+        $client_with_contact = Client::where('contact',$request->contact)->get()->first() ;
+
+        if(!empty($client_with_piece)){
+          if($client_with_piece->nom !== $request->nom or $client_with_piece->prenom !== $request->prenom){
+            $message = 'Enregistrement annulé pour conflit d\'identité, la pièce: '.$request->numero_piece.' est déjà utilisé par le client'.$client_with_piece->nom ;
+            redirect()->route('attribution.sejour.index')->with('warning',$message) ;
+          }
+        }
+        if(!empty($client_with_contact)){
+          if($client_with_contact->nom !== $request->nom or $client_with_contact->prenom !== $request->prenom){
+            $message = 'Enregistrement annulé pour conflit d\'identité, le contact: '.$request->contact.' est déjà utilisé par le client'.$client_with_contact->nom ;
+            redirect()->route('attribution.sejour.index')->with('warning',$message) ;
+          }
+        }
+        // if(empty($client_with_piece) and empty($client_with_contact)){
+        //   $client = new Client() ;
+        //   $client->nom = $request->nom ;
+        //   $client->prenom = $request->prenom ;
+        //   $client->contact = $request->contact ;
+        //   $client->numero_piece = $request->numero_piece ;
+        //   $client->piece = $request->piece ;
+        //   $client->save() ;
+        // }else{
+        //   $client = $client_with_piece ;
+        // }
         $sejour = new Sejour($request->all()) ;
         $sejour->client = $client->id ;
         $sejour->prix = $chambre->typeLinked->cout_reservation ;

@@ -1,15 +1,22 @@
 <template>
-<div class="form-group">
-    <label for="produit">Produit</label>
-    <b-form-select id="produit" v-on:change="getDetails" search v-model="choice">
-        <option v-for="produit in produits" :key="produit.id" :value="produit.id">{{produit.libelle}}</option>
-    </b-form-select>
-    <label for="quantite">Quantite</label>
-    <b-form-input id="quantite" :state="quantiteState" aria-describedby="input-live-help input-live-feedback" v-model="quantite"></b-form-input>
-    <b-form-invalid-feedback id="input-live-feedback">
-      Quantite doit être un nombre , non vide !!
-    </b-form-invalid-feedback>
-    <b-form-text id="input-live-help">EX: 4</b-form-text>
+<div>
+    <div class="form-group">
+        <b-form-radio-group v-on:change="getList" v-model="selected" :options="options" name="radio-inline"></b-form-radio-group>
+    </div>
+    <div class="form-group">
+        <label for="produit">Produit</label>
+        <b-form-select id="produit" v-on:change="getDetails" search v-model="choice">
+            <option v-for="produit in produits" :key="produit.id" :value="produit.id">{{produit.libelle}}</option>
+        </b-form-select>
+    </div>
+    <div class="form-group">
+        <label for="quantite">Quantite</label>
+        <b-form-input id="quantite" :state="quantiteState" aria-describedby="input-live-help input-live-feedback" v-model="quantite"></b-form-input>
+        <b-form-invalid-feedback id="input-live-feedback">
+            Quantite doit être un nombre , non vide !!
+        </b-form-invalid-feedback>
+        <b-form-text id="input-live-help">EX: 4</b-form-text>
+    </div>
     <div v-if="showDetails" class="container">
         <b-card img-width="40%" :img-src="produit.image" :alt="produit.image" img-alt="Card image" img-left class="mb-3">
             <b-card-text>
@@ -22,10 +29,10 @@
         </b-card>
     </div>
     <div class="row">
-      <div class="col-md-9"></div>
-      <div class="col-md-3">
-        <button width="100%" @click="addit" type="button" class="btn btn-primary">valider</button>
-      </div>
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <button width="100%" @click="addit" type="button" class="btn btn-primary">valider</button>
+        </div>
     </div>
 </div>
 </template>
@@ -34,6 +41,7 @@
 import {
     BFormSelect,
     BCard,
+    BFormRadioGroup,
     BCardText,
     BFormInput,
     BFormText,
@@ -43,48 +51,59 @@ export default {
     components: {
         BFormSelect,
         BCard,
+        BFormRadioGroup,
         BCardText,
         BFormInput,
         BFormText,
         BFormInvalidFeedback
     },
-    props: ['usingby','synchrone'],
+    props: ['usingby', 'synchrone'],
     data() {
         return {
+            selected: null,
+            options: [{
+                    text: 'Consommable',
+                    value: 'consommable'
+                },
+                {
+                    text: 'Accéssoire',
+                    value: 'accessoire'
+                }
+            ],
             choice: null,
             produits: null,
             produit: null,
-            quantite:'',
+            quantite: '',
             showDetails: false,
         }
     },
     mounted() {
-        if(this.usingby === 'destockage'){
-          this.getAccessoires()
-        }else if(this.usingby === 'appro'){
-          this.getProducts()
-        }else{
-          this.getConsommables()
+        if (this.usingby === 'destockage') {
+            this.getAccessoires()
+        } else if (this.usingby === 'appro') {
+              this.getProducts()
+        } else {
+            this.getConsommables()
         }
     },
-    computed:{
-      quantiteState(){
-        if(this.quantite){
-          let etat = null
-          if(this.quantite.length > 0 && !isNaN(Number(this.quantite)) && this.quantite != 0){
-            etat = true
-          }else{
-            etat = false
-          }
-          return etat
-        }else{
-          return null
+    computed: {
+        quantiteState() {
+            if (this.quantite) {
+                let etat = null
+                if (this.quantite.length > 0 && !isNaN(Number(this.quantite)) && this.quantite != 0) {
+                    etat = true
+                } else {
+                    etat = false
+                }
+                return etat
+            } else {
+                return null
+            }
         }
-      }
     },
     methods: {
         getDetails() {
-            axios.post('/api/produit/show', {
+            axios.post('/ajax/produit/show', {
                 produit: this.choice,
             }).then((response) => {
                 const {
@@ -97,7 +116,7 @@ export default {
             })
         },
         getConsommables() {
-            axios.get('/api/produit/consommables/all').then((response) => {
+            axios.get('/ajax/produit/consommables/all').then((response) => {
                 const {
                     products
                 } = response.data
@@ -107,7 +126,7 @@ export default {
             })
         },
         getProducts() {
-            axios.get('/api/produit/all').then((response) => {
+            axios.get('/ajax/produit/all').then((response) => {
                 const {
                     products
                 } = response.data
@@ -116,18 +135,21 @@ export default {
                 console.log(err)
             })
         },
-        getAccessoires(){
-          axios.get('/api/produit/accessoire/all').then((response) => {
-              const {
-                  accessoires
-              } = response.data
-              this.produits = accessoires
-          }).catch((err) => {
-              console.log(err)
-          })
+        getAccessoires() {
+            axios.get('/ajax/produit/accessoire/all').then((response) => {
+                const {
+                    accessoires
+                } = response.data
+                this.produits = accessoires
+            }).catch((err) => {
+                console.log(err)
+            })
         },
-        addit(){
-            this.$root.$emit('add',this.produit,this.quantite)
+        getList(){
+          console.log('is running',this.selected);
+        },
+        addit() {
+            this.$root.$emit('add', this.produit, this.quantite)
             this.choice = null
             this.quantite = ''
             //conserver en session le produit

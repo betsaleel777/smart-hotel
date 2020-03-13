@@ -10,11 +10,14 @@
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-6">
             <h6 class="card-title">Liste des grandes catégories de produits</h6>
           </div>
           <div class="col-md-2">
             <a style="width:100%" href="{{route('accessoire_index')}}" class="btn btn-outline-primary"><i class="fas fa-box"></i> Accéssoires</a>
+          </div>
+          <div class="col-md-2">
+            <a style="width:100%" href="{{route('consommable_index')}}" class="btn btn-outline-primary"><i class="fas fa-shopping-bag"></i> Consommables</a>
           </div>
           <div class="col-md-2">
            <a style="width:100%" href="{{route('famille_add')}}" class="btn btn-outline-primary"><i class="fas fa-plus"></i> ajouter</a>

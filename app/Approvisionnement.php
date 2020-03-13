@@ -13,6 +13,6 @@ class Approvisionnement extends Model
     }
 
     public function userLinked(){
-      return $this->hasOne(User::class,'user') ;
+      return $this->belongsTo(User::class,'user') ;
     }
 }

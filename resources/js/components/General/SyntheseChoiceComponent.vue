@@ -72,7 +72,7 @@ export default {
             this.list = newTab
         },
         getAccessoriesSaved() {
-            axios.get('/api/destockage/' + this.from + '/saved/' + this.attribution).then((response) => {
+            axios.get('/ajax/destockage/' + this.from + '/saved/' + this.attribution).then((response) => {
                 this.list = response.data.produits.map((produit) => {
                     return {
                         id: produit.produit_linked.id,
@@ -92,10 +92,10 @@ export default {
                 let urlRedirect = null
 
                 if (this.usingby === 'destockage') {
-                    url = '/api/destockage/save'
+                    url = '/ajax/destockage/save'
                     urlRedirect = '/home/sejour'
                 } else if (this.usingby === 'appro') {
-                    url = '/api/approvisionnement/save'
+                    url = '/ajax/approvisionnement/save'
                     urlRedirect = '/home/approvisionnement'
                 }
 
@@ -106,7 +106,7 @@ export default {
                 }
 
                 axios.post(url, {
-                    accessoires: this.list,
+                    items: this.list,
                     passage: attributionPassage,
                     sejour: attributionSejour
                 }).then((response) => {
