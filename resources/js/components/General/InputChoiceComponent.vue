@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="form-group">
+    <div v-if="type" class="form-group">
         <b-form-radio-group v-on:change="getList" v-model="selected" :options="options" name="radio-inline"></b-form-radio-group>
     </div>
     <div class="form-group">
@@ -57,17 +57,17 @@ export default {
         BFormText,
         BFormInvalidFeedback
     },
-    props: ['usingby', 'synchrone'],
+    props: ['usingby', 'synchrone', 'type'],
     data() {
         return {
-            selected: null,
+            selected: 'accessoire',
             options: [{
                     text: 'Consommable',
-                    value: 'consommable'
+                    value: 'accessoire'
                 },
                 {
                     text: 'Accéssoire',
-                    value: 'accessoire'
+                    value: 'consommable'
                 }
             ],
             choice: null,
@@ -81,7 +81,7 @@ export default {
         if (this.usingby === 'destockage') {
             this.getAccessoires()
         } else if (this.usingby === 'appro') {
-              this.getProducts()
+            this.getConsommables()
         } else {
             this.getConsommables()
         }
@@ -145,8 +145,12 @@ export default {
                 console.log(err)
             })
         },
-        getList(){
-          console.log('is running',this.selected);
+        getList() {
+            if(this.selected === 'accessoire'){
+              this.getAccessoires()
+            }else if( this.selected === 'consommable'){
+              this.getConsommables()
+            }
         },
         addit() {
             this.$root.$emit('add', this.produit, this.quantite)

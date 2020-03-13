@@ -17,7 +17,7 @@
                  <input-choice :usingby="'destockage'"></input-choice>
               </div>
               <div class="col-md-6">
-                 <synthese-choice :synchrone="true" :from="'{{$origine}}'" :usingby="'destockage'" :attribution="{{$attribution}}"></synthese-choice>
+                 <synthese-choice :type="false" :synchrone="true" :from="'{{$origine}}'" :usingby="'destockage'" :attribution="{{$attribution}}"></synthese-choice>
               </div>
             </div>
           </div>

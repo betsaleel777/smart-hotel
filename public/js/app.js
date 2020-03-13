@@ -14722,16 +14722,16 @@ __webpack_require__.r(__webpack_exports__);
     BFormText: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormText"],
     BFormInvalidFeedback: bootstrap_vue__WEBPACK_IMPORTED_MODULE_0__["BFormInvalidFeedback"]
   },
-  props: ['usingby', 'synchrone'],
+  props: ['usingby', 'synchrone', 'type'],
   data: function data() {
     return {
-      selected: null,
+      selected: 'accessoire',
       options: [{
         text: 'Consommable',
-        value: 'consommable'
+        value: 'accessoire'
       }, {
         text: 'Accéssoire',
-        value: 'accessoire'
+        value: 'consommable'
       }],
       choice: null,
       produits: null,
@@ -14744,7 +14744,7 @@ __webpack_require__.r(__webpack_exports__);
     if (this.usingby === 'destockage') {
       this.getAccessoires();
     } else if (this.usingby === 'appro') {
-      this.getProducts();
+      this.getConsommables();
     } else {
       this.getConsommables();
     }
@@ -14811,7 +14811,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getList: function getList() {
-      console.log('is running', this.selected);
+      if (this.selected === 'accessoire') {
+        this.getAccessoires();
+      } else if (this.selected === 'consommable') {
+        this.getConsommables();
+      }
     },
     addit: function addit() {
       this.$root.$emit('add', this.produit, this.quantite);
@@ -99039,24 +99043,26 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "form-group" },
-      [
-        _c("b-form-radio-group", {
-          attrs: { options: _vm.options, name: "radio-inline" },
-          on: { change: _vm.getList },
-          model: {
-            value: _vm.selected,
-            callback: function($$v) {
-              _vm.selected = $$v
-            },
-            expression: "selected"
-          }
-        })
-      ],
-      1
-    ),
+    _vm.type
+      ? _c(
+          "div",
+          { staticClass: "form-group" },
+          [
+            _c("b-form-radio-group", {
+              attrs: { options: _vm.options, name: "radio-inline" },
+              on: { change: _vm.getList },
+              model: {
+                value: _vm.selected,
+                callback: function($$v) {
+                  _vm.selected = $$v
+                },
+                expression: "selected"
+              }
+            })
+          ],
+          1
+        )
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "div",

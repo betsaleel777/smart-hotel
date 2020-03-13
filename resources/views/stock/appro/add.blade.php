@@ -14,7 +14,7 @@
           <div class="container">
             <div class="row">
               <div class="col-md-6">
-                 <input-choice :usingby="'appro'"></input-choice>
+                 <input-choice :usingby="'appro'" :type="true"></input-choice>
               </div>
               <div class="col-md-6">
                  <synthese-choice :usingby="'appro'"></synthese-choice>
