@@ -15015,16 +15015,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['chambre', 'batiment'],
   data: function data() {
     return {
       kind: null,
-      heure: null
+      heure: null,
+      messages: {
+        heure: {
+          exist: false,
+          value: ''
+        },
+        kind: {
+          exist: false,
+          value: ''
+        }
+      }
     };
   },
   methods: {
     attribuer: function attribuer(event) {
+      var _this = this;
+
       event.preventDefault();
       var current = this; //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
 
@@ -15036,8 +15050,26 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         location.href = '/home/attributions';
       })["catch"](function (error) {
-        console.log(error);
+        var errors = error.response.data.errors;
+
+        if (errors.heure) {
+          _this.messages.heure.value = errors.heure[0];
+          _this.messages.heure.exist = true;
+        }
+
+        if (errors.kind) {
+          _this.messages.kind.value = errors.kind[0];
+          _this.messages.kind.exist = true;
+        }
       });
+    },
+    resetModal: function resetModal() {
+      this.messages.heure.value = '';
+      this.messages.heure.exist = false;
+      this.messages.kind.value = '';
+      this.messages.kind.exist = false;
+      this.heure = null;
+      this.kind = null;
     }
   }
 });
@@ -15653,6 +15685,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -15686,6 +15759,52 @@ __webpack_require__.r(__webpack_exports__);
       message: {
         net: null,
         details: null
+      },
+      messages: {
+        nom: {
+          exist: false,
+          value: ''
+        },
+        prenom: {
+          exist: false,
+          value: ''
+        },
+        piece: {
+          exist: false,
+          value: ''
+        },
+        batiment: {
+          exist: false,
+          value: ''
+        },
+        chambre: {
+          exist: false,
+          value: ''
+        },
+        remise: {
+          exist: false,
+          value: ''
+        },
+        avance: {
+          exist: false,
+          value: ''
+        },
+        numero: {
+          exist: false,
+          value: ''
+        },
+        contact: {
+          exist: false,
+          value: ''
+        },
+        debut: {
+          exist: false,
+          value: ''
+        },
+        fin: {
+          exist: false,
+          value: ''
+        }
       },
       idSejourAttribution: null,
       chambres: null,
@@ -15827,8 +15946,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this7 = this;
 
       axios.post('/ajax/sejour/liberer', {
-        attribution: this.idSejourAttribution,
-        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+        attribution: this.idSejourAttribution
       }).then(function (response) {
         var chambre = response.data.chambre;
         var message = "la chmabre ".concat(chambre.libelle, " a \xE9t\xE9 lib\xE9r\xE9e avec succ\xE8s !!");
@@ -15844,8 +15962,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this8 = this;
 
       axios.post('/ajax/sejour/supprimer', {
-        attribution: this.idSejourAttribution,
-        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+        attribution: this.idSejourAttribution
       }).then(function (response) {
         var chambre = response.data.chambre;
         var client = response.data.client;
@@ -15859,9 +15976,10 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    updateEvent: function updateEvent() {
+    updateEvent: function updateEvent(event) {
       var _this9 = this;
 
+      event.preventDefault();
       var end = moment__WEBPACK_IMPORTED_MODULE_1___default()(this.timeInterval.fin);
       var start = moment__WEBPACK_IMPORTED_MODULE_1___default()(this.timeInterval.debut);
       this.delais = end.diff(start, 'days');
@@ -15878,21 +15996,53 @@ __webpack_require__.r(__webpack_exports__);
         attribution: this.idSejourAttribution,
         remise: this.remise,
         avance: this.avance,
-        delais: this.delais,
-        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+        delais: this.delais
       }).then(function (response) {
-        var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                     du:").concat(_this9.timeInterval.debut, " midi au ").concat(_this9.timeInterval.fin, " midi, pour le\n                     client ").concat(_this9.client.nom, " ").concat(_this9.client.prenom);
+        var message = "l'attribution concernant ".concat(response.data.chambre.libelle, " a \xE9t\xE9 modifi\xE9e\n                     du:").concat(_this9.timeInterval.debut, " midi au ").concat(_this9.timeInterval.fin, " midi, pour le\n                     client ").concat(_this9.client.nom, " ").concat(_this9.client.prenom);
 
         _this9.getEvents();
 
         _this9.$awn.success(message);
+
+        return;
       })["catch"](function (err) {
-        console.log(err);
+        var errors = err.response.data.errors;
+
+        if (errors.nom) {
+          _this9.messages.nom.exist = true;
+          _this9.messages.nom.value = errors.nom[0];
+        }
+
+        if (errors.prenom) {
+          _this9.messages.prenom.exist = true;
+          _this9.messages.prenom.value = errors.prenom[0];
+        }
+
+        if (errors.remise) {
+          _this9.messages.remise.exist = true;
+          _this9.messages.remise.value = errors.remise[0];
+        }
+
+        if (errors.avance) {
+          _this9.messages.avance.exist = true;
+          _this9.messages.avance.value = errors.avance[0];
+        }
+
+        if (errors.debut) {
+          _this9.messages.debut.exist = true;
+          _this9.messages.debut.value = errors.debut[0];
+        }
+
+        if (errors.fin) {
+          _this9.messages.fin.exist = true;
+          _this9.messages.fin.value = errors.fin[0];
+        }
       });
     },
-    saveEvent: function saveEvent() {
+    saveEvent: function saveEvent(event) {
       var _this10 = this;
 
+      event.preventDefault();
       axios.post('/ajax/sejour/add', {
         nom: this.client.nom,
         prenom: this.client.prenom,
@@ -15905,16 +16055,64 @@ __webpack_require__.r(__webpack_exports__);
         fin: this.timeInterval.fin,
         remise: this.remise,
         avance: this.avance,
-        delais: this.delais,
-        _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
+        delais: this.delais
       }).then(function (response) {
-        var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                                    du:").concat(_this10.timeInterval.debut, " midi au ").concat(_this10.timeInterval.fin, " midi, pour le\n                                    client ").concat(_this10.client.nom, " ").concat(_this10.client.prenom);
+        var message = "la chambre ".concat(response.data.chambre.libelle, " a \xE9t\xE9 attribu\xE9e\n                     du:").concat(_this10.timeInterval.debut, " midi au ").concat(_this10.timeInterval.fin, " midi, pour le\n                     client ").concat(_this10.client.nom, " ").concat(_this10.client.prenom);
 
         _this10.getEvents();
 
+        _this10.$bvModal.hide('modal');
+
         _this10.$awn.success(message);
+
+        return;
       })["catch"](function (err) {
-        console.log(err);
+        var errors = err.response.data.errors;
+
+        if (errors.nom) {
+          _this10.messages.nom.exist = true;
+          _this10.messages.nom.value = errors.nom[0];
+        }
+
+        if (errors.prenom) {
+          _this10.messages.prenom.exist = true;
+          _this10.messages.prenom.value = errors.prenom[0];
+        }
+
+        if (errors.piece) {
+          _this10.messages.piece.exist = true;
+          _this10.messages.piece.value = errors.piece[0];
+        }
+
+        if (errors.batiment) {
+          _this10.messages.batiment.exist = true;
+          _this10.messages.batiment.value = errors.batiment[0];
+        }
+
+        if (errors.chambre) {
+          _this10.messages.chambre.exist = true;
+          _this10.messages.chambre.value = errors.chambre[0];
+        }
+
+        if (errors.remise) {
+          _this10.messages.remise.exist = true;
+          _this10.messages.remise.value = errors.remise[0];
+        }
+
+        if (errors.avance) {
+          _this10.messages.avance.exist = true;
+          _this10.messages.avance.value = errors.avance[0];
+        }
+
+        if (errors.numero_piece) {
+          _this10.messages.numero.exist = true;
+          _this10.messages.numero.value = errors.numero_piece[0];
+        }
+
+        if (errors.contact) {
+          _this10.messages.contact.exist = true;
+          _this10.messages.contact.value = errors.contact[0];
+        }
       });
     },
     resetModal: function resetModal() {
@@ -15932,12 +16130,34 @@ __webpack_require__.r(__webpack_exports__);
       this.timeInterval.debut = null;
       this.timeInterval.fin = null;
       this.idSejourAttribution = null;
+      this.messages.nom.exist = false;
+      this.messages.prenom.exist = false;
+      this.messages.batiment.exist = false;
+      this.messages.chambre.exist = false;
+      this.messages.piece.exist = false;
+      this.messages.remise.exist = false;
+      this.messages.avance.exist = false;
+      this.messages.numero.exist = false;
+      this.messages.contact.exist = false;
+      this.messages.debut.exist = false;
+      this.messages.fin.exist = false;
+      this.messages.nom.value = '';
+      this.messages.prenom.value = '';
+      this.messages.batiment.value = '';
+      this.messages.chambre.value = '';
+      this.messages.piece.value = '';
+      this.messages.remise.value = '';
+      this.messages.avance.value = '';
+      this.messages.numero.value = '';
+      this.messages.contact.value = '';
+      this.messages.debut.value = '';
+      this.messages.fin.value = '';
     },
     prixNet: function prixNet() {
       if (this.message.details) {
         var prix_normal = this.details.type_linked.cout_reservation * this.delais;
         var prix_avec_remise = prix_normal - prix_normal * Number(this.remise);
-        this.message.net = "le prix net total \xE0 payer: ".concat(prix_avec_remise, ",\n                                Avance: ").concat(prix_normal * this.avance, " , Reste \xE0 payer: ").concat(prix_avec_remise - prix_normal * this.avance);
+        this.message.net = "le prix net total \xE0 payer: ".concat(prix_avec_remise, ",\n                                    Avance: ").concat(prix_normal * this.avance, " , Reste \xE0 payer: ").concat(prix_avec_remise - prix_normal * this.avance);
       } else {
         this.message.net = 'Vous devez choisir le batiment et la chambre !!';
       }
@@ -99316,7 +99536,25 @@ var render = function() {
     [
       _c("div", { staticClass: "modal-dialog modal-sm" }, [
         _c("div", { staticClass: "modal-content" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "modal-header" }, [
+            _c("h4", { staticClass: "modal-title" }, [
+              _vm._v("Temps de passage")
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "close",
+                attrs: {
+                  type: "button",
+                  "data-dismiss": "modal",
+                  "aria-label": "Close"
+                },
+                on: { click: _vm.resetModal }
+              },
+              [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+            )
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("form", [
@@ -99335,7 +99573,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { id: "heures", type: "text" },
+                  attrs: { name: "heure", id: "heures", type: "text" },
                   domProps: { value: _vm.heure },
                   on: {
                     input: function($event) {
@@ -99345,7 +99583,13 @@ var render = function() {
                       _vm.heure = $event.target.value
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _vm.messages.heure.exist
+                  ? _c("span", { staticStyle: { color: "red" } }, [
+                      _vm._v(_vm._s(_vm.messages.heure.value))
+                    ])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
@@ -99399,7 +99643,14 @@ var render = function() {
                       _vm.kind = "repos"
                     }
                   }
-                })
+                }),
+                _vm._v(" "),
+                _c("br"),
+                _vm.messages.kind.exist
+                  ? _c("span", { staticStyle: { color: "red" } }, [
+                      _vm._v(_vm._s(_vm.messages.kind.value))
+                    ])
+                  : _vm._e()
               ])
             ])
           ]),
@@ -99409,7 +99660,8 @@ var render = function() {
               "button",
               {
                 staticClass: "btn btn-default",
-                attrs: { type: "button", "data-dismiss": "modal" }
+                attrs: { type: "button", "data-dismiss": "modal" },
+                on: { click: _vm.resetModal }
               },
               [_vm._v("Close")]
             ),
@@ -99429,29 +99681,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Temps de passage")]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -100195,58 +100425,74 @@ var render = function() {
           on: { hidden: _vm.resetModal, ok: _vm.saveEvent }
         },
         [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.nom,
+                  expression: "client.nom"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "nom", type: "text" },
+              domProps: { value: _vm.client.nom },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "nom", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.nom.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.nom.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.prenom,
+                  expression: "client.prenom"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "prenom", type: "text" },
+              domProps: { value: _vm.client.prenom },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "prenom", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.prenom.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.prenom.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "form-group" },
             [
-              _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.nom,
-                    expression: "client.nom"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "nom", type: "text" },
-                domProps: { value: _vm.client.nom },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "nom", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.prenom,
-                    expression: "client.prenom"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "prenom", type: "text" },
-                domProps: { value: _vm.client.prenom },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "prenom", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
               _c("label", { attrs: { for: "type" } }, [_vm._v("Piece:")]),
               _vm._v(" "),
               _c(
@@ -100272,8 +100518,21 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.messages.piece.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.piece.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
               _c("label", { attrs: { for: "batiment" } }, [
                 _vm._v("Batiments:")
               ]),
@@ -100299,8 +100558,21 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.messages.batiment.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.batiment.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
               _c("label", { attrs: { for: "chambre" } }, [_vm._v("Chambre:")]),
               _vm._v(" "),
               _c(
@@ -100324,13 +100596,26 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
-              _c("small", { staticClass: "text-muted" }, [
-                _vm._v(_vm._s(_vm.message.details))
-              ]),
-              _c("br"),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.messages.chambre.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.chambre.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("small", { staticClass: "text-muted" }, [
+            _vm._v(_vm._s(_vm.message.details))
+          ]),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
               _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
               _vm._v(" "),
               _c(
@@ -100354,8 +100639,21 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.messages.remise.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.remise.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
               _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
               _vm._v(" "),
               _c(
@@ -100379,67 +100677,89 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
-              _c("small", { staticClass: "text-muted" }, [
-                _vm._v(_vm._s(_vm.message.net))
-              ]),
-              _c("br"),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "numero" } }, [
-                _vm._v("Numero de la pièce:")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.numero,
-                    expression: "client.numero"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "numero", type: "text" },
-                domProps: { value: _vm.client.numero },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "numero", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "contact" } }, [
-                _vm._v("Contact du client:")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.contact,
-                    expression: "client.contact"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "contact", type: "text" },
-                domProps: { value: _vm.client.contact },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "contact", $event.target.value)
-                  }
-                }
-              })
+              )
             ],
             1
-          )
+          ),
+          _vm._v(" "),
+          _vm.messages.avance.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.avance.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("small", { staticClass: "text-muted" }, [
+            _vm._v(_vm._s(_vm.message.net))
+          ]),
+          _c("br"),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "numero" } }, [
+              _vm._v("Numero de la pièce:")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.numero,
+                  expression: "client.numero"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "numero", type: "text" },
+              domProps: { value: _vm.client.numero },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "numero", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.numero.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.numero.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "contact" } }, [
+              _vm._v("Contact du client:")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.contact,
+                  expression: "client.contact"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "contact", type: "text" },
+              domProps: { value: _vm.client.contact },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "contact", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.contact.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.contact.value))
+              ])
+            : _vm._e()
         ]
       ),
       _vm._v(" "),
@@ -100450,58 +100770,74 @@ var render = function() {
           on: { hidden: _vm.resetModal, ok: _vm.updateEvent }
         },
         [
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.nom,
+                  expression: "client.nom"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "nom", type: "text" },
+              domProps: { value: _vm.client.nom },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "nom", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.nom.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.nom.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.client.prenom,
+                  expression: "client.prenom"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "prenom", type: "text" },
+              domProps: { value: _vm.client.prenom },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.client, "prenom", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.prenom.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.prenom.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "form-group" },
             [
-              _c("label", { attrs: { for: "nom" } }, [_vm._v("Nom:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.nom,
-                    expression: "client.nom"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "nom", type: "text" },
-                domProps: { value: _vm.client.nom },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "nom", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "prenom" } }, [_vm._v("Prenom:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.client.prenom,
-                    expression: "client.prenom"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "prenom", type: "text" },
-                domProps: { value: _vm.client.prenom },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.client, "prenom", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
               _c("label", { attrs: { for: "remise" } }, [_vm._v("Remise:")]),
               _vm._v(" "),
               _c(
@@ -100525,8 +100861,21 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.messages.remise.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.remise.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
               _c("label", { attrs: { for: "avance" } }, [_vm._v("Avance:")]),
               _vm._v(" "),
               _c(
@@ -100549,116 +100898,129 @@ var render = function() {
                   )
                 }),
                 0
-              ),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "debut" } }, [_vm._v("Debut:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.timeInterval.debut,
-                    expression: "timeInterval.debut"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "debut", type: "text" },
-                domProps: { value: _vm.timeInterval.debut },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.timeInterval, "debut", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "contact" } }, [_vm._v("Fin:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.timeInterval.fin,
-                    expression: "timeInterval.fin"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { id: "fin", type: "text" },
-                domProps: { value: _vm.timeInterval.fin },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.timeInterval, "fin", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "row form-group" }, [
-                _c("div", { staticClass: "col-md-3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-light",
-                      on: { click: _vm.liberer }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-door-open" }),
-                      _vm._v("libération")
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-light",
-                      on: { click: _vm.runAccessoirePage }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-box" }),
-                      _vm._v("accessoire")
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-light",
-                      on: { click: _vm.supprimer }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-trash" }),
-                      _vm._v("suppression")
-                    ]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-light",
-                      on: { click: _vm.runRestaurantPage }
-                    },
-                    [
-                      _c("i", { staticClass: "fas fa-drumstick-bite" }),
-                      _vm._v("restauration")
-                    ]
-                  )
-                ])
-              ])
+              )
             ],
             1
-          )
+          ),
+          _vm._v(" "),
+          _vm.messages.avance.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.avance.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "debut" } }, [_vm._v("Debut:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.timeInterval.debut,
+                  expression: "timeInterval.debut"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "debut", type: "text" },
+              domProps: { value: _vm.timeInterval.debut },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.timeInterval, "debut", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.debut.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.debut.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "contact" } }, [_vm._v("Fin:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.timeInterval.fin,
+                  expression: "timeInterval.fin"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { id: "fin", type: "text" },
+              domProps: { value: _vm.timeInterval.fin },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.timeInterval, "fin", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _vm.messages.fin.exist
+            ? _c("span", { staticStyle: { color: "red" } }, [
+                _vm._v(_vm._s(_vm.messages.fin.value))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "row form-group" }, [
+            _c("div", { staticClass: "col-md-3" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-light", on: { click: _vm.liberer } },
+                [
+                  _c("i", { staticClass: "fas fa-door-open" }),
+                  _vm._v("libération")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-3" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-light",
+                  on: { click: _vm.runAccessoirePage }
+                },
+                [_c("i", { staticClass: "fas fa-box" }), _vm._v("accessoire")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-3" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-light", on: { click: _vm.supprimer } },
+                [
+                  _c("i", { staticClass: "fas fa-trash" }),
+                  _vm._v("suppression")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-3" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-light",
+                  on: { click: _vm.runRestaurantPage }
+                },
+                [
+                  _c("i", { staticClass: "fas fa-drumstick-bite" }),
+                  _vm._v("restauration")
+                ]
+              )
+            ])
+          ])
         ]
       )
     ],

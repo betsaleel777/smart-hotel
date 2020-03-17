@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Temps de passage</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button @click="resetModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -12,18 +12,20 @@
                 <form>
                     <div class="form-group">
                         <label for="heures">Nombre d'Heures</label>
-                        <input id="heures" class="form-control" type="text" v-model="heure">
+                        <input name="heure" id="heures" class="form-control" type="text" v-model="heure">
+                        <span style="color:red" v-if="messages.heure.exist">{{messages.heure.value}}</span>
                     </div>
                     <div class="form-group">
                         <label for="passage">Passage</label>
                         <input v-model="kind" id="passage" type="radio" class="form-group" name="kind" value="passage">
                         <label for="repos">Repos</label>
                         <input v-model="kind" id="repos" type="radio" class="form-group" name="kind" value="repos">
+                        <br><span style="color:red" v-if="messages.kind.exist">{{messages.kind.value}}</span>
                     </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button @click="resetModal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button @click="attribuer" type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
@@ -41,6 +43,16 @@ export default {
         return {
             kind: null,
             heure: null,
+            messages: {
+                heure: {
+                    exist: false,
+                    value: ''
+                },
+                kind: {
+                    exist: false,
+                    value: ''
+                }
+            }
         }
     },
     methods: {
@@ -58,8 +70,25 @@ export default {
                     location.href = '/home/attributions';
                 })
                 .catch((error) => {
-                    console.log(error);
+                    const errors = error.response.data.errors
+
+                    if (errors.heure) {
+                        this.messages.heure.value = errors.heure[0]
+                        this.messages.heure.exist = true
+                    }
+                    if (errors.kind) {
+                        this.messages.kind.value = errors.kind[0]
+                        this.messages.kind.exist = true
+                    }
                 })
+        },
+        resetModal(){
+          this.messages.heure.value = ''
+          this.messages.heure.exist = false
+          this.messages.kind.value = ''
+          this.messages.kind.exist = false  
+          this.heure = null
+          this.kind = null
         }
 
     }

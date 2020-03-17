@@ -151,6 +151,12 @@ Route::prefix('home')->group(function () {
     // Route::get('/update/{id}','FacturesController@update')->name('facture_update') ;
   });
 
+  Route::prefix('/inventaire')->group(function(){
+    Route::get('/','InventairesController@index')->name('inventaire_index') ;
+    Route::get('/multicritere/one_date/{famille}/{sous_famille}/{type}/{jour}','InventairesController@searchByDate')->name('inventaire_date') ;
+    Route::get('/multicritere/interval_date/{famille}/{sous_famille}/{type}/{debut}/{fin}','InventairesController@searchByDateInterval')->name('inventaire_date_interval') ;
+  });
+
   Route::get('/destockage/add/sejour/{id}','DestockagesController@addFromSejour')->name('destockage_sejour_add') ;
   Route::get('/destockage/add/passage/{id}','DestockagesController@addFromPassage')->name('destockage_passage_add') ;
   Route::post('/destockage/store', 'DestockagesController@store')->name('destockage_store') ;

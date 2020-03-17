@@ -6,68 +6,109 @@
         <div class="form-group">
             <label for="nom">Nom:</label>
             <input class="form-control" id="nom" type="text" v-model="client.nom">
+        </div>
+        <span style="color:red" v-if="messages.nom.exist">{{messages.nom.value}}</span>
+        <div class="form-group">
             <label for="prenom">Prenom:</label>
             <input class="form-control" id="prenom" type="text" v-model="client.prenom">
+        </div>
+        <span style="color:red" v-if="messages.prenom.exist">{{messages.prenom.value}}</span>
+        <div class="form-group">
             <label for="type">Piece:</label>
             <b-form-select v-model="client.piece">
                 <option id="type" v-for="typePiece in typePieces" :key="typePiece.id" :value="typePiece.id">{{typePiece.libelle}}</option>
             </b-form-select>
+        </div>
+        <span style="color:red" v-if="messages.piece.exist">{{messages.piece.value}}</span>
+        <div class="form-group">
             <label for="batiment">Batiments:</label>
             <b-form-select @change="getChambres" id="batiment" v-model="batiment">
                 <option v-for="bat in batiments" :key="bat.id" :value="bat.id">{{bat.libelle}}</option>
             </b-form-select>
+        </div>
+        <span style="color:red" v-if="messages.batiment.exist">{{messages.batiment.value}}</span>
+        <div class="form-group">
             <label for="chambre">Chambre:</label>
             <b-form-select @change="getRoomDetails" id="chambre" v-model="chambre">
                 <option v-for="room in chambres" :key="room.id" :value="room.id">{{room.libelle}}</option>
             </b-form-select>
-            <small class="text-muted">{{message.details}}</small><br>
+        </div>
+        <span style="color:red" v-if="messages.chambre.exist">{{messages.chambre.value}}</span>
+        <small class="text-muted">{{message.details}}</small><br>
+        <div class="form-group">
             <label for="remise">Remise:</label>
             <b-form-select id="remise" class="form-control" v-model="remise">
                 <option v-for="remise in pourcentages" :key="remise.valeur" :value="remise.valeur">{{remise.libelle}}</option>
             </b-form-select>
+        </div>
+        <span style="color:red" v-if="messages.remise.exist">{{messages.remise.value}}</span>
+        <div class="form-group">
             <label for="avance">Avance:</label>
             <b-form-select @change="prixNet" id="avance" v-model="avance">
                 <option v-for="avance in pourcentages" :key="avance.valeur" :value="avance.valeur">{{avance.libelle}}</option>
             </b-form-select>
-            <small class="text-muted">{{message.net}}</small><br>
+        </div>
+        <span style="color:red" v-if="messages.avance.exist">{{messages.avance.value}}</span>
+        <small class="text-muted">{{message.net}}</small><br>
+        <div class="form-group">
             <label for="numero">Numero de la pièce:</label>
             <input class="form-control" id="numero" type="text" v-model="client.numero">
+        </div>
+        <span style="color:red" v-if="messages.numero.exist">{{messages.numero.value}}</span>
+        <div class="form-group">
             <label for="contact">Contact du client:</label>
             <input class="form-control" id="contact" type="text" v-model="client.contact">
         </div>
+        <span style="color:red" v-if="messages.contact.exist">{{messages.contact.value}}</span>
     </b-modal>
 
     <b-modal @hidden="resetModal" @ok="updateEvent" id="modal-update">
         <div class="form-group">
             <label for="nom">Nom:</label>
             <input class="form-control" id="nom" type="text" v-model="client.nom">
+        </div>
+        <span style="color:red" v-if="messages.nom.exist">{{messages.nom.value}}</span>
+        <div class="form-group">
             <label for="prenom">Prenom:</label>
             <input class="form-control" id="prenom" type="text" v-model="client.prenom">
+        </div>
+        <span style="color:red" v-if="messages.prenom.exist">{{messages.prenom.value}}</span>
+        <div class="form-group">
             <label for="remise">Remise:</label>
             <b-form-select id="remise" class="form-control" v-model="remise">
                 <option v-for="remise in pourcentages" :key="remise.valeur" :value="remise.valeur">{{remise.libelle}}</option>
             </b-form-select>
+        </div>
+        <span style="color:red" v-if="messages.remise.exist">{{messages.remise.value}}</span>
+        <div class="form-group">
             <label for="avance">Avance:</label>
             <b-form-select id="avance" v-model="avance">
                 <option v-for="avance in pourcentages" :key="avance.valeur" :value="avance.valeur">{{avance.libelle}}</option>
             </b-form-select>
+        </div>
+        <span style="color:red" v-if="messages.avance.exist">{{messages.avance.value}}</span>
+        <div class="form-group">
             <label for="debut">Debut:</label>
             <input id="debut" v-model="timeInterval.debut" type="text" class="form-control">
+        </div>
+        <span style="color:red" v-if="messages.debut.exist">{{messages.debut.value}}</span>
+        <div class="form-group">
             <label for="contact">Fin:</label>
             <input id="fin" v-model="timeInterval.fin" type="text" class="form-control">
-            <div class="row form-group">
-                <div class="col-md-3">
-                    <button @click="liberer" class="btn btn-light"><i class="fas fa-door-open"></i>libération</button>
-                </div>
-                <div class="col-md-3">
-                    <button @click="runAccessoirePage" class="btn btn-light"><i class="fas fa-box"></i>accessoire</button>
-                </div>
-                <div class="col-md-3">
-                    <button @click="supprimer" class="btn btn-light"><i class="fas fa-trash"></i>suppression</button>
-                </div>
-                <div class="col-md-3">
-                    <button @click="runRestaurantPage" class="btn btn-light"><i class="fas fa-drumstick-bite"></i>restauration</button>
-                </div>
+        </div>
+        <span style="color:red" v-if="messages.fin.exist">{{messages.fin.value}}</span>
+        <div class="row form-group">
+            <div class="col-md-3">
+                <button @click="liberer" class="btn btn-light"><i class="fas fa-door-open"></i>libération</button>
+            </div>
+            <div class="col-md-3">
+                <button @click="runAccessoirePage" class="btn btn-light"><i class="fas fa-box"></i>accessoire</button>
+            </div>
+            <div class="col-md-3">
+                <button @click="supprimer" class="btn btn-light"><i class="fas fa-trash"></i>suppression</button>
+            </div>
+            <div class="col-md-3">
+                <button @click="runRestaurantPage" class="btn btn-light"><i class="fas fa-drumstick-bite"></i>restauration</button>
             </div>
         </div>
     </b-modal>
@@ -112,6 +153,52 @@ export default {
                 net: null,
                 details: null
             },
+            messages: {
+                nom: {
+                    exist: false,
+                    value: ''
+                },
+                prenom: {
+                    exist: false,
+                    value: ''
+                },
+                piece: {
+                    exist: false,
+                    value: ''
+                },
+                batiment: {
+                    exist: false,
+                    value: ''
+                },
+                chambre: {
+                    exist: false,
+                    value: ''
+                },
+                remise: {
+                    exist: false,
+                    value: ''
+                },
+                avance: {
+                    exist: false,
+                    value: ''
+                },
+                numero: {
+                    exist: false,
+                    value: ''
+                },
+                contact: {
+                    exist: false,
+                    value: ''
+                },
+                debut: {
+                    exist: false,
+                    value: ''
+                },
+                fin: {
+                    exist: false,
+                    value: ''
+                }
+            },
             idSejourAttribution: null,
             chambres: null,
             chambre: null,
@@ -126,10 +213,10 @@ export default {
     },
     methods: {
         runRestaurantPage() {
-          location.href = '/home/restauration/add/' + this.idSejourAttribution
+            location.href = '/home/restauration/add/' + this.idSejourAttribution
         },
-        runAccessoirePage(){
-          location.href = '/home/destockage/add/sejour/' + this.idSejourAttribution
+        runAccessoirePage() {
+            location.href = '/home/destockage/add/sejour/' + this.idSejourAttribution
         },
         handleSelect(info) {
             const end = moment(info.endStr).subtract(1, 'days')
@@ -246,7 +333,6 @@ export default {
         liberer() {
             axios.post('/ajax/sejour/liberer', {
                 attribution: this.idSejourAttribution,
-                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
                 const chambre = response.data.chambre
                 const message = `la chmabre ${chambre.libelle} a été libérée avec succès !!`
@@ -259,7 +345,6 @@ export default {
         supprimer() {
             axios.post('/ajax/sejour/supprimer', {
                 attribution: this.idSejourAttribution,
-                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
                 const {
                     chambre
@@ -281,7 +366,8 @@ export default {
             })
 
         },
-        updateEvent() {
+        updateEvent(event) {
+            event.preventDefault()
             const end = moment(this.timeInterval.fin)
             const start = moment(this.timeInterval.debut)
             this.delais = end.diff(start, 'days')
@@ -297,19 +383,44 @@ export default {
                 remise: this.remise,
                 avance: this.avance,
                 delais: this.delais,
-                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
                 const message =
-                    `la chambre ${response.data.chambre.libelle} a été attribuée
+                    `l'attribution concernant ${response.data.chambre.libelle} a été modifiée
                      du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
                      client ${this.client.nom} ${this.client.prenom}`
                 this.getEvents()
                 this.$awn.success(message)
+                return
             }).catch((err) => {
-                console.log(err)
+                const errors = err.response.data.errors
+                if (errors.nom) {
+                    this.messages.nom.exist = true
+                    this.messages.nom.value = errors.nom[0]
+                }
+                if (errors.prenom) {
+                    this.messages.prenom.exist = true
+                    this.messages.prenom.value = errors.prenom[0]
+                }
+                if (errors.remise) {
+                    this.messages.remise.exist = true
+                    this.messages.remise.value = errors.remise[0]
+                }
+                if (errors.avance) {
+                    this.messages.avance.exist = true
+                    this.messages.avance.value = errors.avance[0]
+                }
+                if (errors.debut) {
+                    this.messages.debut.exist = true
+                    this.messages.debut.value = errors.debut[0]
+                }
+                if (errors.fin) {
+                    this.messages.fin.exist = true
+                    this.messages.fin.value = errors.fin[0]
+                }
             })
         },
-        saveEvent() {
+        saveEvent(event) {
+            event.preventDefault()
             axios.post('/ajax/sejour/add', {
                 nom: this.client.nom,
                 prenom: this.client.prenom,
@@ -323,16 +434,53 @@ export default {
                 remise: this.remise,
                 avance: this.avance,
                 delais: this.delais,
-                _token: document.querySelector("meta[name='csrf-token']").getAttribute('content')
             }).then((response) => {
-                    const message =
-                        `la chambre ${response.data.chambre.libelle} a été attribuée
-                                    du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
-                                    client ${this.client.nom} ${this.client.prenom}`
-                    this.getEvents()
-                    this.$awn.success(message)
+                const message =
+                    `la chambre ${response.data.chambre.libelle} a été attribuée
+                     du:${this.timeInterval.debut} midi au ${this.timeInterval.fin} midi, pour le
+                     client ${this.client.nom} ${this.client.prenom}`
+                this.getEvents()
+                this.$bvModal.hide('modal')
+                this.$awn.success(message)
+                return
             }).catch((err) => {
-                console.log(err)
+                const errors = err.response.data.errors
+                if (errors.nom) {
+                    this.messages.nom.exist = true
+                    this.messages.nom.value = errors.nom[0]
+                }
+                if (errors.prenom) {
+                    this.messages.prenom.exist = true
+                    this.messages.prenom.value = errors.prenom[0]
+                }
+                if (errors.piece) {
+                    this.messages.piece.exist = true
+                    this.messages.piece.value = errors.piece[0]
+                }
+                if (errors.batiment) {
+                    this.messages.batiment.exist = true
+                    this.messages.batiment.value = errors.batiment[0]
+                }
+                if (errors.chambre) {
+                    this.messages.chambre.exist = true
+                    this.messages.chambre.value = errors.chambre[0]
+                }
+                if (errors.remise) {
+                    this.messages.remise.exist = true
+                    this.messages.remise.value = errors.remise[0]
+                }
+                if (errors.avance) {
+                    this.messages.avance.exist = true
+                    this.messages.avance.value = errors.avance[0]
+                }
+                if (errors.numero_piece) {
+                    this.messages.numero.exist = true
+                    this.messages.numero.value = errors.numero_piece[0]
+                }
+                if (errors.contact) {
+                    this.messages.contact.exist = true
+                    this.messages.contact.value = errors.contact[0]
+                }
             })
         },
         resetModal() {
@@ -350,14 +498,35 @@ export default {
             this.timeInterval.debut = null
             this.timeInterval.fin = null
             this.idSejourAttribution = null
+            this.messages.nom.exist = false
+            this.messages.prenom.exist = false
+            this.messages.batiment.exist = false
+            this.messages.chambre.exist = false
+            this.messages.piece.exist = false
+            this.messages.remise.exist = false
+            this.messages.avance.exist = false
+            this.messages.numero.exist = false
+            this.messages.contact.exist = false
+            this.messages.debut.exist = false
+            this.messages.fin.exist = false
+            this.messages.nom.value = ''
+            this.messages.prenom.value = ''
+            this.messages.batiment.value = ''
+            this.messages.chambre.value = ''
+            this.messages.piece.value = ''
+            this.messages.remise.value = ''
+            this.messages.avance.value = ''
+            this.messages.numero.value = ''
+            this.messages.contact.value = ''
+            this.messages.debut.value = ''
+            this.messages.fin.value = ''
         },
         prixNet() {
-
             if (this.message.details) {
                 let prix_normal = this.details.type_linked.cout_reservation * this.delais
                 let prix_avec_remise = prix_normal - prix_normal * Number(this.remise)
                 this.message.net = `le prix net total à payer: ${prix_avec_remise},
-                                Avance: ${prix_normal*this.avance} , Reste à payer: ${prix_avec_remise-prix_normal*this.avance}`
+                                    Avance: ${prix_normal*this.avance} , Reste à payer: ${prix_avec_remise-prix_normal*this.avance}`
             } else {
                 this.message.net = 'Vous devez choisir le batiment et la chambre !!'
             }

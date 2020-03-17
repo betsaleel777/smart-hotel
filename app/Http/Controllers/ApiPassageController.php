@@ -38,7 +38,8 @@ class ApiPassageController extends Controller
     }
 
     public function attribuer(Request $request)
-    {
+    {    //validation
+         $request->validate(AttributionsPassage::RULES,AttributionsPassage::MESSAGES) ;
         //insertion du passage dans la table passage
         $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
         $passage = new Passage() ;

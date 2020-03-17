@@ -12,8 +12,12 @@ class AttributionsPassage extends Model
     protected $fillable = ['batiment','passage','restHeure'] ;
     protected $table = 'attributions_passages' ;
     protected $dates = ['created_at','updated_at','deleted_at'] ;
-    const RULES = ['heure' => 'required|numeric'] ;
-    const MESSAGES = ['heure.required' => 'le nombre d\'heures est requis','heure.numeric' => 'doit être un nombre'] ;
+    const RULES = ['heure' => 'required|numeric',
+                   'kind' => 'required'
+                  ] ;
+    const MESSAGES = ['heure.required' => 'le nombre d\'heures est requis',
+                      'heure.numeric' => 'doit être un nombre',
+                      'kind.required' => 'le type de la visite est requis'] ;
 
     public function batimentLinked(){
       return $this->belongsTo(Batiment::class,'batiment') ;

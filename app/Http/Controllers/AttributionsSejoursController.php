@@ -21,33 +21,41 @@ class AttributionsSejoursController extends Controller
 
     public function add(Request $request)
     {
+        //validation
+        $rules = ['nom' => 'required|max:60',
+                  'prenom' => 'required|max:150',
+                  'piece' => 'required',
+                  'batiment' => 'required' ,
+                  'chambre' => 'required',
+                  'remise' => 'required',
+                  'avance' => 'required',
+                  'numero_piece' => 'required|max:191|unique:clients,numero_piece',
+                  'contact' => 'required|max:20|unique:clients,contact',
+                 ] ;
+        $messages = ['nom.required' => 'le nom est requis',
+                     'nom.max' => 'maximum de caractère dépassé',
+                     'prenom.required' => 'le prénom est requis',
+                     'prenom.max' => 'maximum de caractère dépassé',
+                     'piece.required' => 'choix du type de pièce est requis',
+                     'batiment.required' => 'choix du batiment est requis' ,
+                     'chambre.required' => 'le choix de la chambre est requis',
+                     'remise.required' => 'la remise est requise',
+                     'avance.required' => 'l\'avance est requise',
+                     'numero_piece.required' => 'le numéro de la pièce est requis',
+                     'numero_piece.max' => 'maximum de caractère dépassé',
+                     'numero_piece.unique' => 'ce numéro de pièce est déjà utilisé',
+                     'contact.unique' => 'ce contact est déjà utilisé',
+                     'contact.required' => 'le contact est requis'
+                    ] ;
+        $request->validate($rules,$messages) ;
         $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre) ;
-        $client_with_piece = Client::where('numero_piece',$request->numero_piece)->get()->first() ;
-        $client_with_contact = Client::where('contact',$request->contact)->get()->first() ;
-
-        if(!empty($client_with_piece)){
-          if($client_with_piece->nom !== $request->nom or $client_with_piece->prenom !== $request->prenom){
-            $message = 'Enregistrement annulé pour conflit d\'identité, la pièce: '.$request->numero_piece.' est déjà utilisé par le client'.$client_with_piece->nom ;
-            redirect()->route('attribution.sejour.index')->with('warning',$message) ;
-          }
-        }
-        if(!empty($client_with_contact)){
-          if($client_with_contact->nom !== $request->nom or $client_with_contact->prenom !== $request->prenom){
-            $message = 'Enregistrement annulé pour conflit d\'identité, le contact: '.$request->contact.' est déjà utilisé par le client'.$client_with_contact->nom ;
-            redirect()->route('attribution.sejour.index')->with('warning',$message) ;
-          }
-        }
-        // if(empty($client_with_piece) and empty($client_with_contact)){
-        //   $client = new Client() ;
-        //   $client->nom = $request->nom ;
-        //   $client->prenom = $request->prenom ;
-        //   $client->contact = $request->contact ;
-        //   $client->numero_piece = $request->numero_piece ;
-        //   $client->piece = $request->piece ;
-        //   $client->save() ;
-        // }else{
-        //   $client = $client_with_piece ;
-        // }
+        $client = new Client() ;
+        $client->nom = $request->nom ;
+        $client->prenom = $request->prenom ;
+        $client->contact = $request->contact ;
+        $client->numero_piece = $request->numero_piece ;
+        $client->piece = $request->piece ;
+        $client->save() ;
         $sejour = new Sejour($request->all()) ;
         $sejour->client = $client->id ;
         $sejour->prix = $chambre->typeLinked->cout_reservation ;
@@ -87,6 +95,25 @@ class AttributionsSejoursController extends Controller
     }
 
     public function update(Request $request){
+      $rules = ['nom' => 'required|max:60',
+                'prenom' => 'required|max:150',
+                'remise' => 'required',
+                'avance' => 'required',
+                'debut' => 'required|date_format:Y-m-d H:i:s',
+                'fin' => 'required|date_format:Y-m-d H:i:s',
+               ] ;
+       $messages = ['nom.required' => 'le nom est requis',
+                    'nom.max' => 'maximum de caractère dépassé',
+                    'prenom.required' => 'le prénom est requis',
+                    'prenom.max' => 'maximum de caractère dépassé',
+                    'remise.required' => 'la remise est requise',
+                    'avance.required' => 'l\'avance est requise',
+                    'debut.required' => 'la date debut est requise',
+                    'debut.date_format' => 'format de date incorrecte',
+                    'fin.required' => 'la date de fin est requise',
+                    'fin.date_format' => 'format de date incorrecte'
+                   ] ;
+      $request->validate($rules,$messages) ;
       $attribution = AttributionSejour::findOrFail($request->attribution) ;
       $sejour = Sejour::findOrFail($attribution->sejour);
       $sejour->debut = $request->debut ;
