@@ -334,10 +334,17 @@ export default {
             axios.post('/ajax/sejour/liberer', {
                 attribution: this.idSejourAttribution,
             }).then((response) => {
-                const chambre = response.data.chambre
-                const message = `la chmabre ${chambre.libelle} a été libérée avec succès !!`
-                this.getEvents()
-                this.$awn.success(message)
+                if (response.data.chambre) {
+                    const chambre = response.data.chambre
+                    const message = `la chambre ${chambre.libelle} a été libérée avec succès !!`
+                    this.getEvents()
+                    this.$awn.success(message)
+                    return
+                } else {
+                    const warning = response.data.warning
+                    this.$awn.warning(warning)
+                    return
+                }
             }).catch((error) => {
                 console.log(error);
             })

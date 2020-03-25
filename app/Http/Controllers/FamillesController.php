@@ -52,4 +52,9 @@ class FamillesController extends Controller
       $message = 'la famille: '.$famille->libelle.' a été supprimée avec succès' ;
       return redirect()->route('famille_index')->with('success',$message) ;
     }
+    //-------------------------------- ajax --------------------------------------------
+    public function getFamilles(){
+      $familles = Famille::select('id','libelle')->get() ;
+      return response()->json(['familles' => $familles]) ;
+    }
 }

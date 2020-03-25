@@ -33,16 +33,16 @@ class Client extends Model
 
     public function pieceLinked()
     {
-        return $this->belongsTo(TypePiece::class, 'piece') ;
+        return $this->belongsTo(TypePiece::class, 'piece');
     }
 
     public function sejours()
     {
-        return $this->hasMany(Client::class, 'client') ;
+        return $this->hasMany(Client::class, 'client');
     }
 
     public function encaissements()
     {
-        return $this->hasMany(Encaissement::class, 'client') ;
+        return $this->hasMany(Encaissement::class, 'client');
     }
 }

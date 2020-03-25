@@ -71,4 +71,10 @@ class SousFamillesController extends Controller
     $titre = 'Associer à '.$famille->libelle ;
     return view('parametre.sous_famille.plug',compact('titre','famille')) ;
   }
+
+  //------------------------------ajax --------------------------------------------
+  public function getSousFamilles(int $famille){
+    $sous_familles = SousFamille::select('id','libelle')->where('famille',$famille)->get() ;
+    return response()->json(['sous_familles' => $sous_familles]) ;
+  }
 }

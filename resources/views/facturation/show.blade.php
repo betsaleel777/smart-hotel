@@ -204,7 +204,7 @@
             @if ($etat === 'libéré' or $etat === 'libérer' or $etat === 'facturer')
             <a href="{{route('facture_ticket',$facture)}}" class="btn btn-warning float-right"><i class="far fa-credit-card"></i> Reçu</a>
             @else
-            <a class="btn btn-success float-right"><i class="far fa-credit-card"></i> Faire Payer</a>
+            <a href="{{route('facture_solder',$facture)}}" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Faire Payer</a>
             @endif
         </div>
     </div>

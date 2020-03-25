@@ -33,6 +33,8 @@ Vue.component('synthese-product', require('./components/Restauration/SynthesePro
 Vue.component('input-choice', require('./components/General/InputChoiceComponent.vue').default)
 Vue.component('synthese-choice', require('./components/General/SyntheseChoiceComponent.vue').default)
 Vue.component('modal-button-appro', require('./components/Appro/ModalButtonComponent.vue').default)
+Vue.component('form-multicritere', require('./components/Inventaire/FormMulticritereComponent.vue').default)
+Vue.component('custom-datepicker', require('./components/Inventaire/CustomDatepickerComponent.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

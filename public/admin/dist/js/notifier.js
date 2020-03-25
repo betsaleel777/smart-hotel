@@ -9,7 +9,7 @@ $(function() {
   $(function() {
     const elt = document.getElementById('message');
     if (elt) {
-        const message = elt.getElementsByTagName('span')[0].textContent
+        const message = elt.getElementsByTagName('span')[0].innerHTML
         const type = elt.getElementsByTagName('em')[0].textContent
 
         if (message) {

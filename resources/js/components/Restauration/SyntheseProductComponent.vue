@@ -15,11 +15,11 @@
         <div class="row">
             <div role="group" class=" btn-group-vertical col-md-4">
                 <button @click="saveProforma" class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button>
-                <button @click="proformaPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
+                <!-- <button @click="proformaPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button> -->
             </div>
             <div role="group" class="btn-group-vertical col-md-4">
                 <button @click="solder" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> solder</button>
-                <button @click="facturerPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button>
+                <!-- <button @click="facturerPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button> -->
             </div>
             <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
         </div>
