@@ -15,35 +15,43 @@ class AttributionSejour extends Model
     const RULES = ['batiment' => 'required'] ;
     const MESSAGES = ['batiment.required' => 'le choix du batiment est requis'] ;
 
-    public function setFree():void{
-      $this->attributes['etat'] = 'libérer' ;
+    public function setFree():void
+    {
+        $this->attributes['etat'] = 'libérer' ;
     }
 
-    public function setPay():void{
-      $this->attributes['etat'] = 'facturer' ;
+    public function setPay():void
+    {
+        $this->attributes['etat'] = 'facturer' ;
     }
 
-    public function batimentLinked(){
-      return $this->belongsTo(Batiment::class,'batiment') ;
+    public function batimentLinked()
+    {
+        return $this->belongsTo(Batiment::class, 'batiment');
     }
 
-    public function sejourLinked(){
-      return $this->belongsTo(Sejour::class,'sejour') ;
+    public function sejourLinked()
+    {
+        return $this->belongsTo(Sejour::class, 'sejour');
     }
 
-    public function liberation(){
-      return $this->belongsTo(LiberationSejour::class,'attribution') ;
+    public function liberation()
+    {
+        return $this->belongsTo(LiberationSejour::class, 'attribution');
     }
 
-    public function encaissement(){
-      return $this->hasOne(Encaissement::class,'sejour') ;
+    public function encaissement()
+    {
+        return $this->hasOne(Encaissement::class, 'sejour');
     }
 
-    public function produits(){
-        return $this->belongsToMany(Produit::class,'restaurations' ,'sejour','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
+    public function produits()
+    {
+        return $this->belongsToMany(Produit::class, 'restaurations', 'sejour', 'produit')->withPivot('quantite', 'etat', 'prix')->withTimestamps();
     }
 
-    // public function destockes(){
-    //   return $this->belongsToMany(Produit::class,'destockages','attribution_sejour','produit')->withPivot('quantite','user','attribution_passage')->withTimestamps() ;
-    // }
+    public function destockes()
+    {
+        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_sejour', 'produit')->withPivot('quantite', 'user', 'attribution_passage')->withTimestamps();
+    }
 }

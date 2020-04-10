@@ -234,8 +234,13 @@ Route::prefix('/ajax')->group(
         Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma');
 
         Route::post('/destockage/save', 'DestockagesController@save')->name('destockage_save');
+        Route::post('/destockage/check', 'DestockagesController@check')->name('produit_stock_check');
         Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved')->name('produit_sejour_saved');
+        Route::post('/destockage/update/sejour/saved/{id}', 'DestockagesController@updateSejourSaved')->name('update_produit_sejour_saved');
+        Route::post('/destockage/delete/sejour/saved/{id}', 'DestockagesController@deleteSejourSaved')->name('delete_produit_sejour_saved');
         Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved')->name('produit_passage_saved');
+        Route::post('/destockage/update/passage/saved/{id}', 'DestockagesController@updatePassageSaved')->name('update_produit_passage_saved');
+        Route::post('/destockage/delete/passage/saved/{id}', 'DestockagesController@deletePassageSaved')->name('delete_produit_passage_saved');
 
         Route::post('/approvisionnement/save', 'ApprovisionnementsController@save')->name('appro_save');
         Route::post('/approvisionnement/edit', 'ApprovisionnementsController@edit')->name('appro_edit');
