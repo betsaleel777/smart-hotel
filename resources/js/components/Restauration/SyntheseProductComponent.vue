@@ -14,14 +14,14 @@
         </b-card-text>
         <div class="row">
             <div role="group" class=" btn-group-vertical col-md-4">
-                <button @click="saveProforma" class="btn btn-primary"><i class="fas fa-file-invoice"></i> proforma</button>
+                <button @click="saveProforma" class="btn btn-primary"><i class="fas fa-file-invoice"></i> Enregistrer</button>
                 <!-- <button @click="proformaPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button> -->
             </div>
             <div role="group" class="btn-group-vertical col-md-4">
-                <button @click="solder" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> solder</button>
+                <button @click="solder" class="btn btn-success"><i class="fas fa-file-invoice-dollar"></i> Solder</button>
                 <!-- <button @click="facturerPdf" class="btn btn-warning"><i class="fas fa-print"></i> exporter pdf</button> -->
             </div>
-            <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> supprimer</button></div>
+            <div class="col-md-4"><button @click="supprimer" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button></div>
         </div>
     </b-card>
 </div>
@@ -41,33 +41,43 @@ export default {
     data() {
         return {
             total: '0',
-            list: []
+            list: [],
+            checkResponse:{}
         }
     },
     mounted() {
         this.getProformas()
+        //on definit ce que le composant doit faire quand il detecte qu'un produit a été ajouté à sa liste
         this.$root.$on('add', (produit, quantite) => {
             if (produit && quantite) {
                 let elt = {}
                 let found = false
+                //si le produit selectionné plus d'une fois on modifie la quantite dans la section suivante
                 if (this.list.length > 0) {
+                    let quantiteUpdated = 0
                     let newTab = this.list.map((line) => {
                         if (line.id === produit.id) {
                             line.quantite = Number(line.quantite) + Number(quantite)
+                            quantiteUpdated = line.quantite
+                            this.checkStock(produit.id,quantiteUpdated)
                             found = true
                         }
                         return line
                     })
                     this.list = newTab
                 }
-
+                //fin de section
+                //dans le cas où le produit a été nouvellement sélectionné on l'ajoute à la liste dans la section suivante
                 if (!found) {
                     elt.id = produit.id
                     elt.libelle = produit.libelle
                     elt.prix = Number(produit.prix)
                     elt.quantite = Number(quantite)
+                    //avant de l'ajouter à la liste des produits on vérifie si la quanité renseignée est cohérente avec le stock
+                    this.checkStock(produit.id,Number(quantite))
                     this.list.push(elt)
                 }
+                //fin de section
                 this.totaliser()
             } else {
                 this.$awn.warning('Veuillez choisir un produit et renseigner la quantité !!')
@@ -95,7 +105,7 @@ export default {
                 this.list = response.data.proformas
                 this.totaliser()
             }).catch((err) => {
-                console.log(err);
+                console.log(err)
             })
         },
         saveProforma() {
@@ -142,6 +152,20 @@ export default {
             } else {
                 this.$awn.info('aucune commande de restauration enregistrée')
             }
+        },
+        checkStock(produit,quantite) {
+            console.log(produit,quantite)
+            axios.post('/ajax/restauration/check', {
+                produit: produit,
+                quantite: quantite
+            }).then(response => {
+                if(!response.data.state){
+                  this.$awn.warning(response.data.message)
+                  this.removeIt(produit)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
         proformaPdf() {
             const url = this.passage ? '/home/restauration/passage/pdf/proforma/' : '/home/restauration/sejour/pdf/proforma/'

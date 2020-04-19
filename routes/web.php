@@ -186,14 +186,11 @@ Route::prefix('home')->group(
         Route::prefix('/inventaire')->group(
             function () {
                 Route::get('/', 'InventairesController@index')->name('inventaire_index');
-                Route::get('/multicritere/one_date/{famille}/{sous_famille}/{type}/{jour}', 'InventairesController@searchByDate')->name('inventaire_date');
-                Route::get('/multicritere/interval_date/{famille}/{sous_famille}/{type}/{debut}/{fin}', 'InventairesController@searchByDateInterval')->name('inventaire_date_interval');
             }
         );
 
         Route::get('/destockage/add/sejour/{id}', 'DestockagesController@addFromSejour')->name('destockage_sejour_add');
         Route::get('/destockage/add/passage/{id}', 'DestockagesController@addFromPassage')->name('destockage_passage_add');
-        Route::post('/destockage/store', 'DestockagesController@store')->name('destockage_store');
 
     }
 );
@@ -232,17 +229,21 @@ Route::prefix('/ajax')->group(
         Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder')->name('solde_passage_proforma');
         Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas');
         Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma');
+        Route::post('/restauration/check', 'RestaurationsController@check')->name('product_check_quantity');
 
-        Route::post('/destockage/save', 'DestockagesController@save')->name('destockage_save');
+        Route::post('/destockage/sejour/save', 'DestockagesController@sejourSave')->name('destockage_sejour_save');
+        Route::post('/destockage/passage/save', 'DestockagesController@passageSave')->name('destockage_passage_save');
         Route::post('/destockage/check', 'DestockagesController@check')->name('produit_stock_check');
         Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved')->name('produit_sejour_saved');
-        Route::post('/destockage/update/sejour/saved/{id}', 'DestockagesController@updateSejourSaved')->name('update_produit_sejour_saved');
-        Route::post('/destockage/delete/sejour/saved/{id}', 'DestockagesController@deleteSejourSaved')->name('delete_produit_sejour_saved');
         Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved')->name('produit_passage_saved');
-        Route::post('/destockage/update/passage/saved/{id}', 'DestockagesController@updatePassageSaved')->name('update_produit_passage_saved');
-        Route::post('/destockage/delete/passage/saved/{id}', 'DestockagesController@deletePassageSaved')->name('delete_produit_passage_saved');
+        Route::post('/destockage/update/saved', 'DestockagesController@updateSaved')->name('update_produit_saved');
+        Route::post('/destockage/delete/saved', 'DestockagesController@deleteSaved')->name('delete_sejour_saved');
 
         Route::post('/approvisionnement/save', 'ApprovisionnementsController@save')->name('appro_save');
         Route::post('/approvisionnement/edit', 'ApprovisionnementsController@edit')->name('appro_edit');
+
+        Route::post('/multicritere/one_date', 'InventairesController@searchByDate')->name('inventaire_date');
+        Route::post('/multicritere/interval_date', 'InventairesController@searchByDateInterval')->name('inventaire_date_interval');
+        Route::post('/multicritere/default', 'InventairesController@searchDefault')->name('inventaire_default');
     }
 );

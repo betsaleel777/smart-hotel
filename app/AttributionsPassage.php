@@ -19,28 +19,44 @@ class AttributionsPassage extends Model
                       'heure.numeric' => 'doit être un nombre',
                       'kind.required' => 'le type de la visite est requis'] ;
 
-    public function batimentLinked(){
-      return $this->belongsTo(Batiment::class,'batiment') ;
+    public function setFree():void
+    {
+        $this->attributes['etat'] = 'libérer' ;
     }
 
-    public function passageLinked(){
-      return $this->belongsTo(Passage::class,'passage') ;
+    public function setPay():void
+    {
+        $this->attributes['etat'] = 'facturer' ;
+    }
+    
+    public function batimentLinked()
+    {
+        return $this->belongsTo(Batiment::class, 'batiment');
     }
 
-    public function liberation(){
-      return $this->belongsTo(LiberationsPassage::class,'attribution') ;
+    public function passageLinked()
+    {
+        return $this->belongsTo(Passage::class, 'passage');
     }
 
-    public function encaissement(){
-      return $this->hasOne(Encaissement::class,'passage') ;
+    public function liberation()
+    {
+        return $this->belongsTo(LiberationsPassage::class, 'attribution');
     }
 
-    public function produits(){
-      return $this->belongsToMany(Produit::class,'restaurations','passage','produit')->withPivot('quantite','etat','prix')->withTimestamps() ;
+    public function encaissement()
+    {
+        return $this->hasOne(Encaissement::class, 'passage');
     }
 
-    // public function destockes(){
-    //   return $this->belongsToMany(Produit::class,'destockages','attribution_passage','produit')->withPivot('quantite','user','attribution_sejour')->withTimestamps() ;
-    // }
+    public function produits()
+    {
+        return $this->belongsToMany(Produit::class, 'restaurations', 'passage', 'produit')->withPivot('quantite', 'etat', 'prix')->withTimestamps();
+    }
+
+    public function destockes()
+    {
+        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_passage', 'produit')->withPivot('quantite', 'user', 'attribution_sejour', 'prix')->withTimestamps();
+    }
 
 }

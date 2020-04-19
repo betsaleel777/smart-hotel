@@ -47,7 +47,7 @@
                 <td>{{$appro->produitLinked->seuil}}</td>
                 {{-- <td>{{$appro->userLinked->name}}</td> --}}
                 <td>
-                  <modal-button-appro :id="'{{$appro->id}}'" :valeur="{{$appro->quantite}}" :produit="'{{$appro->produitLinked->libelle}}'"></modal-button-appro>
+                  <modal-button-appro :id="'{{(int)$appro->id}}'" :valeur="'{{(int)$appro->quantite}}'" :produit="'{{str_replace("'"," ",$appro->produitLinked->libelle)}}'"></modal-button-appro>
                   {{-- <a href="{{route('appro_edit',$appro)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
                   <a href="{{route('appro_delete',$appro)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>supprimer</a> --}}
                   {{-- <a href="{{route('appro_show',$appro)}}" class="btn btn-outline-warning"><i class="fas fa-eye"></i>voir</a> --}}

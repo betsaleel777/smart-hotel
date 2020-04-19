@@ -7,6 +7,7 @@ use App\Restauration ;
 use App\AttributionSejour ;
 use App\Produit ;
 use App\AttributionsPassage ;
+use App\Approvisionnement ;
 use PDF;
 
 class RestaurationsController extends Controller
@@ -180,5 +181,33 @@ class RestaurationsController extends Controller
         $attribution = AttributionsPassage::findOrfail($request->attribution);
         $attribution->produits()->detach();
         return response()->json(['proformas' => $request->all()]);
+    }
+
+    public function check(Request $request){
+      //afficher l'état de consommation du produit
+      $cumul_restauration = Restauration::groupBy('produit')->selectRaw('sum(quantite) as consomme,produit')->where('produit',$request->produit)->get()->first() ;
+      //ajouter les quantité soumises
+      if(!empty($cumul_restauration)){
+         $quantite_deja_consommees = $cumul_restauration->consomme ;
+      }else{
+        $quantite_deja_consommees = (int)$cumul_restauration ;
+      }
+      $total_soumis = $quantite_deja_consommees + $request->quantite ;
+      //afficher l'état d'approvisionnement du même produit
+      $cumul_stock = Approvisionnement::groupBy('produit')->selectRaw('sum(quantite) as appros,produit')->where('produit',$request->produit)->get()->first() ;
+      if(!empty($cumul_stock)){
+         $quantite_en_stock = $cumul_stock->appros ;
+      }else{
+         $quantite_en_stock = (int)$cumul_stock ;
+      }
+      //comparaison de l'approvisionnement à la consommation
+      if($total_soumis > $quantite_en_stock){
+        $state = false ;
+        $message = "Ce produit ne peut être consommer pour la quantité de: $total_soumis, parce que le stock est insuffisant,il reste: ".$quantite_en_stock." éléments" ;
+      }else{
+        $state = true ;
+        $message = "Le stock est bien suffisant" ;
+      }
+      return response()->json(['state' => $state,'message' => $message]) ;
     }
 }

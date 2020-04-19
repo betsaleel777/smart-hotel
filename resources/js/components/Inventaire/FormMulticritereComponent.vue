@@ -13,9 +13,8 @@
         </div>
     </div>
     <div class="form-group">
-        <b-form-radio name="radio-inline" v-model="type" value="all">Tout</b-form-radio>
-        <b-form-radio name="radio-inline" v-model="type" value="consommable">Consommable</b-form-radio>
-        <b-form-radio name="radio-inline" v-model="type" value="accessoire">Accéssoires</b-form-radio>
+      <label for="">Type</label>
+      <b-form-select v-model="type" :options="types"></b-form-select>
     </div>
 </div>
 </template>
@@ -35,16 +34,17 @@ export default {
             familles: [],
             sous_famille: '',
             sous_familles: [],
-            type: 'all',
+            type: null,
+            types:[{text:'tout',value:'all'},{text:'accéssoires',value:'acessoire'},{text:'consommables',value:'consommable'}]
         }
     },
-    mounted(){
-      this.getFamilles()
+    mounted() {
+        this.getFamilles()
     },
-    watch:{
-      sous_famille(value){
-        this.$root.$emit('famille_set',value,this.type)
-      }
+    watch: {
+        type(value) {
+            this.$root.$emit('famille_set', value, this.famille,this.sous_famille)
+        }
     },
     methods: {
         getFamilles() {
@@ -61,7 +61,7 @@ export default {
             })
         },
         getSousFamilles() {
-            axios.get('/parametre/sous_famille/ajax/'+this.famille).then(response => {
+            axios.get('/parametre/sous_famille/ajax/' + this.famille).then(response => {
                 const data = response.data.sous_familles
                 this.sous_familles = data.map(sous_famille => {
                     return {

@@ -7,7 +7,7 @@
     <label for="quantite">Quantite</label>
     <b-form-input id="quantite" :state="quantiteState" aria-describedby="input-live-help input-live-feedback" v-model="quantite"></b-form-input>
     <b-form-invalid-feedback id="input-live-feedback">
-      Quantite doit être un nombre , non vide !!
+        Quantite doit être un nombre , non vide !!
     </b-form-invalid-feedback>
     <b-form-text id="input-live-help">EX: 4</b-form-text>
     <div v-if="showDetails" class="container">
@@ -22,10 +22,10 @@
         </b-card>
     </div>
     <div class="row">
-      <div class="col-md-9"></div>
-      <div class="col-md-3">
-        <button width="100%" @click="addit" type="button" class="btn btn-primary">valider</button>
-      </div>
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <button width="100%" @click="addit" type="button" class="btn btn-primary">valider</button>
+        </div>
     </div>
 </div>
 </template>
@@ -53,27 +53,27 @@ export default {
             choice: null,
             produits: null,
             produit: null,
-            quantite:'',
+            quantite: '',
             showDetails: false,
         }
     },
     mounted() {
         this.getConsommables()
     },
-    computed:{
-      quantiteState(){
-        if(this.quantite){
-          let etat = null
-          if(this.quantite.length > 0 && !isNaN(Number(this.quantite)) && this.quantite != 0){
-            etat = true
-          }else{
-            etat = false
-          }
-          return etat
-        }else{
-          return null
+    computed: {
+        quantiteState() {
+            if (this.quantite) {
+                let etat = null
+                if (this.quantite.length > 0 && !isNaN(Number(this.quantite)) && this.quantite != 0) {
+                    etat = true
+                } else {
+                    etat = false
+                }
+                return etat
+            } else {
+                return null
+            }
         }
-      }
     },
     methods: {
         getDetails() {
@@ -99,11 +99,10 @@ export default {
                 console.log(err)
             })
         },
-        addit(){
-            this.$root.$emit('add',this.produit,this.quantite)
+        addit() {
+            this.$root.$emit('add', this.produit, this.quantite)
             this.choice = null
             this.quantite = ''
-            //conserver en session le produit
         }
     }
 }

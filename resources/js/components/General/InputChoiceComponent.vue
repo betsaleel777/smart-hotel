@@ -71,7 +71,8 @@ export default {
                 }
             ],
             choice: null,
-            produits: null,
+            prix:0,
+            produits: [],
             produit: null,
             quantite: '',
             showDetails: false,
@@ -110,6 +111,7 @@ export default {
                     produit
                 } = response.data
                 this.produit = produit
+                this.prix = produit.prix
                 this.showDetails = true;
             }).catch((err) => {
                 console.log(err)
@@ -153,9 +155,10 @@ export default {
             }
         },
         addit() {
-            this.$root.$emit('add', this.produit, this.quantite)
+            this.$root.$emit('add', this.produit, this.quantite, this.prix)
             this.choice = null
             this.quantite = ''
+            this.prix = 0
             //conserver en session le produit
         }
     }

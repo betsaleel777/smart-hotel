@@ -66,10 +66,7 @@ export default {
                     heure: current.heure,
                     kind: current.kind
                 })
-                .then(function(response) {
-                    location.href = '/home/attributions';
-                })
-                .catch((error) => {
+                .then(response => location.href = '/home/attributions/passage').catch((error) => {
                     const errors = error.response.data.errors
 
                     if (errors.heure) {
@@ -82,13 +79,13 @@ export default {
                     }
                 })
         },
-        resetModal(){
-          this.messages.heure.value = ''
-          this.messages.heure.exist = false
-          this.messages.kind.value = ''
-          this.messages.kind.exist = false  
-          this.heure = null
-          this.kind = null
+        resetModal() {
+            this.messages.heure.value = ''
+            this.messages.heure.exist = false
+            this.messages.kind.value = ''
+            this.messages.kind.exist = false
+            this.heure = null
+            this.kind = null
         }
 
     }

@@ -61,6 +61,7 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                                 @if (!Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
                                 <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
                                 <a href="{{route('resto_new',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-drumstick-bite"></i></a>
+                                <a href="{{route('destockage_passage_add',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-box"></i></a>
                                 @endif
                                 <a href="{{route('attributions_pass_liberer',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>libérer</a>
                             </td>

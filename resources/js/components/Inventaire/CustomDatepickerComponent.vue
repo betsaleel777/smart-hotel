@@ -49,13 +49,15 @@ export default {
             minDate: null,
             maxDate: null,
             famille: null,
+            sous_famille: null,
             type: null
         }
     },
     mounted() {
-        this.$root.$on('famille_set', (famille, type) => {
+        this.$root.$on('famille_set', (type, famille, sous_famille) => {
             this.famille = famille
             this.type = type
+            this.sous_famille = sous_famille
         })
     },
     methods: {
@@ -99,9 +101,40 @@ export default {
             this.desactiverSecond = true
             this.desactiverFirst = false
             this.desactiverThree = false
+            this.oneDate = null
+            this.debut = null
+            this.fin = null
         },
         send() {
-            console.log(this.debut, this.fin, this.oneDate, this.famille, this.type)
+            console.log(this.debut, this.fin, this.oneDate, this.type, this.famille, this.sous_famille)
+            if (this.debut && this.fin) {
+                axios.post('/ajax/multicritere/interval_date/', {
+                    type: this.type,
+                    famille: this.famille,
+                    sous_famille: this.sous_famille,
+                    debut: this.debut,
+                    fin: this.fin
+                }).then(response => {
+                    console.log(response.data);
+                }).catch(err => console.log(err))
+            } else if (this.oneDate) {
+                axios.post('/ajax/multicritere/one_date/', {
+                    type: this.type,
+                    famille: this.famille,
+                    sous_famille: this.sous_famille,
+                    oneDate: this.debut,
+                }).then(response => {
+                    console.log(response.data)
+                }).catch(err => console.log(err))
+            }else{
+              axios.post('/ajax/multicritere/default/', {
+                  type: this.type,
+                  famille: this.famille,
+                  sous_famille: this.sous_famille,
+              }).then(response => {
+                  console.log(response.data)
+              }).catch(err => console.log(err))
+            }
         }
     }
 }

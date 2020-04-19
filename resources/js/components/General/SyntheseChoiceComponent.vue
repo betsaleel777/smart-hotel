@@ -17,15 +17,20 @@
             <div class="col-md-4"><button @click="envoyer" class="btn btn-primary"><i class="fas fa-send"></i> Envoyer</button></div>
         </div>
     </b-card>
-    <center><button @click="decompact" class="btn btn-warning">mode</button></center>
-    <b-table v-if="compact" striped hover :items="board_compact" :fields="fields_compact" caption-top>
-    </b-table>
-    <b-table v-if="!compact" striped hover :items="board_uncompact" :fields="fields" caption-top>
-        <template v-slot:cell(option)="data">
-            <button class="btn btn-primary" @click="edit(data.value.id, data.value.quantite, data.value.libelle)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-danger" @click="trash(data.value.id)"><i class="fas fa-trash"></i></button>
-        </template>
-    </b-table>
+    <div v-if="usingby === 'destockage'">
+        <center><button @click="decompact" class="btn btn-warning">mode</button></center>
+        <b-table v-if="compact" striped hover :items="board_compact" :fields="fields_compact" caption-top>
+        </b-table>
+        <b-table v-if="!compact" striped hover :items="board_uncompact" :fields="fields" caption-top>
+            <template v-slot:cell(option)="data">
+                <button class="btn btn-primary" @click="edit(data.value.id, data.value.quantite, data.value.libelle)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger" @click="trash(data.value.id)"><i class="fas fa-trash"></i></button>
+                <b-modal @ok="update(data.value.id)" :id="'modal-'+data.value.id" :title="data.value.libelle">
+                    <input type="text" class="form-control" v-model="updateQuantite">
+                </b-modal>
+            </template>
+        </b-table>
+    </div>
 </div>
 </template>
 
@@ -46,6 +51,7 @@ export default {
         return {
             total: '0',
             list: [],
+            updateQuantite: 0,
             board_compact: [],
             board_uncompact: [],
             compact: true,
@@ -74,7 +80,7 @@ export default {
         }
     },
     mounted() {
-        this.$root.$on('add', (produit, quantite) => {
+        this.$root.$on('add', (produit, quantite, prix) => {
             if (produit && quantite) {
                 let elt = {}
                 let found = false
@@ -82,6 +88,7 @@ export default {
                     let newTab = this.list.map(line => {
                         if (line.id === produit.id) {
                             line.quantite = Number(line.quantite) + Number(quantite)
+                            line.prix = Number(prix)
                             found = true
                         }
                         return line
@@ -92,6 +99,7 @@ export default {
                     elt.id = produit.id
                     elt.libelle = produit.libelle
                     elt.quantite = Number(quantite)
+                    elt.prix = Number(prix)
                     this.list.push(elt)
                 }
             } else {
@@ -115,10 +123,10 @@ export default {
                         option: {
                             id: produit.id,
                             quantite: produit.quantite,
-                            libelle: produit.produit_linked.libelle
+                            libelle: produit.produit_linked.libelle,
                         },
                         quantite: produit.quantite,
-                        libelle: produit.produit_linked.libelle
+                        libelle: produit.produit_linked.libelle,
                     }
                 })
                 this.board_compact = produits.compact.map(produit => {
@@ -135,19 +143,20 @@ export default {
             this.compact = !this.compact
         },
         trash(id) {
-            console.log('delete avec ' + id);
+            axios.post('/ajax/destockage/delete/saved', {
+                destockage: id
+            }).then(response => location.reload()).catch(err => console.log(err))
         },
         edit(id, quantite, libelle) {
-            console.log('les infos sont: ' + id, quantite, libelle);
+            //lancer le modal avec les infos de modification
+            this.updateQuantite = quantite
+            this.$bvModal.show('modal-' + id)
         },
-        update() {
-            axios.post('/ajax/destockage/update/' + this.from + '/saved', {}).then(response => {
-                if(response.data.message){
-                  this.$awn.success(response.data.message)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        update(id) {
+            axios.post('/ajax/destockage/update/saved', {
+                destockage: id,
+                quantite: this.updateQuantite
+            }).then(response => location.reload()).catch(err => console.log(err))
         },
         envoyer(event) {
             if (this.list.length > 0) {
@@ -157,7 +166,7 @@ export default {
                 // let urlRedirect = null
 
                 if (this.usingby === 'destockage') {
-                    url = '/ajax/destockage/save'
+                    url = '/ajax/destockage/'+this.from+'/save'
                     // urlRedirect = '/home/sejour'
                 } else if (this.usingby === 'appro') {
                     url = '/ajax/approvisionnement/save'
@@ -175,10 +184,10 @@ export default {
                     passage: attributionPassage,
                     sejour: attributionSejour
                 }).then(response => {
-                    if(response.data.warning){
-                      this.$awn.warning(response.data.warning) ;
-                    }else{
-                      location.reload()
+                    if (response.data.warning) {
+                        this.$awn.warning(response.data.warning);
+                    } else {
+                        location.reload()
                     }
                 }).catch(err => {
                     console.log(err);

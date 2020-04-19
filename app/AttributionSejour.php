@@ -52,6 +52,6 @@ class AttributionSejour extends Model
 
     public function destockes()
     {
-        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_sejour', 'produit')->withPivot('quantite', 'user', 'attribution_passage')->withTimestamps();
+        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_sejour', 'produit')->withPivot('quantite', 'user', 'attribution_passage','prix')->withTimestamps();
     }
 }

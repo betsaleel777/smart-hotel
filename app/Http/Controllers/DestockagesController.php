@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr ;
 use App\Produit ;
 use App\AttributionSejour ;
+use App\AttributionsPassage ;
 use App\Destockage ;
 use App\Approvisionnement ;
 
@@ -87,7 +88,7 @@ class DestockagesController extends Controller
 
     public function addFromSejour(int $id)
     {
-        $titre = 'Accéssoire de chambre' ;
+        $titre = 'Accéssoire de chambre pour sejour' ;
         $attribution = $id ;
         $origine = 'sejour' ;
         return view('destockage.add', compact('attribution', 'titre', 'origine'));
@@ -95,7 +96,7 @@ class DestockagesController extends Controller
 
     public function addFromPassage(int $id)
     {
-        $tritre = 'Accessoire de chambre' ;
+        $titre = 'Accessoire de chambre pour passage' ;
         $attribution = $id ;
         $origine = 'passage' ;
         return view('destockage.add', compact('attribution', 'titre', 'origine'));
@@ -106,7 +107,7 @@ class DestockagesController extends Controller
 
     }
 
-    public function save(Request $request)
+    public function sejourSave(Request $request)
     {
         $attribution = AttributionSejour::findOrFail($request->sejour);
         $rejected = $this->checkStock($request->items);
@@ -115,10 +116,41 @@ class DestockagesController extends Controller
             {
                 $calebasse = [$accessoire['id'] =>['quantite' => $accessoire['quantite'],
                                                    'user' => null,
+                                                   'prix' => $accessoire['prix'],
                                                    'attribution_passage' => $request->passage ]
                                                   ] ;
                 $attribution->destockes()->attach($calebasse);
             }
+            $message = 'Enregistrement de la liste de produit soumise effectué avec succès !' ;
+            session()->flash('success',$message) ;
+        }else{
+            $produits = Produit::select('id', 'libelle')->whereIn('id', $rejected)->get()->toArray();
+            $message = "le destockage pour les produits d'entretiens suivant: " ;
+            foreach ($produits as $produit) {
+                $message .=  mb_strtoupper($produit['libelle']).', ' ;
+            }
+            $end = "ne peut être enregistré car ils sont en manque d'approvisionnement." ;
+            $message .= $end ;
+            return response()->json(['warning' => $message]);
+        }
+    }
+
+    public function passageSave(Request $request)
+    {
+        $attribution =AttributionsPassage::findOrFail($request->passage);
+        $rejected = $this->checkStock($request->items);
+        if(empty($rejected)) {
+            foreach ($request->items as $accessoire)
+            {
+                $calebasse = [$accessoire['id'] =>['quantite' => $accessoire['quantite'],
+                                                   'user' => null,
+                                                   'prix' => $accessoire['prix'],
+                                                   'attribution_passage' => $request->passage ]
+                                                  ] ;
+                $attribution->destockes()->attach($calebasse);
+            }
+            $message = 'Enregistrement de la liste de produit soumise effectué avec succès !' ;
+            session()->flash('success',$message) ;
         }else{
             $produits = Produit::select('id', 'libelle')->whereIn('id', $rejected)->get()->toArray();
             $message = "le destockage pour les produits d'entretiens suivant: " ;
@@ -155,31 +187,29 @@ class DestockagesController extends Controller
                                 }]
                             )
                             ->where('attribution_passage', $passage)->get();
-        $products = $products->groupBy('produit')->toArray();
+        $products = $prods_without_group->groupBy('produit')->toArray();
         //faire disparaitre les répétitions
         $produits_sans_repetition = $this->no_repeat_product($products);
-        return response()->json(['produits' => [ 'compact' => $produits_sans_repetition, 'decompact' => $prods_without_group]]);
+        return response()->json(['produits' => [ 'compact' => array_values($produits_sans_repetition), 'decompact' => $prods_without_group]]);
     }
 
-    public function updateSejourSaved(Request $request)
+    public function updateSaved(Request $request)
     {
-
+        $destockage = Destockage::findOrFail($request->destockage);
+        $destockage->quantite = $request->quantite ;
+        $destockage->save();
+        $message = 'modification de la quantite enregistrée avec succès !' ;
+        session()->flash('success', $message);
+        return response()->json([]);
     }
-    public function updatePassageSaved(Request $request)
-    {
 
-    }
-
-    public function deleteSejourSaved(int $id)
+    public function deleteSaved(Request $request)
     {
-        $destockage = Destockage::findOrFail($id);
+        $destockage = Destockage::findOrFail($request->destockage);
         $destockage->delete();
-        return response()->json(['message' => 'cette ligne de destockage de produit d\'entretien a bien été supprimé']);
+        $message = "Ce produit vient d'être définitivement supprimé de la liste des produits d'entretien utilisés pour cette visite." ;
+        session()->flash('success', $message);
+        return response()->json([]);
     }
-    public function deletePassageSaved(int $id)
-    {
-
-    }
-
 
 }
