@@ -27,7 +27,7 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                 </div>
             </div>
             <p class="card-text">
-                <table id="attr" class="table table-bordered">
+                <table id="passage" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -59,8 +59,10 @@ $badge = ['inoccupée' => 'badge badge-success' ,
                             </td>
                             <td>
                                 @if (!Carbon::now()->greaterThan($attribution->created_at->add($attribution->passageLinked->heure,'hour')) and $attribution->passageLinked->chambreLinked->statut === 'occupée' )
-                                <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i>modifier</a>
-                                <a href="{{route('resto_new',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-drumstick-bite"></i></a>
+                                @if ($attribution->etat !== 'facturer')
+                                  <a href="{{route('attributions_pass_edit',$attribution)}}" class="btn btn-outline-success"><i class="fas fa-edit"></i></a>
+                                  <a href="{{route('resto_new',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-drumstick-bite"></i></a>
+                                @endif
                                 <a href="{{route('destockage_passage_add',$attribution)}}" class="btn btn-outline-dark"><i class="fas fa-box"></i></a>
                                 @endif
                                 <a href="{{route('attributions_pass_liberer',$attribution)}}" class="btn btn-outline-danger"><i class="fas fa-trash"></i>libérer</a>
@@ -80,7 +82,7 @@ $badge = ['inoccupée' => 'badge badge-success' ,
 <script src="{{asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
 <script>
     $(function() {
-        $('#attr').DataTable();
+        $('#passage').DataTable();
     });
 </script>
 <script src="{{asset('js/app.js')}}" type="text/javascript"></script>

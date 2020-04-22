@@ -107,7 +107,7 @@ class RestaurationsController extends Controller
             $synchrone += $calebasse ;
         }
         $attribution->produits()->sync($synchrone);
-        $attribution->setPay();
+        //$attribution->setPay();
         $attribution->save();
         $message = 'facture de référence '.$attribution->encaissement->reference.' a été enregistrée avec succès !!' ;
         return response()->json(['message' => $message]);
@@ -123,7 +123,7 @@ class RestaurationsController extends Controller
             $synchrone += $calebasse ;
         }
         $attribution->produits()->sync($synchrone);
-        $attribution->setPay();
+        //$attribution->setPay();
         $attribution->save();
         $message = 'facture de référence '.$attribution->encaissement->reference.' a été enregistrée avec succès !!' ;
         return response()->json(['message' => $message]);

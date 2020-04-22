@@ -106,7 +106,6 @@ export default {
             this.fin = null
         },
         send() {
-            console.log(this.debut, this.fin, this.oneDate, this.type, this.famille, this.sous_famille)
             if (this.debut && this.fin) {
                 axios.post('/ajax/multicritere/interval_date/', {
                     type: this.type,

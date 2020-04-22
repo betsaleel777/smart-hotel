@@ -28,11 +28,10 @@ export default {
     },
     beforeUpdate(){
       if(this.temps < 0){
-        console.log('on passe dedans une fois')
         const audio = new Audio('http://soundbible.com/mp3/analog-watch-alarm_daniel-simion.mp3')
         audio.play()
         clearInterval(this.timer)
-        this.$awn.info('la chambre '+this.chambre+' doit être libérée !!')
+        location.reload()
       }
     },
     mounted() {

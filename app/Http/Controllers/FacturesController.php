@@ -7,15 +7,26 @@ use App\Encaissement ;
 use App\Restauration ;
 use App\AttributionSejour ;
 use App\AttributionsPassage ;
-use PDF;
+use PDF ;
 
 class FacturesController extends Controller
 {
+    //pour verifier si chaque produit dans la liste a bien été facturé
+    private function allpayProduct(Array $produits){
+      $allPayed = true ;
+      foreach ($produits as $produit) {
+        if($produit->etat !== 'facturer'){
+          $allPayed = false ;
+          break ;
+        }
+      }
+      return $allPayed ;
+    }
     public function index()
     {
         $titre = 'Factures' ;
         $factures = Encaissement::select('reference', 'client', 'id', 'quantite', 'sejour', 'passage', 'passage_nature', 'created_at')
-                  ->with('clientLinked', 'sejourLinked', 'passageLinked')->get();
+                    ->with('clientLinked', 'sejourLinked', 'passageLinked')->orderBy('id','DESC')->get();
         return view('facturation.index', compact('factures', 'titre'));
     }
 
@@ -50,10 +61,10 @@ class FacturesController extends Controller
         //voir si la restauration a bien été solder d'abord et notifier l'utilisateur au cas ou c'est pas le cas, c'est après cela qu'on peut solder la visite
         if(!empty($encaissement->sejourLinked)) {
             $restauration_sejour = Restauration::where('sejour', $encaissement->sejourLinked->id)->get()->all();
-            if(!empty($restauration_passage)) {
+            if(!empty($restauration_sejour)) {
                 $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
-                            <br><a href="'.route('resto_new', $encaissement->sejourLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
-                if($restauration_passage[0]->etat !== 'facturer') {
+                            <br><a href="'.route('resto_add', $encaissement->sejourLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
+                if(!$this->allpayProduct($restauration_sejour)) {
                     return redirect()->route('facture_index')->with('warning', $message);
                 }
             }
@@ -66,10 +77,10 @@ class FacturesController extends Controller
 
         if(!empty($encaissement->passageLinked)) {
             $restauration_passage = Restauration::where('passage', $encaissement->passageLinked->id)->get()->all();
-            if (!empty($restauration_sejour)) {
+            if (!empty($restauration_passage)) {
                 $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
-                            <br><a href="'.route('resto_add', $encaissement->passageLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
-                if($restauration_sejour[0]->etat !== 'facturer') {
+                            <br><a href="'.route('resto_new', $encaissement->passageLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
+                if(!$this->allpayProduct($restauration_passage)) {
                     return redirect()->route('facture_index')->with('warning', $message);
                 }
             }

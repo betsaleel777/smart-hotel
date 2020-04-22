@@ -56,11 +56,13 @@ class ApiPassageController extends Controller
             $passage->passage = true ;
             $passage->repos = false ;
             $encaissement->passage_nature = 'passage' ;
+            $passage->prix = $chambre->typeLinked->cout_passage ;
             $encaissement->prix_unitaire = $chambre->typeLinked->cout_passage ;
         } else {
             $passage->passage = false ;
             $passage->repos = true ;
             $encaissement->passage_nature = 'repos' ;
+            $passage->prix = $chambre->typeLinked->cout_repos ;
             $encaissement->prix_unitaire = $chambre->typeLinked->cout_repos ;
         }
         $passage->save();

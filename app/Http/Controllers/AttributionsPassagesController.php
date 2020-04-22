@@ -14,7 +14,7 @@ class AttributionsPassagesController extends Controller
     public function index()
     {
         $titre = 'Passages & repos' ;
-        $attributions = AttributionsPassage::with('batimentLinked', 'passageLinked', 'passageLinked.chambreLinked', 'passageLinked.chambreLinked.typeLinked')->whereNull('etat')->get()->all();
+        $attributions = AttributionsPassage::with('batimentLinked', 'passageLinked', 'passageLinked.chambreLinked', 'passageLinked.chambreLinked.typeLinked')->whereNull('etat')->orWhere('etat','=','facturer')->get()->all();
         return view('attribution.passage.index', compact('attributions', 'titre'));
     }
 
