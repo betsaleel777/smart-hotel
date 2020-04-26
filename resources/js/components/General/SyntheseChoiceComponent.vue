@@ -166,7 +166,7 @@ export default {
                 // let urlRedirect = null
 
                 if (this.usingby === 'destockage') {
-                    url = '/ajax/destockage/'+this.from+'/save'
+                    url = '/ajax/destockage/' + this.from + '/save'
                     // urlRedirect = '/home/sejour'
                 } else if (this.usingby === 'appro') {
                     url = '/ajax/approvisionnement/save'

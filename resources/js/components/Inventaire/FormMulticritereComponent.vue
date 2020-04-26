@@ -40,6 +40,11 @@ export default {
     },
     mounted() {
         this.getFamilles()
+        this.$root.$on('reset', () =>{
+          this.famille = '';
+          this.sous_famille = ''
+          this.type = null
+        })
     },
     watch: {
         type(value) {

@@ -32,7 +32,7 @@
 import {
     BFormDatepicker
 } from 'bootstrap-vue'
-// import {Moment} from 'moment'
+import moment from 'moment'
 export default {
     components: {
         BFormDatepicker
@@ -70,6 +70,7 @@ export default {
             if (context.selectedDate) {
                 const now = new Date()
                 if (context.selectedDate.getDate() === now.getDate()) {
+                    this.clear()
                     this.$awn.warning('Attention la date d\'aujourd\'hui ne peut être choisie comme date de debut')
                 } else {
                     this.desactiverSecond = null
@@ -83,7 +84,7 @@ export default {
             if (context.selectedDate) {
                 if (context.selectedDate.getDate() === this.minDate.getDate()) {
                     this.clear()
-                    this.$awn.warning('Attention la date d\'aujourd\'hui ne peut être choisie comme date de debut')
+                    this.$awn.warning('Attention des dates différentes doivent être spécifiées');
                 }
             }
         },
@@ -98,6 +99,7 @@ export default {
             }
         },
         clear() {
+            this.$root.$emit('reset')
             this.desactiverSecond = true
             this.desactiverFirst = false
             this.desactiverThree = false
@@ -107,38 +109,47 @@ export default {
         },
         send() {
             if (this.debut && this.fin) {
-                axios.post('/ajax/multicritere/interval_date/', {
-                    type: this.type,
-                    famille: this.famille,
-                    sous_famille: this.sous_famille,
-                    debut: this.debut,
-                    fin: this.fin
-                }).then(response => {
-                    console.log(response.data);
-                }).catch(err => console.log(err))
+                if (moment(this.fin).isAfter(this.debut)) {
+                    axios.post('/ajax/multicritere/interval_date/', {
+                        type: this.type,
+                        famille: this.famille,
+                        sous_famille: this.sous_famille,
+                        debut: this.debut,
+                        fin: this.fin
+                    }).then(response => {
+                        console.log(response.data);
+                    }).catch(err => console.log(err))
+                } else {
+                    this.clear()
+                    this.$awn.warning('Intervale de date selectionné incorrecte! la date de début doit précéder celle de fin')
+                }
             } else if (this.oneDate) {
                 axios.post('/ajax/multicritere/one_date/', {
                     type: this.type,
                     famille: this.famille,
                     sous_famille: this.sous_famille,
-                    oneDate: this.debut,
+                    oneDate: this.oneDate,
                 }).then(response => {
                     console.log(response.data)
                 }).catch(err => console.log(err))
-            }else{
-              axios.post('/ajax/multicritere/default/', {
-                  type: this.type,
-                  famille: this.famille,
-                  sous_famille: this.sous_famille,
-              }).then(response => {
-                  console.log(response.data)
-              }).catch(err => console.log(err))
+            } else {
+                axios.post('/ajax/multicritere/default/', {
+                    type: this.type,
+                    famille: this.famille,
+                    sous_famille: this.sous_famille,
+                }).then(response => {
+                    if (response.data.inventaire.length > 0) {
+                        console.log(response.data)
+                    } else {
+                        this.$awn.info('Aucun resultat trouvé pour cette recherche')
+                    }
+                }).catch(err => console.log(err))
             }
         }
     }
 }
 </script>
-<style>
+<style scoped>
 .invisible {
     visibility: hidden
 }
