@@ -26,6 +26,7 @@
                     <input value="{{$produit->prix}}" name="prix" class="form-control" id="prix">
                 </div>
                 {!!$errors->first('prix','<p style="color:#a94442">:message</p>')!!}
+
                 <div class="form-group">
                     <label for="seuil">Seuil:</label>
                     <input value="{{$produit->seuil}}" name="seuil" class="form-control" id="seuil">

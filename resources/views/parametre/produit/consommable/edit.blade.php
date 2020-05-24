@@ -26,6 +26,13 @@
                     <input value="{{$produit->prix}}" name="prix" class="form-control" id="prix">
                 </div>
                 {!!$errors->first('prix','<p style="color:#a94442">:message</p>')!!}
+
+                <div class="form-group">
+                    <label for="achat">Prix d'achat:</label>
+                    <input value="{{$produit->achat}}" name="achat" class="form-control" id="achat">
+                </div>
+                {!!$errors->first('achat','<p style="color:#a94442">:message</p>')!!}
+
                 <div class="form-group">
                     <label for="seuil">Seuil:</label>
                     <input value="{{$produit->seuil}}" name="seuil" class="form-control" id="seuil">

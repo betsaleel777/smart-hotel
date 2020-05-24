@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Produit extends Model
 {
     use SoftDeletes ;
-    protected $fillable = ['libelle','sous_famille','reference','seuil','image','prix','genre'] ;
+    protected $fillable = ['libelle','sous_famille','reference','seuil','image','prix','genre','achat'] ;
     const RULES = [
                    'libelle' => 'required|max:100' ,
                    'sous_famille' => 'required' ,
                    'seuil' => 'required|numeric' ,
                    'image' => 'image|mimes:jpeg,png,jpg|max:2048',
+                   'achat' => 'nullable|numeric',
                    'prix' => 'required|numeric' ,
                   ];
 
@@ -28,6 +29,7 @@ class Produit extends Model
                        'image.image' => 'Ce choix doit être une :attribute' ,
                        'image.mimes' => 'Les format supportés sont: jpeg,jpg,png' ,
                        'image.max' => 'taille maximum dépassée !!' ,
+                       'achat.numeric' => 'le prix doit être un nombre',
                      ] ;
     public function immatriculer():void{
          $lettres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;

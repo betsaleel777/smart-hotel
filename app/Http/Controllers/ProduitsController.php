@@ -62,6 +62,7 @@ class ProduitsController extends Controller
       $produit->libelle = $request->libelle ;
       $produit->seuil = $request->seuil ;
       $produit->prix = $request->prix ;
+      $produit->achat = $request->achat ;
       $produit->sous_famille = $request->sous_famille ;
       if(!empty($request->image)){
         $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
@@ -129,6 +130,7 @@ class ProduitsController extends Controller
        $produit->libelle = $request->libelle ;
        $produit->seuil = $request->seuil ;
        $produit->prix = $request->prix ;
+       $produit->achat = 0 ;
        $produit->sous_famille = $request->sous_famille ;
        if(!empty($request->image)){
          $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;
@@ -191,6 +193,7 @@ class ProduitsController extends Controller
         $produit->libelle = $request->libelle ;
         $produit->seuil = $request->seuil ;
         $produit->prix = $request->prix ;
+        $produit->achat = $request->achat ;
         $produit->sous_famille = $request->sous_famille ;
         if(!empty($request->image)){
           $oldpath = public_path('images').'/'.$produit->getOriginal('image') ;

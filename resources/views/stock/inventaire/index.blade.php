@@ -10,7 +10,6 @@
         </div>
         <div class="container">
             <form-multicritere></form-multicritere>
-            <custom-datepicker :interval="true"></custom-datepicker>
         </div>
     </div>
 </div>
