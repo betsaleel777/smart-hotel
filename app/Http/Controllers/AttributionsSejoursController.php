@@ -49,6 +49,10 @@ class AttributionsSejoursController extends Controller
                      'contact.required' => 'le contact est requis'
                     ] ;
         $request->validate($rules, $messages);
+        //empêcher la collision
+          //chercher si un sejour concernant la même chambre existe et verifier si il y a chevauchement de date
+
+          //chercher si un passage/repos existe pour la même chambre et verifier s'il y a chevauchement de date
         $chambre = Chambre::with('typeLinked')->findOrFail($request->chambre);
         $client = new Client();
         $client->nom = $request->nom ;

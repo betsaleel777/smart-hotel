@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Approvisionnement ;
+use App\Produit ;
 
 class ApprovisionnementsController extends Controller
 {
@@ -62,9 +63,13 @@ class ApprovisionnementsController extends Controller
 
     public function save(Request $request)
     {
+        //à améliorer en passant le prix d'achat directement depuis l'objet request
         foreach ($request->items as $produit) {
+            $product = Produit::findOrFail($produit['id']) ;
+            ($product->genre === 'consommable')? $achat = $product->achat : $achat = $product->prix ;
             $data = ['produit' => $produit['id'],
               'quantite' => $produit['quantite'],
+              'achat' => $achat,
               'user' => null
              ] ;
             Approvisionnement::create($data);
@@ -84,5 +89,5 @@ class ApprovisionnementsController extends Controller
     {
 
     }
-    
+
 }

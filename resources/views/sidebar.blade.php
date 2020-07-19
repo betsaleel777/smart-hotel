@@ -75,6 +75,12 @@
                             <p>Inventaire</p>
                           </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{route('point_index')}}" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Point des Ventes</p>
+                            </a>
+                          </li>
                     </ul>
                 </li>
                 <li class="nav-item">

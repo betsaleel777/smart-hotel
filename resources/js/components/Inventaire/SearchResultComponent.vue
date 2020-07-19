@@ -1,52 +1,38 @@
 <template>
-  <b-table
-    responsive
-    striped
-    hover
-    :items="products"
-    :fields="fields"
-  ></b-table>
+    <b-table responsive hover :items="products" :fields="fields"></b-table>
 </template>
 <script>
-import { BTable } from "bootstrap-vue";
+import { BTable } from 'bootstrap-vue'
 export default {
-  name: "SearchResult",
+  name: 'SearchResult',
   components: {
     BTable
   },
-  props: ["products"],
-  data() {
+  props: ['products'],
+  data () {
     return {
       fields: [
         {
-          key: "libelle",
-          label: "Libellé"
+          key: 'libelle',
+          label: 'Libellé'
         },
         {
-          key: "prix",
-          label: "Prix Vente"
+          key: 'entrees',
+          label: 'Entrées'
         },
         {
-          key: "entrees",
-          label: "Entrées"
+          key: 'sorties',
+          label: 'Sorties'
         },
         {
-          key: "sorties",
-          label: "Sorties"
-        },
-        {
-          key: "restes",
-          label: "Restes"
-        },
-        {
-          key: "marge",
-          label: "Marge"
+          key: 'restes',
+          label: 'Produits disponible'
         }
       ]
-    };
+    }
   },
   methods: {}
-};
+}
 </script>
 
 <style scoped></style>

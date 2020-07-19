@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Approvisionnement extends Model
 {
-    protected $fillable = ['quantite','produit','user'] ;
+    protected $fillable = ['quantite','produit','user','achat'] ;
 
     public function produitLinked()
     {

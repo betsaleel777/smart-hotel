@@ -189,6 +189,12 @@ Route::prefix('home')->group(
             }
         );
 
+        Route::prefix('/point')->group(
+            function () {
+                Route::get('/ventes', 'PointVentesController@index')->name('point_index');
+            }
+        );
+
         Route::get('/destockage/add/sejour/{id}', 'DestockagesController@addFromSejour')->name('destockage_sejour_add');
         Route::get('/destockage/add/passage/{id}', 'DestockagesController@addFromPassage')->name('destockage_passage_add');
 
@@ -245,5 +251,9 @@ Route::prefix('/ajax')->group(
         Route::post('/multicritere/one_date', 'InventairesController@searchByDate')->name('inventaire_date');
         Route::post('/multicritere/interval_date', 'InventairesController@searchByDateInterval')->name('inventaire_date_interval');
         Route::post('/multicritere/default', 'InventairesController@searchDefault')->name('inventaire_default');
+
+        Route::post('/multicritere/vente/one_date', 'PointVentesController@searchByDate')->name('point_vente_date');
+        Route::post('/multicritere/vente/interval_date', 'PointVentesController@searchByDateInterval')->name('point_vente_date_interval');
+        Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault')->name('point_vente_default');
     }
 );
