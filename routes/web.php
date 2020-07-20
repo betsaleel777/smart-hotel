@@ -255,5 +255,7 @@ Route::prefix('/ajax')->group(
         Route::post('/multicritere/vente/one_date', 'PointVentesController@searchByDate')->name('point_vente_date');
         Route::post('/multicritere/vente/interval_date', 'PointVentesController@searchByDateInterval')->name('point_vente_date_interval');
         Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault')->name('point_vente_default');
+
+        Route::post('/solder', 'FacturesController@solderTable')->name('facture_table_solder');
     }
 );

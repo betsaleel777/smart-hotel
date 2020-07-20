@@ -212,7 +212,7 @@ export default {
       if (this.debut && this.fin) {
         if (moment(this.fin).isAfter(this.debut)) {
           axios
-            .post('/ajax/multicritere/vente/interval_date/', {
+            .post('/ajax/multicritere/vente/interval_date', {
               type: this.type,
               famille: this.famille,
               sous_famille: this.sous_famille,
@@ -244,7 +244,7 @@ export default {
         }
       } else if (this.oneDate) {
         axios
-          .post('/ajax/multicritere/vente/one_date/', {
+          .post('/ajax/multicritere/vente/one_date', {
             type: this.type,
             famille: this.famille,
             sous_famille: this.sous_famille,
@@ -269,7 +269,7 @@ export default {
           .catch(err => console.log(err))
       } else {
         axios
-          .post('/ajax/multicritere/vente/default/', {
+          .post('/ajax/multicritere/vente/default', {
             type: this.type,
             famille: this.famille,
             sous_famille: this.sous_famille

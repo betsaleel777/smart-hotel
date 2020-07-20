@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('meta')
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('content')
 <div class="invoice p-3 mb-3">
     <!-- title row -->
@@ -168,7 +171,7 @@
                     </tr>
                     <tr>
                         <th>Remise({{$facture->remise}} %)</th>
-                        <td>-{{$cout_brut_chambre*$facture->remise/100}}</td>
+                        <td>{{$cout_brut_chambre*$facture->remise/100}}</td>
                     </tr>
                     <tr>
                         <th>Coût Net</th>
@@ -176,7 +179,7 @@
                     </tr>
                     <tr>
                         <th>Avance:</th>
-                        <td>-{{$cout_brut_chambre*$facture->avance/100}}</td>
+                        <td>{{$cout_brut_chambre*$facture->avance/100}}</td>
                     </tr>
                     <tr>
                         <th>Net Chambre:</th>
@@ -204,9 +207,16 @@
             @if ($etat === 'libéré' or $etat === 'libérer' or $etat === 'facturer')
             <a href="{{route('facture_ticket',$facture)}}" class="btn btn-warning float-right"><i class="far fa-credit-card"></i> Reçu</a>
             @else
-            <a href="{{route('facture_solder',$facture)}}" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Faire Payer</a>
+             @if (Str::lower($batiment->libelle) === 'table' )
+              <payer-table :facture="{{$facture->id}}" ></payer-table>
+             @else
+              <a href="{{route('facture_solder',$facture)}}" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Faire Payer</a>
+             @endif
             @endif
         </div>
     </div>
 </div>
+@endsection
+@section('script')
+<script src="{{asset('js/app.js')}}" type="text/javascript"></script>
 @endsection

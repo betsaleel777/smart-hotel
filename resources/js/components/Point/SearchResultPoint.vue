@@ -1,5 +1,10 @@
 <template>
-    <b-table responsive hover :items="products" :fields="fields"></b-table>
+    <b-table responsive hover :items="products" :fields="fields">
+       <template v-slot:table-caption><b>Total Vendus:</b> {{vendus()}}<br>
+        <b>Total Marge:</b> {{marges()}}
+       </template>
+    </b-table>
+
 </template>
 <script>
 import { BTable } from 'bootstrap-vue'
@@ -26,7 +31,7 @@ export default {
         },
         {
           key: 'sorties',
-          label: 'Vendus'
+          label: 'Quantité'
         },
         {
           key: 'montant',
@@ -39,7 +44,22 @@ export default {
       ]
     }
   },
-  methods: {}
+  methods: {
+    vendus () {
+      let totalVendu = 0
+      this.products.forEach(product => {
+        totalVendu += Number(product.montant)
+      })
+      return totalVendu
+    },
+    marges () {
+      let totalMarge = 0
+      this.products.forEach(product => {
+        totalMarge += Number(product.marge)
+      })
+      return totalMarge
+    }
+  }
 }
 </script>
 

@@ -17,14 +17,6 @@ export default {
           label: 'Libellé'
         },
         {
-          key: 'entrees',
-          label: 'Entrées'
-        },
-        {
-          key: 'sorties',
-          label: 'Sorties'
-        },
-        {
           key: 'restes',
           label: 'Produits disponible'
         }

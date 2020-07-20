@@ -17,41 +17,35 @@
         }
 
         td {
-            text-align: center;
+            text-align: left ;
         }
 
         caption {
-            font-weight: bold
+            font-weight: bold ;
         }
 
-        center {
-            font-size: 7px
+        .hotel {
+            text-align: left ;
+            font-size: 8px ;
         }
     </style>
     <title></title>
 </head>
 
 <body>
-    <center>
-        <img src="" alt="logo_hotel">
-        <strong>{{$facture->reference}}</strong>
-        <b>Date:</b>{{Carbon::now()->format('d-m-Y')}}<br>
-        <strong>Nom d'hotel</strong><br>
-        <strong>Adresse</strong>:<br>
-        <strong>Email</strong>:<br>
-        <strong>Contact</strong>:<br>
-        <strong>Au client</strong>
-        <adress>
+        <div class="hotel">
+          <img src="" alt="logo_hotel">
+          <strong>{{$facture->reference}}</strong><br>
+          {{Carbon::now()->format('d-m-Y')}}<br>
             @if ($facture->clientLinked)
             {{$facture->clientLinked->nom.' '.$facture->clientLinked->prenom}}<br>
-            {{-- 795 Folsom Ave, Suite 600<br> San Francisco, CA 94107<br> --}}
-            Phone: (225) {{$facture->clientLinked->contact}}<br>
-            {{$facture->clientLinked->pieceLinked->libelle}}:{{$facture->clientLinked->numero_piece}}
+            Hotel Oni-sakon, Rue 600<br> Abidjan marcory, BP 654<br>
+            {{-- Phone: (225) {{$facture->clientLinked->contact}}<br>
+            {{$facture->clientLinked->pieceLinked->libelle}}:{{$facture->clientLinked->numero_piece}} --}}
             @else
             <strong>Client X</strong><br>
             @endif
-        </adress>
-    </center>
+        </div>
     @php
     $total_restauration = 0 ;
     if($facture->sejourLinked){
@@ -71,10 +65,10 @@
     <table>
         <thead>
             <tr>
-                <th>Qte</th>
                 <th>Produit</th>
-                <th>PU</th>
-                <th>subtototal</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -84,8 +78,8 @@
             $total_restauration += $produit->pivot->quantite*$produit->pivot->prix
             @endphp
             <tr>
+                <td>{{$produit->reference}} {{$produit->libelle}}</td>
                 <td>{{$produit->pivot->quantite}}</td>
-                <td><b>{{$produit->reference}}</b> {{$produit->libelle}}</td>
                 <td>{{$produit->pivot->prix}}</td>
                 <td>{{$produit->pivot->quantite*$produit->pivot->prix}}</td>
             </tr>
@@ -95,12 +89,18 @@
             $cout_brut_chambre = $facture->prix_unitaire*$facture->quantite ;
             @endphp
             <tr>
+                <td>{{$attribution->chambreLinked->typeLinked->libelle}} {{$attribution->chambreLinked->libelle}}</td>
                 <td>{{$facture->quantite}} {{$temps}}</td>
-                <td>{{$attribution->chambreLinked->libelle}}:{{$attribution->chambreLinked->typeLinked->libelle}},<em>{{$batiment->libelle}}</em></td>
                 <td>{{$facture->prix_unitaire}}</td>
                 <td>{{$cout_brut_chambre}}</td>
             </tr>
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3"><b>TOTAL</b></td>
+            <td>{{ $total_restauration + $cout_brut_chambre }}</td>
+        </tr>
+        </tfoot>
     </table>
 </body>
 

@@ -95,7 +95,7 @@ export default {
     },
     getSousFamilles () {
       axios
-        .get('/parametre/sous_famille/ajax/' + this.famille)
+        .get('/parametre/sous_famille/ajax' + this.famille)
         .then(response => {
           const data = response.data.sous_familles
           this.sous_familles = data.map(sous_famille => {
@@ -111,7 +111,7 @@ export default {
     },
     send () {
       axios
-        .post('/ajax/multicritere/default/', {
+        .post('/ajax/multicritere/default', {
           type: this.type,
           famille: this.famille,
           sous_famille: this.sous_famille

@@ -34,6 +34,7 @@ return array(
     'App\\Http\\Controllers\\FacturesController' => $baseDir . '/app/Http/Controllers/FacturesController.php',
     'App\\Http\\Controllers\\FamillesController' => $baseDir . '/app/Http/Controllers/FamillesController.php',
     'App\\Http\\Controllers\\InventairesController' => $baseDir . '/app/Http/Controllers/InventairesController.php',
+    'App\\Http\\Controllers\\PointVentesController' => $baseDir . '/app/Http/Controllers/PointVentesController.php',
     'App\\Http\\Controllers\\ProduitsController' => $baseDir . '/app/Http/Controllers/ProduitsController.php',
     'App\\Http\\Controllers\\RestaurationsController' => $baseDir . '/app/Http/Controllers/RestaurationsController.php',
     'App\\Http\\Controllers\\SousFamillesController' => $baseDir . '/app/Http/Controllers/SousFamillesController.php',

@@ -161,7 +161,7 @@
                           </tr>
                           <tr>
                               <th>Remise({{$facture->remise}} %)</th>
-                              <td>-{{$cout_brut_chambre*$facture->remise/100}}</td>
+                              <td>{{$cout_brut_chambre*$facture->remise/100}}</td>
                           </tr>
                           <tr>
                               <th>Coût Net</th>
@@ -169,7 +169,7 @@
                           </tr>
                           <tr>
                               <th>Avance:</th>
-                              <td>-{{$cout_brut_chambre*$facture->avance/100}}</td>
+                              <td>{{$cout_brut_chambre*$facture->avance/100}}</td>
                           </tr>
                           <tr>
                               <th>Net Chambre:</th>

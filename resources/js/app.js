@@ -10,8 +10,8 @@ import Vue from 'vue'
 require('./bootstrap')
 window.Vue = require('vue')
 const options = {
-    position: 'top-right',
-    durations: { info: 14000 }
+  position: 'top-right',
+  durations: { info: 14000 }
 }
 /**
  * The following block of code may be used to automatically register your
@@ -35,6 +35,7 @@ Vue.component('synthese-choice', require('./components/General/SyntheseChoiceCom
 Vue.component('modal-button-appro', require('./components/Appro/ModalButtonComponent.vue').default)
 Vue.component('form-multicritere', require('./components/Inventaire/FormMulticritereComponent.vue').default)
 Vue.component('form-multicritere-point', require('./components/Point/FormMulticriterePoint.vue').default)
+Vue.component('payer-table', require('./components/Facture/PayerTable.vue').default)
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -44,5 +45,5 @@ Vue.use(VueAWN, options)
 Vue.use(ModalPlugin)
 
 const app = new Vue({
-    el: '#app'
+  el: '#app'
 })

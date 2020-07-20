@@ -38,56 +38,56 @@
 
 <script>
 export default {
-    props: ['chambre', 'batiment'],
-    data() {
-        return {
-            kind: null,
-            heure: null,
-            messages: {
-                heure: {
-                    exist: false,
-                    value: ''
-                },
-                kind: {
-                    exist: false,
-                    value: ''
-                }
-            }
-        }
-    },
-    methods: {
-        attribuer: function(event) {
-            event.preventDefault()
-            let current = this
-            //const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
-            axios.post('/ajax/attribution/passage', {
-                    batiment: current.batiment,
-                    chambre: current.chambre,
-                    heure: current.heure,
-                    kind: current.kind
-                })
-                .then(response => location.href = '/home/attributions/passage').catch((error) => {
-                    const errors = error.response.data.errors
-
-                    if (errors.heure) {
-                        this.messages.heure.value = errors.heure[0]
-                        this.messages.heure.exist = true
-                    }
-                    if (errors.kind) {
-                        this.messages.kind.value = errors.kind[0]
-                        this.messages.kind.exist = true
-                    }
-                })
+  props: ['chambre', 'batiment'],
+  data () {
+    return {
+      kind: null,
+      heure: null,
+      messages: {
+        heure: {
+          exist: false,
+          value: ''
         },
-        resetModal() {
-            this.messages.heure.value = ''
-            this.messages.heure.exist = false
-            this.messages.kind.value = ''
-            this.messages.kind.exist = false
-            this.heure = null
-            this.kind = null
+        kind: {
+          exist: false,
+          value: ''
         }
-
+      }
     }
+  },
+  methods: {
+    attribuer: function (event) {
+      event.preventDefault()
+      const current = this
+      // const csrf = document.querySelector('head meta[name="csrf-token"]').getAttribute('content')
+      axios.post('/ajax/attribution/passage', {
+        batiment: current.batiment,
+        chambre: current.chambre,
+        heure: current.heure,
+        kind: current.kind
+      })
+        .then((response) => { location.href = '/home/attributions/passage' }).catch((error) => {
+          const errors = error.response.data.errors
+
+          if (errors.heure) {
+            this.messages.heure.value = errors.heure[0]
+            this.messages.heure.exist = true
+          }
+          if (errors.kind) {
+            this.messages.kind.value = errors.kind[0]
+            this.messages.kind.exist = true
+          }
+        })
+    },
+    resetModal () {
+      this.messages.heure.value = ''
+      this.messages.heure.exist = false
+      this.messages.kind.value = ''
+      this.messages.kind.exist = false
+      this.heure = null
+      this.kind = null
+    }
+
+  }
 }
 </script>

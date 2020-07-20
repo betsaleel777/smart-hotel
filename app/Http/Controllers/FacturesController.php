@@ -7,6 +7,7 @@ use App\Encaissement ;
 use App\Restauration ;
 use App\AttributionSejour ;
 use App\AttributionsPassage ;
+use App\StatsTable ;
 use PDF ;
 
 class FacturesController extends Controller
@@ -22,6 +23,7 @@ class FacturesController extends Controller
       }
       return $allPayed ;
     }
+
     public function index()
     {
         $titre = 'Factures' ;
@@ -55,41 +57,64 @@ class FacturesController extends Controller
 
     public function solder(int $id)
     {
-        //chercher l'encaissement correspondant
-        $encaissement = Encaissement::with('sejourLinked', 'passageLinked')->findOrFail($id);
-        //dans les deux cas il faut chercher dans restauration pour voir si cette visite y est référencé
-        //voir si la restauration a bien été solder d'abord et notifier l'utilisateur au cas ou c'est pas le cas, c'est après cela qu'on peut solder la visite
-        if(!empty($encaissement->sejourLinked)) {
-            $restauration_sejour = Restauration::where('sejour', $encaissement->sejourLinked->id)->get()->all();
-            if(!empty($restauration_sejour)) {
-                $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
-                            <br><a href="'.route('resto_add', $encaissement->sejourLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
-                if(!$this->allpayProduct($restauration_sejour)) {
-                    return redirect()->route('facture_index')->with('warning', $message);
-                }
-            }
-            $attribution = AttributionSejour::findOrFail($encaissement->sejour);
-            $attribution->etat = 'facturer' ;
-            $attribution->save();
-            $message = 'La facture de séjour de référence: '.$encaissement->reference.' a été soldée avec succès.' ;
-            return redirect()->route('facture_index')->with('success', $message);
-        }
+       //chercher l'encaissement correspondant
+       $encaissement = Encaissement::with('sejourLinked', 'passageLinked')->findOrFail($id);
+       //dans les deux cas il faut chercher dans restauration pour voir si cette visite y est référencé
+       //voir si la restauration a bien été solder d'abord et notifier l'utilisateur au cas ou c'est pas le cas, c'est après cela qu'on peut solder la visite
+       if(!empty($encaissement->sejourLinked)) {
+           $restauration_sejour = Restauration::where('sejour', $encaissement->sejourLinked->id)->get()->all();
+           if(!empty($restauration_sejour)) {
+               $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
+                           <br><a href="'.route('resto_add', $encaissement->sejourLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
+               if(!$this->allpayProduct($restauration_sejour)) {
+                   return redirect()->route('facture_index')->with('warning', $message);
+               }
+           }
+           $attribution = AttributionSejour::findOrFail($encaissement->sejour);
+           $attribution->etat = 'facturer' ;
+           $attribution->save();
+           $message = 'La facture de séjour de référence: '.$encaissement->reference.' a été soldée avec succès.' ;
+           return redirect()->route('facture_index')->with('success', $message);
+       }
 
-        if(!empty($encaissement->passageLinked)) {
-            $restauration_passage = Restauration::where('passage', $encaissement->passageLinked->id)->get()->all();
-            if (!empty($restauration_passage)) {
-                $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
-                            <br><a href="'.route('resto_new', $encaissement->passageLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
-                if(!$this->allpayProduct($restauration_passage)) {
-                    return redirect()->route('facture_index')->with('warning', $message);
-                }
+       if(!empty($encaissement->passageLinked)) {
+           $restauration_passage = Restauration::where('passage', $encaissement->passageLinked->id)->get()->all();
+           if (!empty($restauration_passage)) {
+               $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
+                           <br><a href="'.route('resto_new', $encaissement->passageLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
+               if(!$this->allpayProduct($restauration_passage)) {
+                   return redirect()->route('facture_index')->with('warning', $message);
+               }
+           }
+           $attribution = AttributionsPassage::findOrFail($encaissement->passage);
+           $attribution->etat = 'facturer' ;
+           $attribution->save();
+           $message = 'La facture de passage de référence: '.$encaissement->reference.' a été soldée avec succès.' ;
+           return redirect()->route('facture_index')->with('success', $message);
+       }
+    }
+
+    public function solderTable(Request $request){
+      //chercher l'encaissement correspondant
+      $encaissement = Encaissement::with('sejourLinked', 'passageLinked')->findOrFail($request->encaissement);
+
+        $restauration_passage = Restauration::where('passage', $encaissement->passageLinked->id)->get()->all();
+        if (!empty($restauration_passage)) {
+            $message = '<p>La libération ne peut être éffectuée car le client a éffectué un achat de consommable sans payer
+                        <br><a href="'.route('resto_new', $encaissement->passageLinked->id).'">cliquer ici pour consulter l\'achat.</a></p>' ;
+            if(!$this->allpayProduct($restauration_passage)) {
+                $request->session()->flash('warning', $message);
+                return ;
             }
-            $attribution = AttributionsPassage::findOrFail($encaissement->passage);
-            $attribution->etat = 'facturer' ;
-            $attribution->save();
-            $message = 'La facture de passage de référence: '.$encaissement->reference.' a été soldée avec succès.' ;
-            return redirect()->route('facture_index')->with('success', $message);
         }
+        $attribution = AttributionsPassage::findOrFail($encaissement->passage);
+        $attribution->etat = 'facturer' ;
+        $attribution->save();
+        $message = 'La facture de passage de référence: '.$encaissement->reference.' a été soldée avec succès.' ;
+        //enregistrement des statistiques de table
+        StatsTable::create($request->all()) ;
+        $request->session()->flash('success', $message);
+        return  ;
     }
 
 }
