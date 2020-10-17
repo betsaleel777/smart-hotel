@@ -483,6 +483,7 @@ class ComposerStaticInit100f6a015822fddb32951dcd7ab1659f
         'App\\Restauration' => __DIR__ . '/../..' . '/app/Restauration.php',
         'App\\Sejour' => __DIR__ . '/../..' . '/app/Sejour.php',
         'App\\SousFamille' => __DIR__ . '/../..' . '/app/SousFamille.php',
+        'App\\StatsTable' => __DIR__ . '/../..' . '/app/StatsTable.php',
         'App\\Type' => __DIR__ . '/../..' . '/app/Type.php',
         'App\\TypePiece' => __DIR__ . '/../..' . '/app/TypePiece.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',

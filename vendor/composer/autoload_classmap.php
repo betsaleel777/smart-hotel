@@ -61,6 +61,7 @@ return array(
     'App\\Restauration' => $baseDir . '/app/Restauration.php',
     'App\\Sejour' => $baseDir . '/app/Sejour.php',
     'App\\SousFamille' => $baseDir . '/app/SousFamille.php',
+    'App\\StatsTable' => $baseDir . '/app/StatsTable.php',
     'App\\Type' => $baseDir . '/app/Type.php',
     'App\\TypePiece' => $baseDir . '/app/TypePiece.php',
     'App\\User' => $baseDir . '/app/User.php',
