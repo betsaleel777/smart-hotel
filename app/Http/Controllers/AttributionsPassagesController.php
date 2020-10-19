@@ -11,10 +11,15 @@ use App\Restauration ;
 
 class AttributionsPassagesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $titre = 'Passages & repos' ;
-        $attributions = AttributionsPassage::with('batimentLinked', 'passageLinked', 'passageLinked.chambreLinked', 'passageLinked.chambreLinked.typeLinked')->whereNull('etat')->orWhere('etat','=','facturer')->get()->all();
+        $attributions = AttributionsPassage::with('batimentLinked', 'passageLinked', 'passageLinked.chambreLinked', 'passageLinked.chambreLinked.typeLinked')->whereNull('etat')->orWhere('etat', '=', 'facturer')->get()->all();
         return view('attribution.passage.index', compact('attributions', 'titre'));
     }
 

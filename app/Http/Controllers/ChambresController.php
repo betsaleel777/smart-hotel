@@ -8,6 +8,13 @@ use App\Batiment ;
 
 class ChambresController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $titre = 'Chambres' ;

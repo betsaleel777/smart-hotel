@@ -12,6 +12,11 @@ use App\Approvisionnement ;
 
 class DestockagesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     //verification pour voir si des approvisionnements ont déjà été effectués et comparer les quantités
     /**
      à partir de liste des produits à enregistrer on verifie dans destockage si la somme des quantités des produit de la
@@ -27,10 +32,10 @@ class DestockagesController extends Controller
         //sommation des quantités de la liste avec les produits déjà destockés
         //va chercher les produits destockes listés
         $produits_destockes = Destockage::groupBy('produit')
-                          ->selectRaw('sum(quantite) as destockes,produit')
-                          ->whereIn('produit', $id_prod)
-                          ->get()
-                          ->toArray();
+            ->selectRaw('sum(quantite) as destockes,produit')
+            ->whereIn('produit', $id_prod)
+            ->get()
+            ->toArray();
         //sommation entre les valeurs des produits de la liste et ceux fournit par la DB après la requête précedente
         $list_utile = Arr::pluck($liste_produit, 'quantite', 'id');
         $produit_destockes_somme = array_map(
@@ -41,10 +46,10 @@ class DestockagesController extends Controller
         );
         //recherche de l'approvisionnement des produits de la liste
         $produits_appros = Approvisionnement::groupBy('produit')
-                          ->selectRaw('sum(quantite) as appros,produit')
-                          ->whereIn('produit', $id_prod)
-                          ->get()
-                          ->pluck('appros', 'produit')->all();
+            ->selectRaw('sum(quantite) as appros,produit')
+            ->whereIn('produit', $id_prod)
+            ->get()
+            ->pluck('appros', 'produit')->all();
         //comparaison qui verifie si les produit soumis en plus de ceux qui était déjà destockés ne dépasse pas les produits en stock en terme de quantité
         $rejected = [] ;
         foreach ($produit_destockes_somme as $ligne) {
@@ -122,7 +127,7 @@ class DestockagesController extends Controller
                 $attribution->destockes()->attach($calebasse);
             }
             $message = 'Enregistrement de la liste de produit soumise effectué avec succès !' ;
-            session()->flash('success',$message) ;
+            session()->flash('success', $message);
         }else{
             $produits = Produit::select('id', 'libelle')->whereIn('id', $rejected)->get()->toArray();
             $message = "le destockage pour les produits d'entretiens suivant: " ;
@@ -150,7 +155,7 @@ class DestockagesController extends Controller
                 $attribution->destockes()->attach($calebasse);
             }
             $message = 'Enregistrement de la liste de produit soumise effectué avec succès !' ;
-            session()->flash('success',$message) ;
+            session()->flash('success', $message);
         }else{
             $produits = Produit::select('id', 'libelle')->whereIn('id', $rejected)->get()->toArray();
             $message = "le destockage pour les produits d'entretiens suivant: " ;
@@ -166,11 +171,11 @@ class DestockagesController extends Controller
     public function sejourSaved(int $sejour)
     {
         $prods_without_group = Destockage::select('quantite', 'produit', 'id')
-                                ->with(
-                                    ['produitLinked' => function ($query) {
+            ->with(
+                ['produitLinked' => function ($query) {
                                           return $query->select('libelle', 'id');
-                                    }]
-                                )
+                }]
+            )
                                 ->where('attribution_sejour', $sejour)->get();
         $products = $prods_without_group->groupBy('produit')->toArray();
         //faire disparaitre les répétitions
@@ -181,11 +186,11 @@ class DestockagesController extends Controller
     public function passageSaved(int $passage)
     {
         $prods_without_group = Destockage::select('id', 'quantite', 'produit')
-                            ->with(
-                                ['produitLinked' => function ($query) {
+            ->with(
+                ['produitLinked' => function ($query) {
                                     return $query->select('libelle', 'id');
-                                }]
-                            )
+                }]
+            )
                             ->where('attribution_passage', $passage)->get();
         $products = $prods_without_group->groupBy('produit')->toArray();
         //faire disparaitre les répétitions

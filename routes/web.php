@@ -259,3 +259,7 @@ Route::prefix('/ajax')->group(
         Route::post('/solder', 'FacturesController@solderTable')->name('facture_table_solder');
     }
 );
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

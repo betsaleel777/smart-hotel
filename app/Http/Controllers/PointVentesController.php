@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB   ;
 
 class PointVentesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $titre = 'Point de vente' ;
@@ -23,7 +28,7 @@ class PointVentesController extends Controller
             $condition_vente = "WHERE DATE_FORMAT(restaurations.created_at,'%Y-%m-%d') = '$request->oneDate'" ;
         } elseif ($fonction === 'par_intervale_de_date') {
             $condition_vente = "WHERE DATE_FORMAT(restaurations.created_at,'%Y-%m-%d') BETWEEN '$request->debut' AND '$request->fin'" ;
-        }elseif($fonction === 'par_defaut'){
+        }elseif($fonction === 'par_defaut') {
             $condition_vente = "WHERE MONTH(restaurations.created_at) = MONTH(CURRENT_DATE())" ;
         }
 
