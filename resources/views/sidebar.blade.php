@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
     <a href="{{route('dashboard')}}" class="brand-link">
         <img src="{{asset('admin/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span class="brand-text font-weight-light">{{ mb_strtoupper(Auth::user()->departementLinked()->first()->nom)}}</span>
     </a>
 
     <!-- Sidebar -->
@@ -14,7 +14,7 @@
                 <img src="{{asset('admin/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block">{{ Auth::user()->name }}</a>
             </div>
         </div>
 
@@ -47,10 +47,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                          <a href="{{route('attributions_pass_index')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Passage & repos</p>
-                          </a>
+                            <a href="{{route('attributions_pass_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Passage & repos</p>
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -69,18 +69,6 @@
                                 <p>Approvisionement</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                          <a href="{{route('inventaire_index')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Inventaire</p>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('point_index')}}" class="nav-link">
-                              <i class="far fa-circle nav-icon"></i>
-                              <p>Point des Ventes</p>
-                            </a>
-                          </li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -116,10 +104,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                          <a href="{{route('type_index')}}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Types de Chambre</p>
-                          </a>
+                            <a href="{{route('type_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Types de Chambre</p>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{route('chambre_index')}}" class="nav-link">
@@ -143,6 +131,35 @@
                             <a href="{{route('famille_index')}}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Familles</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('compte_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Gestion des utilisateurs</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            Etats
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('inventaire_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Inventaire</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('point_index')}}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Point des Ventes</p>
                             </a>
                         </li>
                     </ul>

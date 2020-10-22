@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'WelcomeController@dashboard')->name('dashboard');
+Route::get('/deconnexion', 'Auth\LoginController@logout')->name('deconnexion') ;
 
 Route::prefix('parametre')->group(
     function () {
@@ -99,6 +100,21 @@ Route::prefix('parametre')->group(
             }
         );
 
+        Route::prefix('/compte')->group(
+            function () {
+                Route::get('/', 'ComptesController@index')->name('compte_index');
+                Route::get('/add', 'ComptesController@add')->name('compte_add');
+                Route::post('/store', 'ComptesController@store')->name('compte_store');
+                Route::get('/edit/{id}', 'ComptesController@edit')->name('compte_edit');
+                Route::post('/update/{id}', 'ComptesController@update')->name('compte_update');
+                Route::get('/delete/{id}', 'ComptesController@delete')->name('compte_delete');
+                Route::get('/show/{id}', 'ComptesController@show')->name('compte_show');
+                // Route::get('/associer/{id}', 'SousFamillesController@associer')->name('sous_famille_associer');
+                // Route::get('/ajax/{famille}', 'SousFamillesController@getSousFamilles')->name('sous_famille_concerned');
+                // Route::post('/plug', 'SousFamillesController@plug')->name('sous_famille_plug');
+            }
+        );
+
         Route::prefix('/produit')->group(
             function () {
                 Route::get('/', 'ProduitsController@index')->name('produit_index');
@@ -111,6 +127,12 @@ Route::prefix('parametre')->group(
                 Route::get('/delete/{id}', 'ProduitsController@delete')->name('produit_delete');
             }
         );
+
+        Route::prefix('/departement')->group(
+          function (){
+             Route::get('/index', 'DepartementsController@index')->name('departement_index') ;
+             Route::post('/departement/store', 'DepartementsController@store')->name('departement_store');
+        });
     }
 );
 
@@ -144,10 +166,10 @@ Route::prefix('home')->group(
 
         Route::prefix('/client')->group(
             function () {
-                Route::get('/client/index', 'ClientsController@index')->name('client_index');
-                Route::get('/client/edit/{id}', 'ClientsController@edit')->name('client_edit');
-                Route::post('/client/update/{id}', 'ClientsController@update')->name('client_update');
-                Route::get('/client/delete/{id}', 'ClientsController@delete')->name('client_delete');
+                Route::get('/index', 'ClientsController@index')->name('client_index');
+                Route::get('/edit/{id}', 'ClientsController@edit')->name('client_edit');
+                Route::post('/update/{id}', 'ClientsController@update')->name('client_update');
+                Route::get('/delete/{id}', 'ClientsController@delete')->name('client_delete');
             }
         );
 
@@ -195,8 +217,12 @@ Route::prefix('home')->group(
             }
         );
 
-        Route::get('/destockage/add/sejour/{id}', 'DestockagesController@addFromSejour')->name('destockage_sejour_add');
-        Route::get('/destockage/add/passage/{id}', 'DestockagesController@addFromPassage')->name('destockage_passage_add');
+        Route::prefix('/destockage')->group(
+            function () {
+                Route::get('/add/sejour/{id}', 'DestockagesController@addFromSejour')->name('destockage_sejour_add');
+                Route::get('/add/passage/{id}', 'DestockagesController@addFromPassage')->name('destockage_passage_add');
+            }
+        );
 
     }
 );
@@ -205,10 +231,12 @@ Route::prefix('/ajax')->group(
     function () {
 
         Route::get('/batiments/all/', 'BatimentsController@allBatiments')->name('all_batiment');
+
         Route::get('/chambres/all/{batiment}', 'ApiPassageController@allRooms')->name('all_chambre');
         Route::get('/chambres/empty/{batiment}', 'ApiPassageController@emptyRooms')->name('empty_chambre');
         Route::get('/chambre/details/{chambre}', 'ChambresController@details')->name('chambre_details');
         Route::get('/chambres/used/{batiment}', 'ApiPassageController@usedRooms')->name('used_chambre');
+
         Route::post('/attribution/passage', 'ApiPassageController@attribuer')->name('attribution_passage');
         Route::post('/liberation/passage', 'ApiPassageController@liberer')->name('liberation_passage');
 
@@ -257,6 +285,9 @@ Route::prefix('/ajax')->group(
         Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault')->name('point_vente_default');
 
         Route::post('/solder', 'FacturesController@solderTable')->name('facture_table_solder');
+
+        Route::post('/departement/store', 'DepartementsController@storejs');
+        Route::get('/departements','DepartementsController@getDepartements');
     }
 );
 

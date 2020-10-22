@@ -8,8 +8,9 @@ use App\Produit ;
 
 class ApprovisionnementsController extends Controller
 {
-    public function __construct(){
-       $this->middleware('auth') ;
+    public function __construct()
+    {
+        $this->middleware('auth');
     }
 
     public function index()
@@ -69,7 +70,7 @@ class ApprovisionnementsController extends Controller
     {
         //à améliorer en passant le prix d'achat directement depuis l'objet request
         foreach ($request->items as $produit) {
-            $product = Produit::findOrFail($produit['id']) ;
+            $product = Produit::findOrFail($produit['id']);
             ($product->genre === 'consommable')? $achat = $product->achat : $achat = $product->prix ;
             $data = ['produit' => $produit['id'],
               'quantite' => $produit['quantite'],
@@ -78,7 +79,7 @@ class ApprovisionnementsController extends Controller
              ] ;
             Approvisionnement::create($data);
         }
-        session()->flash('success',"les produit de la liste soumise ont bien été enregistrés comme approvisionnement") ;
+        session()->flash('success', "les produit de la liste soumise ont bien été enregistrés comme approvisionnement");
     }
 
     public function edit(Request $request)
@@ -86,7 +87,7 @@ class ApprovisionnementsController extends Controller
         $appro = Approvisionnement::findOrFail($request->id);
         $appro->quantite = $request->quantite ;
         $appro->save();
-        session()->flash('success',"la modification de la quantité a bien été prise en compte") ;
+        session()->flash('success', "la modification de la quantité a bien été prise en compte");
     }
 
     public function delete(int $id)

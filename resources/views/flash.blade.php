@@ -6,7 +6,7 @@
 @endif
 @if (session('error'))
     <div hidden id="message" class="alert alert-danger">
-        <em  id="type">danger</em>
+        <em  id="type">error</em>
         <span>{!! session('error') !!}</span>
     </div>
 @endif

@@ -7,11 +7,13 @@
 import VueAWN from "vue-awesome-notifications";
 import { ModalPlugin } from "bootstrap-vue";
 import Vue from "vue";
+import ModalDepartement from "./components/ModalDepartement.vue";
+import SelectDepartement from "./components/SelectDepartement.vue";
 require("./bootstrap");
 window.Vue = require("vue");
 const options = {
     position: "top-right",
-    durations: { info: 14000 }
+    durations: { info: 14000 },
 };
 /**
  * The following block of code may be used to automatically register your
@@ -82,5 +84,9 @@ Vue.use(VueAWN, options);
 Vue.use(ModalPlugin);
 
 const app = new Vue({
-    el: "#app"
+    el: "#app",
+    components: {
+        ModalDepartement,
+        SelectDepartement,
+    },
 });
