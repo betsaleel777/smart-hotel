@@ -9,14 +9,14 @@ class DepartementsController extends Controller
 {
     public function index()
     {
-
+        $titre = 'Départements' ;
+        $departements = Departement::get();
+        return view('departement.index', \compact('titre', 'departements'));
     }
 
-    public function add()
-    {
-
-    }
-
+    /**
+     * créer un département de façon asynchronne
+     **/
     public function storejs(Request $request)
     {
         $this->validate($request, Departement::RULES, Departement::MESSAGES);
@@ -35,22 +35,27 @@ class DepartementsController extends Controller
 
     public function edit(int $id)
     {
-
+        $departement = Departement::find($id);
+        $titre = 'Modifier '.$departement->nom ;
+        return \view('departement.edit', \compact('departement', 'titre'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request, int $id)
     {
-
+        $this->validate($request, Departement::RULES, Departement::MESSAGES);
+        $departement = Departement::find($id);
+        $departement->nom = $request->nom ;
+        $departement->save() ;
+        $message = "modification du département enregistrée avec succès" ;
+        return redirect()->route('departement_index')->with('success',$message) ;
     }
 
-    public function delete(int $id)
-    {
-
-    }
-
+    /**
+    * recupère tout les départements de façon asynchronne
+    **/
     public function getDepartements()
     {
-      $departements = Departement::select('id','nom')->get() ;
-      return response()->json(['departements' => $departements]) ;
+        $departements = Departement::select('id', 'nom')->get();
+        return response()->json(['departements' => $departements]);
     }
 }

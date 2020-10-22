@@ -1,7 +1,11 @@
 <template>
     <div>
-        <button @click="runModal" type="button" class="btn btn-success">
-            nouveau
+        <button
+            @click="runModal"
+            type="button"
+            class="btn btn-outline-primary pretty"
+        >
+            créer departement
         </button>
         <b-modal
             @show="reset"
@@ -25,6 +29,12 @@
 
 <script>
 export default {
+    props: {
+        reload: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return {
             nom: "",
@@ -42,10 +52,14 @@ export default {
                 .post("/ajax/departement/store", { nom: this.nom })
                 .then((result) => {
                     this.$root.$emit("new_add"); //listen by SelectDepartement
-                    this.$awn.success(result.data.message);
                     this.nom = "";
                     this.$nextTick(() => {
-                        this.$bvModal.hide("departement");
+                        if (this.reload) {
+                            location.reload();
+                        } else {
+                            this.$awn.success(result.data.message);
+                            this.$bvModal.hide("departement");
+                        }
                     });
                 })
                 .catch((err) => {
@@ -62,4 +76,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.pretty {
+    width: 100%;
+}
+</style>

@@ -69,6 +69,12 @@
                                 <p>Approvisionement</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{route('appro_secondaire_index')}}" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Stock département</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">

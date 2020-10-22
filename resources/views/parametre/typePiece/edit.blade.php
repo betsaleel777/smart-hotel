@@ -12,7 +12,7 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form role="form" method="post" action="{{route('type_piece_store')}}">
+        <form role="form" method="post" action="{{route('type_piece_update',$piece)}}">
             <div class="card-body">
               @csrf
                 <div class="form-group">

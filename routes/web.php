@@ -12,7 +12,7 @@
 */
 
 Route::get('/', 'WelcomeController@dashboard')->name('dashboard');
-Route::get('/deconnexion', 'Auth\LoginController@logout')->name('deconnexion') ;
+Route::get('/deconnexion', 'Auth\LoginController@logout')->name('deconnexion');
 
 Route::prefix('parametre')->group(
     function () {
@@ -127,12 +127,6 @@ Route::prefix('parametre')->group(
                 Route::get('/delete/{id}', 'ProduitsController@delete')->name('produit_delete');
             }
         );
-
-        Route::prefix('/departement')->group(
-          function (){
-             Route::get('/index', 'DepartementsController@index')->name('departement_index') ;
-             Route::post('/departement/store', 'DepartementsController@store')->name('departement_store');
-        });
     }
 );
 
@@ -224,6 +218,21 @@ Route::prefix('home')->group(
             }
         );
 
+        Route::prefix('/departement')->group(
+            function () {
+                Route::get('/index', 'DepartementsController@index')->name('departement_index');
+                Route::post('/store', 'DepartementsController@store')->name('departement_store');
+                Route::get('/edit/{id}', 'DepartementsController@edit')->name('departement_edit');
+                Route::post('/update/{id}', 'DepartementsController@update')->name('departement_update');
+            }
+        );
+
+        Route::prefix('/secondaire')->group(
+            function () {
+                Route::get('/index', 'SecondairesController@index')->name('appro_secondaire_index');
+            }
+        );
+
     }
 );
 
@@ -287,7 +296,7 @@ Route::prefix('/ajax')->group(
         Route::post('/solder', 'FacturesController@solderTable')->name('facture_table_solder');
 
         Route::post('/departement/store', 'DepartementsController@storejs');
-        Route::get('/departements','DepartementsController@getDepartements');
+        Route::get('/departements', 'DepartementsController@getDepartements');
     }
 );
 
