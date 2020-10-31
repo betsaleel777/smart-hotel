@@ -1,6 +1,6 @@
 <template>
     <select class="form-control" name="departement">
-        <option v-if="selected" selected :key="2000" :value="selected">
+        <option v-if="selected" :key="2000" selected :value="selected">
             {{ selectedName }}
         </option>
         <option v-else selected></option>

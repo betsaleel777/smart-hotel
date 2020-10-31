@@ -9,6 +9,7 @@ import { ModalPlugin } from "bootstrap-vue";
 import Vue from "vue";
 import ModalDepartement from "./components/ModalDepartement.vue";
 import SelectDepartement from "./components/SelectDepartement.vue";
+import SecondaireInputChoice from "./components/Secondaire/InputChoice.vue";
 require("./bootstrap");
 window.Vue = require("vue");
 const options = {
@@ -88,5 +89,6 @@ const app = new Vue({
     components: {
         ModalDepartement,
         SelectDepartement,
+        SecondaireInputChoice,
     },
 });

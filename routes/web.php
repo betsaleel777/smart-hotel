@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -9,7 +11,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', 'WelcomeController@dashboard')->name('dashboard');
 Route::get('/deconnexion', 'Auth\LoginController@logout')->name('deconnexion');
@@ -186,7 +188,6 @@ Route::prefix('home')->group(
             }
         );
 
-
         Route::prefix('/facture')->group(
             function () {
                 Route::get('/', 'FacturesController@index')->name('facture_index');
@@ -230,6 +231,8 @@ Route::prefix('home')->group(
         Route::prefix('/secondaire')->group(
             function () {
                 Route::get('/index', 'SecondairesController@index')->name('appro_secondaire_index');
+                Route::get('/add/default', 'SecondairesController@add')->name('appro_secondaire_add');
+                Route::get('/add/session', 'SecondairesController@addSession')->name('appro_secondaire_add_session');
             }
         );
 
@@ -262,7 +265,6 @@ Route::prefix('/ajax')->group(
         Route::get('/produit/consommables/all', 'ProduitsController@getConsommables')->name('all_consommables');
         Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires')->name('all_accessoire');
         Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit');
-
 
         Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas');
         Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas')->name('resto_passage_proformas');
@@ -297,6 +299,8 @@ Route::prefix('/ajax')->group(
 
         Route::post('/departement/store', 'DepartementsController@storejs');
         Route::get('/departements', 'DepartementsController@getDepartements');
+
+        Route::post('/secondaire/store', 'SecondairesController@storejs');
     }
 );
 

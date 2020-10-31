@@ -40,4 +40,12 @@ class User extends Authenticatable
     public function departementLinked(){
       return $this->belongsTo(Departement::class,'departement') ;
     }
+
+    public static function isAdmin(User $user){
+      return $user->departementLinked()->id === 1 ;
+    }
+
+    // public function scopeAdmin($query){
+    //   return $query->where('departement', 1) ;
+    // }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvisionnement;
+use App\Produit;
 use Illuminate\Http\Request;
-use App\Approvisionnement ;
-use App\Produit ;
 
 class ApprovisionnementsController extends Controller
 {
@@ -15,27 +15,27 @@ class ApprovisionnementsController extends Controller
 
     public function index()
     {
-        $titre = 'Approvisionnement' ;
+        $titre = 'Approvisionnement';
         $appros = Approvisionnement::with(
             ['produitLinked' => function ($query) {
                 return $query->select('id', 'libelle', 'seuil');
-            } ]
+            }]
         )->get();
         return view('stock.appro.index', compact('titre', 'appros'));
     }
 
     public function accessoires()
     {
-        $titre = 'Approvisionnement Accéssoire' ;
+        $titre = 'Approvisionnement Accéssoire';
         $appros = Approvisionnement::with(
             ['produitLinked' => function ($query) {
                 return $query->where('genre', 'accessoire')->select('id', 'libelle', 'seuil');
-            } ]
+            }]
         )->get()->all();
         $appros = array_values(
             array_filter(
                 $appros, function ($appro) {
-                    return !empty($appro->produitLinked)??$appro ;
+                    return !empty($appro->produitLinked) ?? $appro;
                 }
             )
         );
@@ -44,16 +44,16 @@ class ApprovisionnementsController extends Controller
 
     public function consommables()
     {
-        $titre = 'Approvisionnement Consommables' ;
+        $titre = 'Approvisionnement Consommables';
         $appros = Approvisionnement::with(
             ['produitLinked' => function ($query) {
                 return $query->where('genre', 'consommable')->select('id', 'libelle', 'seuil');
-            } ]
+            }]
         )->get()->all();
         $appros = array_values(
             array_filter(
                 $appros, function ($appro) {
-                    return !empty($appro->produitLinked)??$appro ;
+                    return !empty($appro->produitLinked) ?? $appro;
                 }
             )
         );
@@ -62,7 +62,7 @@ class ApprovisionnementsController extends Controller
 
     public function add()
     {
-        $titre = 'Approvisionner des produits' ;
+        $titre = 'Approvisionner des produits';
         return view('stock.appro.add', compact('titre'));
     }
 
@@ -71,12 +71,12 @@ class ApprovisionnementsController extends Controller
         //à améliorer en passant le prix d'achat directement depuis l'objet request
         foreach ($request->items as $produit) {
             $product = Produit::findOrFail($produit['id']);
-            ($product->genre === 'consommable')? $achat = $product->achat : $achat = $product->prix ;
+            ($product->genre === 'consommable') ? $achat = $product->achat : $achat = $product->prix;
             $data = ['produit' => $produit['id'],
-              'quantite' => $produit['quantite'],
-              'achat' => $achat,
-              'user' => null
-             ] ;
+                'quantite' => $produit['quantite'],
+                'achat' => $achat,
+                'user' => null,
+            ];
             Approvisionnement::create($data);
         }
         session()->flash('success', "les produit de la liste soumise ont bien été enregistrés comme approvisionnement");
@@ -85,7 +85,7 @@ class ApprovisionnementsController extends Controller
     public function edit(Request $request)
     {
         $appro = Approvisionnement::findOrFail($request->id);
-        $appro->quantite = $request->quantite ;
+        $appro->quantite = $request->quantite;
         $appro->save();
         session()->flash('success', "la modification de la quantité a bien été prise en compte");
     }
@@ -94,5 +94,4 @@ class ApprovisionnementsController extends Controller
     {
 
     }
-
 }

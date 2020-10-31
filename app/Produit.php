@@ -15,7 +15,7 @@ class Produit extends Model
                    'seuil' => 'required|numeric' ,
                    'image' => 'image|mimes:jpeg,png,jpg|max:2048',
                    'achat' => 'nullable|numeric',
-                   'prix' => 'required|numeric' ,
+                   'prix' => 'required|numeric'
                   ];
 
     const MESSAGES = [
@@ -35,6 +35,10 @@ class Produit extends Model
          $lettres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
          $chiffres = '0123456789' ;
          $this->attributes['reference'] = substr(str_shuffle($lettres),0,6).\substr(\str_shuffle($chiffres),0,4) ;
+    }
+
+    public function scopeConsommable($query){
+      return $query->where('genre','consommable') ;
     }
 
     public function sous_familleLinked(){
