@@ -16,7 +16,7 @@ class SecondairesController extends Controller
     public function index()
     {
         $titre = 'Approvisionement des départements';
-        $appros = Secondaire::get();
+        $appros = Secondaire::with('produitLinked')->get();
         return view('stock.secondaire.index', compact('appros', 'titre'));
     }
 
@@ -51,6 +51,12 @@ class SecondairesController extends Controller
         } else {
             return response()->json(['message' => $message_verification], 422);
         }
+    }
+
+    public function getList()
+    {
+        $secondaires = Secondaire::selectRaw('sum(quantite) as quantite')->selectRaw('id,produit')->groupBy('produit')->get();
+        return response()->json(['secondaires' => $secondaires]);
     }
 
     private static function check(Request $request)

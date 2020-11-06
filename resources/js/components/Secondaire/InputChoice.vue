@@ -149,7 +149,7 @@ export default {
         },
         getDepartements(){
           axios.get('/ajax/departements').then((response) => {
-             this.departements = response.data.departements
+             this.departements  = response.data.departements.filter(departement => departement.id !== 1)
           }).catch((err) => {})
         },
         getProducts() {

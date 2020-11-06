@@ -7,6 +7,7 @@ use App\AttributionSejour;
 use App\AttributionsPassage;
 use App\Produit;
 use App\Restauration;
+use App\Secondaire;
 use Illuminate\Http\Request;
 use PDF;
 
@@ -198,7 +199,7 @@ class RestaurationsController extends Controller
         } else {
             $quantite_deja_consommees = (int) $cumul_restauration;
         }
-        //afficher l'état d'approvisionnement du même produit
+        //afficher l'état d'approvisionnement général du même produit
         $cumul_stock = Approvisionnement::groupBy('produit')->selectRaw('sum(quantite) as appros,produit')->where('produit', $request->produit)->get()->first();
         if (!empty($cumul_stock)) {
             $quantite_en_stock = $cumul_stock->appros - $quantite_deja_consommees;
@@ -214,5 +215,47 @@ class RestaurationsController extends Controller
             $message = "Le stock est bien suffisant";
         }
         return response()->json(['state' => $state, 'message' => $message]);
+    }
+
+    public function checkByDepartement(Request $request)
+    {
+        $this->validate($request, Restauration::RULES, Restauration::MESSAGES);
+        //afficher l'état de consommation du produit
+        $cumul_restauration = Restauration::groupBy('produit')
+            ->selectRaw('sum(quantite) as consomme, produit')
+            ->where('produit', $request->produit)
+            ->where('departement', $request->departement)
+            ->get()
+            ->first();
+        // //ajouter les quantité soumises
+        if (!empty($cumul_restauration)) {
+            $quantite_deja_consommees = $cumul_restauration->consomme;
+        } else {
+            $quantite_deja_consommees = (int) $cumul_restauration;
+        }
+        // //afficher l'état d'approvisionnement secondaire du même produit
+        $cumul_stock = Secondaire::groupBy('produit')
+            ->selectRaw('sum(quantite) as appros,produit')
+            ->where('produit', $request->produit)
+            ->where('departement', $request->departement)
+            ->get()
+            ->first();
+
+        if (!empty($cumul_stock)) {
+            $quantite_en_stock = $cumul_stock->appros - $quantite_deja_consommees;
+        } else {
+            $quantite_en_stock = (int) $cumul_stock;
+        }
+        // //comparaison de l'approvisionnement à la consommation
+        if ($request->quantite > $quantite_en_stock) {
+            $state = false;
+            $message = "Ce produit ne peut être consommer pour la quantité de: $request->quantite, parce que le stock est insuffisant,il reste: $quantite_en_stock éléments";
+        } else {
+            $state = true;
+            $message = "Le stock est bien suffisant";
+        }
+        return response()->json(['state' => $state, 'message' => $message]);
+        // return response()->json([$request->all()]);
+
     }
 }

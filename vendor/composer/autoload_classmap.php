@@ -42,6 +42,7 @@ return array(
     'App\\Http\\Controllers\\ProduitsController' => $baseDir . '/app/Http/Controllers/ProduitsController.php',
     'App\\Http\\Controllers\\RestaurationsController' => $baseDir . '/app/Http/Controllers/RestaurationsController.php',
     'App\\Http\\Controllers\\SecondairesController' => $baseDir . '/app/Http/Controllers/SecondairesController.php',
+    'App\\Http\\Controllers\\ServiceVentesController' => $baseDir . '/app/Http/Controllers/ServiceVentesController.php',
     'App\\Http\\Controllers\\SousFamillesController' => $baseDir . '/app/Http/Controllers/SousFamillesController.php',
     'App\\Http\\Controllers\\TypesController' => $baseDir . '/app/Http/Controllers/TypesController.php',
     'App\\Http\\Controllers\\TypesPiecesController' => $baseDir . '/app/Http/Controllers/TypesPiecesController.php',

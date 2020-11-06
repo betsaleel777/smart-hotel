@@ -1,24 +1,24 @@
 <template>
     <div>
         <button
-            @click="runModal"
             type="button"
             class="btn btn-outline-primary pretty"
+            @click="runModal"
         >
             créer departement
         </button>
         <b-modal
+            id="departement"
+            title="ajouter un departement"
             @show="reset"
             @cancel="reset"
             @ok="send"
-            id="departement"
-            title="ajouter un departement"
         >
             <form class="form-group">
                 <input
+                    v-model="nom"
                     class="form-control"
                     :class="invalid"
-                    v-model="nom"
                     type="text"
                 />
                 <div class="text-danger">{{ message }}</div>

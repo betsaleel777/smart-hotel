@@ -236,71 +236,81 @@ Route::prefix('home')->group(
             }
         );
 
+        Route::prefix('/ventes')->group(
+            function () {
+                Route::get('/index', 'ServiceVentesController@index')->name('service_vente_index');
+            }
+        );
+
     }
 );
 
 Route::prefix('/ajax')->group(
     function () {
 
-        Route::get('/batiments/all/', 'BatimentsController@allBatiments')->name('all_batiment');
+        Route::get('/batiments/all/', 'BatimentsController@allBatiments');
 
-        Route::get('/chambres/all/{batiment}', 'ApiPassageController@allRooms')->name('all_chambre');
-        Route::get('/chambres/empty/{batiment}', 'ApiPassageController@emptyRooms')->name('empty_chambre');
-        Route::get('/chambre/details/{chambre}', 'ChambresController@details')->name('chambre_details');
-        Route::get('/chambres/used/{batiment}', 'ApiPassageController@usedRooms')->name('used_chambre');
+        Route::get('/chambres/all/{batiment}', 'ApiPassageController@allRooms');
+        Route::get('/chambres/empty/{batiment}', 'ApiPassageController@emptyRooms');
+        Route::get('/chambre/details/{chambre}', 'ChambresController@details');
+        Route::get('/chambres/used/{batiment}', 'ApiPassageController@usedRooms');
 
-        Route::post('/attribution/passage', 'ApiPassageController@attribuer')->name('attribution_passage');
-        Route::post('/liberation/passage', 'ApiPassageController@liberer')->name('liberation_passage');
+        Route::post('/attribution/passage', 'ApiPassageController@attribuer');
+        Route::post('/liberation/passage', 'ApiPassageController@liberer');
 
-        Route::post('/sejour/add', 'AttributionsSejoursController@add')->name('attributions_sejour_add');
-        Route::get('/sejour/infos/{attribution}', 'AttributionsSejoursController@infos')->name('attributions_sejour_infos');
-        Route::get('/sejour/all', 'AttributionsSejoursController@getAll')->name('attributions_sejour_all');
-        Route::post('/sejour/update', 'AttributionsSejoursController@update')->name('attributions_sejour_update');
-        Route::post('/sejour/liberer', 'AttributionsSejoursController@liberer')->name('attributions_sejour_liberation');
-        Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete')->name('attributions_sejour_delete');
+        Route::post('/sejour/add', 'AttributionsSejoursController@add');
+        Route::get('/sejour/infos/{attribution}', 'AttributionsSejoursController@infos');
+        Route::get('/sejour/all', 'AttributionsSejoursController@getAll');
+        Route::post('/sejour/update', 'AttributionsSejoursController@update');
+        Route::post('/sejour/liberer', 'AttributionsSejoursController@liberer');
+        Route::post('/sejour/supprimer', 'AttributionsSejoursController@delete');
 
-        Route::get('/typePiece/all', 'TypesPiecesController@pieces')->name('all_pieces');
+        Route::get('/typePiece/all', 'TypesPiecesController@pieces');
 
-        Route::get('/produit/all', 'ProduitsController@getAll')->name('all_produit');
-        Route::get('/produit/consommables/all', 'ProduitsController@getConsommables')->name('all_consommables');
-        Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires')->name('all_accessoire');
-        Route::post('/produit/show', 'ProduitsController@getDetails')->name('show_produit');
+        Route::get('/produit/all', 'ProduitsController@getAll');
+        Route::get('/produit/consommables/all', 'ProduitsController@getConsommables');
+        Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires');
+        Route::post('/produit/show', 'ProduitsController@getDetails');
 
-        Route::post('/restauration/proformas', 'RestaurationsController@getProformas')->name('resto_proformas');
-        Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas')->name('resto_passage_proformas');
-        Route::post('/restauration/save', 'RestaurationsController@saveProformas')->name('save_proformas');
-        Route::post('/restauration/passage/save', 'RestaurationsController@savePassageProformas')->name('save_passage_proformas');
-        Route::post('/restauration/solder', 'RestaurationsController@solder')->name('solde_proforma');
-        Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder')->name('solde_passage_proforma');
-        Route::post('/restauration/delete', 'RestaurationsController@delete')->name('delete_proformas');
-        Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete')->name('delete_passage_proforma');
-        Route::post('/restauration/check', 'RestaurationsController@check')->name('product_check_quantity');
+        Route::post('/restauration/proformas', 'RestaurationsController@getProformas');
+        Route::post('/restauration/passage/proformas', 'RestaurationsController@getPassageProformas');
+        Route::post('/restauration/save', 'RestaurationsController@saveProformas');
+        Route::post('/restauration/passage/save', 'RestaurationsController@savePassageProformas');
+        Route::post('/restauration/solder', 'RestaurationsController@solder');
+        Route::post('/restauration/passage/solder', 'RestaurationsController@passageSolder');
+        Route::post('/restauration/delete', 'RestaurationsController@delete');
+        Route::post('/restauration/passage/delete', 'RestaurationsController@passageDelete');
+        Route::post('/restauration/check', 'RestaurationsController@check');
+        Route::post('/restauration/departement/check', 'RestaurationsController@checkByDepartement');
 
-        Route::post('/destockage/sejour/save', 'DestockagesController@sejourSave')->name('destockage_sejour_save');
-        Route::post('/destockage/passage/save', 'DestockagesController@passageSave')->name('destockage_passage_save');
-        Route::post('/destockage/check', 'DestockagesController@check')->name('produit_stock_check');
-        Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved')->name('produit_sejour_saved');
-        Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved')->name('produit_passage_saved');
-        Route::post('/destockage/update/saved', 'DestockagesController@updateSaved')->name('update_produit_saved');
-        Route::post('/destockage/delete/saved', 'DestockagesController@deleteSaved')->name('delete_sejour_saved');
+        Route::post('/destockage/sejour/save', 'DestockagesController@sejourSave');
+        Route::post('/destockage/passage/save', 'DestockagesController@passageSave');
+        Route::post('/destockage/check', 'DestockagesController@check');
+        Route::get('/destockage/sejour/saved/{id}', 'DestockagesController@sejourSaved');
+        Route::get('/destockage/passage/saved/{id}', 'DestockagesController@passageSaved');
+        Route::post('/destockage/update/saved', 'DestockagesController@updateSaved');
+        Route::post('/destockage/delete/saved', 'DestockagesController@deleteSaved');
 
-        Route::post('/approvisionnement/save', 'ApprovisionnementsController@save')->name('appro_save');
-        Route::post('/approvisionnement/edit', 'ApprovisionnementsController@edit')->name('appro_edit');
+        Route::post('/approvisionnement/save', 'ApprovisionnementsController@save');
+        Route::post('/approvisionnement/edit', 'ApprovisionnementsController@edit');
 
-        Route::post('/multicritere/one_date', 'InventairesController@searchByDate')->name('inventaire_date');
-        Route::post('/multicritere/interval_date', 'InventairesController@searchByDateInterval')->name('inventaire_date_interval');
-        Route::post('/multicritere/default', 'InventairesController@searchDefault')->name('inventaire_default');
+        //Route::post('/multicritere/one_date', 'InventairesController@searchByDate')->name('inventaire_date');
+        //Route::post('/multicritere/interval_date', 'InventairesController@searchByDateInterval')->name('inventaire_date_interval');
+        Route::post('/multicritere/default', 'InventairesController@searchDefault');
+        Route::post('/multicritere/departement', 'InventairesController@searchByDepartement');
+        Route::post('/multicritere/vente/one_date', 'PointVentesController@searchByDate');
+        Route::post('/multicritere/vente/interval_date', 'PointVentesController@searchByDateInterval');
+        Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault');
 
-        Route::post('/multicritere/vente/one_date', 'PointVentesController@searchByDate')->name('point_vente_date');
-        Route::post('/multicritere/vente/interval_date', 'PointVentesController@searchByDateInterval')->name('point_vente_date_interval');
-        Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault')->name('point_vente_default');
-
-        Route::post('/solder', 'FacturesController@solderTable')->name('facture_table_solder');
+        Route::post('/solder', 'FacturesController@solderTable');
 
         Route::post('/departement/store', 'DepartementsController@storejs');
         Route::get('/departements', 'DepartementsController@getDepartements');
 
         Route::post('/secondaire/store', 'SecondairesController@storejs');
+        Route::get('/secondaires', 'SecondairesController@getList');
+
+        Route::post('/ventes/store', 'ServiceVentesController@storejs');
     }
 );
 

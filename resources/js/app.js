@@ -10,6 +10,8 @@ import Vue from "vue";
 import ModalDepartement from "./components/ModalDepartement.vue";
 import SelectDepartement from "./components/SelectDepartement.vue";
 import SecondaireInputChoice from "./components/Secondaire/InputChoice.vue";
+import VenteInputChoice from "./components/Ventes/InputChoice.vue";
+import VenteSynthese from "./components/Ventes/Synthese.vue";
 require("./bootstrap");
 window.Vue = require("vue");
 const options = {
@@ -90,5 +92,7 @@ const app = new Vue({
         ModalDepartement,
         SelectDepartement,
         SecondaireInputChoice,
+        VenteInputChoice,
+        VenteSynthese,
     },
 });

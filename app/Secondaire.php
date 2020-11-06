@@ -21,7 +21,7 @@ class Secondaire extends Model
         'departement.required' => 'le choix du département est obligatoire',
     ];
 
-    public function departement()
+    public function departementLinked()
     {
         return $this->belongsTo(Departement::class, 'departement');
     }
@@ -31,8 +31,8 @@ class Secondaire extends Model
         return $this->belongsTo(User::class, 'user');
     }
 
-    public function produit()
+    public function produitLinked()
     {
-        return $this->belongsTo(Produit::class, 'user');
+        return $this->belongsTo(Produit::class, 'produit');
     }
 }

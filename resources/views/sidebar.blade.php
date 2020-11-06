@@ -78,10 +78,10 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('service_vente_index')}}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
-                            Simple Link
+                            Service de ventes
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
