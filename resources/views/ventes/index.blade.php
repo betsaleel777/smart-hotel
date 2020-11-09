@@ -14,7 +14,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <vente-input-choice></vente-input-choice>
+                        <vente-input-choice :userdep="{{ Auth::user()->departementLinked->id }}">
+                        </vente-input-choice>
                     </div>
                     <div class="col-md-6">
                         <vente-synthese></vente-synthese>

@@ -54,7 +54,7 @@
                 <b-card-text>
                     <strong>Référence:</strong>{{ produit.reference }}<br />
                     <strong>Libellé:</strong>{{ produit.libelle }}<br />
-                    <strong>Prix:</strong>{{ produit.prix }}<br />
+                    <strong>Prix achat:</strong>{{ produit.achat }}<br />
                     <strong>Seuil:</strong>{{ produit.seuil }}<br />
                     <strong>Catégorie:</strong
                     >{{ produit.sous_famille_linked.libelle }}<br />
@@ -135,7 +135,7 @@ export default {
                     produit
                 } = response.data
                 this.produit = produit
-                this.prix = produit.prix
+                this.achat = produit.achat
                 this.showDetails = true;
             }).catch((err) => {})
         },
@@ -161,7 +161,7 @@ export default {
             }).catch((err) => {})
         },
         send() {
-            axios.post('/ajax/secondaire/store', { produit: this.choice, quantite: parseInt(this.quantite), achat: parseInt(this.prix), departement: this.selected }).then((response) => {
+            axios.post('/ajax/secondaire/store', { produit: this.choice, quantite: parseInt(this.quantite), achat: parseInt(this.achat), departement: this.selected }).then((response) => {
               this.$awn.success(response.data.message)
               this.vider()
             }).catch(err => {
@@ -179,7 +179,7 @@ export default {
         vider(){
               this.choice = null
               this.quantite = ''
-              this.prix = 0
+              this.achat = 0
               this.selected = null
               this.showDetails = false
         }

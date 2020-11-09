@@ -7,6 +7,7 @@
                     <b-form-select
                         v-model="departement"
                         :options="departements"
+                        :disabled="disableDepartement"
                     ></b-form-select>
                 </div>
                 <div class="col">
@@ -60,6 +61,12 @@ export default {
         BFormSelect,
         SearchResult,
     },
+    props: {
+        userdep: {
+            type: Number,
+            default: 0,
+        },
+    },
     data() {
         return {
             produits: [],
@@ -81,11 +88,16 @@ export default {
                     value: "consommable",
                 },
             ],
+            disableDepartement: false,
         };
     },
     mounted() {
         this.getFamilles();
         this.getDepartements();
+        if (this.userdep !== 1) {
+            this.disableDepartement = true;
+            this.departement = this.userdep;
+        }
     },
     methods: {
         getFamilles() {

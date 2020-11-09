@@ -7,6 +7,7 @@
                     <b-form-select
                         v-model="selected"
                         :options="departements"
+                        :disabled="disableDepartement"
                     ></b-form-select>
                 </div>
                 <div class="col">
@@ -110,6 +111,12 @@ export default {
         BFormDatepicker,
         SearchResultPoint,
     },
+    props: {
+        userdep: {
+            type: Number,
+            default: 0,
+        },
+    },
     data() {
         return {
             produits: [],
@@ -127,11 +134,16 @@ export default {
             desactiverThree: false,
             minDate: null,
             maxDate: null,
+            disableDepartement: false,
         };
     },
     mounted() {
         this.getFamilles();
         this.getDepartements();
+        if (this.userdep !== 1) {
+            this.disableDepartement = true;
+            this.selected = this.userdep;
+        }
     },
     methods: {
         getFamilles() {
@@ -232,7 +244,7 @@ export default {
             this.fin = null;
             this.famille = null;
             this.sous_famille = null;
-            this.selected = 1;
+            this.selected = this.userdep;
         },
         send() {
             if (this.debut && this.fin) {
@@ -252,15 +264,11 @@ export default {
                                     (produit) => {
                                         return {
                                             libelle: produit.libelle,
-                                            prixAchat: produit.achat,
                                             prixVente: produit.prix,
                                             sorties: produit.sortie,
                                             montant:
                                                 Number(produit.sortie) *
                                                 produit.prix,
-                                            marge:
-                                                Number(produit.sortie) *
-                                                (produit.prix - produit.achat),
                                         };
                                     }
                                 );
@@ -292,15 +300,11 @@ export default {
                                 (produit) => {
                                     return {
                                         libelle: produit.libelle,
-                                        prixAchat: produit.achat,
                                         prixVente: produit.prix,
                                         sorties: produit.sortie,
                                         montant:
                                             Number(produit.sortie) *
                                             produit.prix,
-                                        marge:
-                                            Number(produit.sortie) *
-                                            (produit.prix - produit.achat),
                                     };
                                 }
                             );
@@ -325,15 +329,11 @@ export default {
                                 (produit) => {
                                     return {
                                         libelle: produit.libelle,
-                                        prixAchat: produit.achat,
                                         prixVente: produit.prix,
                                         sorties: produit.sortie,
                                         montant:
                                             Number(produit.sortie) *
                                             produit.prix,
-                                        marge:
-                                            Number(produit.sortie) *
-                                            (produit.prix - produit.achat),
                                     };
                                 }
                             );

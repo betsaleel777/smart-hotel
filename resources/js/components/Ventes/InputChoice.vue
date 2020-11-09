@@ -2,7 +2,12 @@
     <div>
         <div class="form-group">
             <label for="departement">Département</label>
-            <b-form-select id="departement" v-model="selected" search>
+            <b-form-select
+                id="departement"
+                v-model="selected"
+                :disabled="disableDepartement"
+                search
+            >
                 <option
                     v-for="departement in departements"
                     :key="departement.id"
@@ -95,6 +100,12 @@ export default {
         BFormText,
         BFormInvalidFeedback
     },
+    props: {
+        userdep: {
+            type: Number,
+            default: 0
+        }
+    },
     data() {
         return {
             choice: null,
@@ -105,6 +116,7 @@ export default {
             produit: null,
             quantite: '',
             showDetails: false,
+            disableDepartement: false
         }
     },
     computed: {
@@ -126,12 +138,16 @@ export default {
         this.getConsommables()
         this.getDepartements()
         this.$root.$on('vider', () =>{
-            this.selected = null
+            this.selected = this.userdep
             this.quantite = ''
             this.showDetails = false
             this.choice = null
             this.prix = 0
         })
+        if(this.userdep !== 1){
+           this.disableDepartement = true
+           this.selected = this.userdep
+        }
     },
     methods: {
         getDetails() {

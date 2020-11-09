@@ -1,8 +1,7 @@
 <template>
     <b-table responsive hover :items="products" :fields="fields">
         <template v-slot:table-caption
-            ><b>Total Vendus:</b> {{ vendus() }}<br />
-            <b>Total Marge:</b> {{ marges() }}
+            ><b>Total Vendus:</b> {{ vendus() }}
         </template>
     </b-table>
 </template>
@@ -22,10 +21,6 @@ export default {
                     label: "Libellé",
                 },
                 {
-                    key: "prixAchat",
-                    label: "Prix Achat",
-                },
-                {
                     key: "prixVente",
                     label: "Prix Vente",
                 },
@@ -37,10 +32,6 @@ export default {
                     key: "montant",
                     label: "Montant Vente",
                 },
-                {
-                    key: "marge",
-                    label: "Marge",
-                },
             ],
         };
     },
@@ -51,13 +42,6 @@ export default {
                 totalVendu += Number(product.montant);
             });
             return totalVendu;
-        },
-        marges() {
-            let totalMarge = 0;
-            this.products.forEach((product) => {
-                totalMarge += Number(product.marge);
-            });
-            return totalMarge;
         },
     },
 };

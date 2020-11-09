@@ -24,16 +24,16 @@ class InventairesController extends Controller
         if (empty($request->famille) and empty($request->sous_famille)) {
             //le type existe mais famille et sous famille sont vides
             if ($request->type === 'accessoire') {
-                $texte = "WITH r as (SELECT p.libelle,destockages.produit ,destockages.prix, sum(destockages.quantite) AS quantite FROM
-                              destockages INNER JOIN produits p ON p.id=destockages.produit GROUP BY destockages.produit)
-                              SELECT r.prix, r.libelle,a.produit, r.quantite AS sortie,sum(a.quantite) AS entree FROM approvisionnements a,r
-                              WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r as (SELECT p.libelle,destockages.produit , sum(destockages.quantite) AS quantite FROM
+                          destockages INNER JOIN produits p ON p.id=destockages.produit GROUP BY destockages.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie,sum(a.quantite) AS entree FROM approvisionnements a LEFT JOIN r
+                          ON r.produit = a.produit INNER JOIN produits p ON p.id = a.produit WHERE p.genre = 'accessoire' GROUP BY a.produit";
                 $query = sprintf($texte);
             } else {
-                $texte = "WITH r AS (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite) AS quantite
-                              FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit GROUP BY restaurations.produit)
-                              SELECT r.prix, r.libelle,a.produit, r.quantite AS sortie,sum(a.quantite) AS entree FROM approvisionnements a,r
-                              WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r AS (SELECT p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                          FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit GROUP BY restaurations.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie, sum(a.quantite) AS entree FROM approvisionnements a
+                          LEFT JOIN r ON r.produit = a.produit INNER JOIN produits p ON p.id=a.produit WHERE p.genre = 'consommable' GROUP BY a.produit";
                 $query = sprintf($texte);
             }
             return DB::select(DB::Raw($query));
@@ -41,17 +41,17 @@ class InventairesController extends Controller
         } elseif (!empty($request->sous_famille)) {
             //sous_famille existe
             if ($request->type === 'accessoire') {
-                $texte = "WITH r as (SELECT p.libelle,destockages.produit ,destockages.prix, sum(destockages.quantite) AS quantite FROM
-                              destockages INNER JOIN produits p ON p.id=destockages.produit WHERE %1\$s GROUP BY destockages.produit)
-                              SELECT r.prix, r.libelle,a.produit, r.quantite AS sortie,sum(a.quantite) AS entree FROM approvisionnements a,r
-                              WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r as (SELECT p.libelle,destockages.produit , sum(destockages.quantite) AS quantite FROM
+                          destockages INNER JOIN produits p ON p.id=destockages.produit WHERE %1\$s GROUP BY destockages.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie,sum(a.quantite) AS entree FROM approvisionnements a LEFT JOIN r
+                          ON r.produit = a.produit INNER JOIN produits p ON p.id = a.produit WHERE %1\$s AND p.genre = 'accessoire' GROUP BY a.produit";
                 $condition_accessoire = "p.sous_famille = $request->sous_famille";
                 $query = sprintf($texte, $condition_accessoire);
             } else {
-                $texte = "WITH r as (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite) AS quantite
-                              FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit WHERE %1\$s GROUP BY restaurations.produit)
-                              SELECT r.prix, r.libelle,a.produit, r.quantite AS sortie,sum(a.quantite) AS entree FROM approvisionnements a,r
-                              WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r AS (SELECT p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                          FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit WHERE %1\$s GROUP BY restaurations.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie, sum(a.quantite) AS entree FROM approvisionnements a
+                          LEFT JOIN r ON r.produit = a.produit INNER JOIN produits p ON p.id=a.produit WHERE %1\$s AND p.genre = 'consommable' GROUP BY a.produit";
                 $condition_consommable = "p.sous_famille = $request->sous_famille";
                 $query = sprintf($texte, $condition_consommable);
             }
@@ -62,14 +62,17 @@ class InventairesController extends Controller
             $jointure = "INNER JOIN sous_familles s ON p.sous_famille = s.id";
             if ($request->type === 'accessoire') {
                 //reste avant
-                $texte = "WITH r as (SELECT p.libelle,destockages.produit ,destockages.prix, sum(destockages.quantite) AS quantite FROM
-                              destockages INNER JOIN produits p ON p.id=destockages.produit %2\$s WHERE %1\$s  GROUP BY destockages.produit)
-                              SELECT r.prix, r.libelle,a.produit, r.quantite as sortie,sum(a.quantite) AS entree FROM approvisionnements a,r
-                              WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r as (SELECT p.libelle,destockages.produit , sum(destockages.quantite) AS quantite FROM
+                          destockages INNER JOIN produits p ON p.id=destockages.produit %2\$s WHERE %1\$s GROUP BY destockages.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie,sum(a.quantite) AS entree FROM approvisionnements a LEFT JOIN r
+                          ON r.produit = a.produit INNER JOIN produits p ON p.id = a.produit %2\$s WHERE %1\$s AND p.genre = 'accessoire' GROUP BY a.produit";
                 $condition_accessoire = "s.famille = $request->famille";
                 $query = sprintf($texte, $condition_accessoire, $jointure);
             } else {
-                $texte = "WITH r as (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite) as quantite FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit %2\$s WHERE %1\$s GROUP BY restaurations.produit) SELECT r.prix, r.libelle,a.produit, r.quantite as sortie,sum(a.quantite) as entree FROM approvisionnements a,r WHERE r.produit = a.produit GROUP BY a.produit";
+                $texte = "WITH r AS (SELECT p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                          FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit %2\$s WHERE %1\$s GROUP BY restaurations.produit)
+                          SELECT p.libelle, a.produit, IFNULL(r.quantite,0) AS sortie, sum(a.quantite) AS entree FROM approvisionnements a
+                          LEFT JOIN r ON r.produit = a.produit INNER JOIN produits p ON p.id=a.produit %2\$s WHERE %1\$s AND p.genre = 'consommable' GROUP BY a.produit";
                 $condition_consommable = "s.famille = $request->famille";
                 $query = sprintf($texte, $condition_consommable, $jointure);
             }
@@ -83,19 +86,19 @@ class InventairesController extends Controller
         if (empty($request->famille) and empty($request->sous_famille)) {
             //le type existe mais famille et sous famille sont vides
 
-            $texte = "WITH r AS (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite) AS quantite
-                      FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit WHERE restaurations.departement = $request->departement GROUP BY restaurations.produit)
-                      SELECT r.prix, r.libelle, s.produit, r.quantite AS sortie, sum(s.quantite) AS entree FROM secondaires s,r
-                      WHERE r.produit = s.produit GROUP BY s.produit";
+            $texte = "WITH r AS (SELECT restaurations.departement, p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                      FROM restaurations INNER JOIN produits p ON p.id = restaurations.produit WHERE restaurations.departement = $request->departement GROUP BY restaurations.produit)
+                      SELECT p.libelle, s.produit, IFNULL(r.quantite,0) AS sortie, sum(s.quantite) AS entree FROM secondaires s
+                      LEFT JOIN r ON r.produit = s.produit INNER JOIN produits p ON p.id = s.produit WHERE s.departement = $request->departement GROUP BY s.produit";
             $query = sprintf($texte);
             return DB::select(DB::Raw($query));
 
         } elseif (!empty($request->sous_famille)) {
             //sous_famille existe
-            $texte = "WITH r as (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite) AS quantite
-                              FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit WHERE %1\$s AND restaurations.departement = $request->departement  GROUP BY restaurations.produit)
-                              SELECT r.prix, r.libelle,s.produit, r.quantite AS sortie,sum(s.quantite) AS entree FROM secondaires s,r
-                              WHERE r.produit = s.produit GROUP BY s.produit";
+            $texte = "WITH r AS (SELECT restaurations.departement, p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                      FROM restaurations INNER JOIN produits p ON p.id = restaurations.produit WHERE %1\$s AND restaurations.departement = $request->departement GROUP BY restaurations.produit)
+                      SELECT p.libelle, s.produit, IFNULL(r.quantite,0) AS sortie, sum(s.quantite) AS entree FROM secondaires s
+                      LEFT JOIN r ON r.produit = s.produit INNER JOIN produits p ON p.id = s.produit WHERE %1\$s AND s.departement = $request->departement GROUP BY s.produit";
             $condition_consommable = "p.sous_famille = $request->sous_famille";
             $query = sprintf($texte, $condition_consommable);
             return DB::select(DB::Raw($query));
@@ -104,10 +107,10 @@ class InventairesController extends Controller
             //la famille et le type sont spécifié les deux
             $jointure = "INNER JOIN sous_familles s ON p.sous_famille = s.id";
 
-            $texte = "WITH r as (SELECT p.libelle,restaurations.produit ,restaurations.prix, sum(restaurations.quantite)
-                      as quantite FROM restaurations INNER JOIN produits p ON p.id=restaurations.produit %2\$s WHERE %1\$s AND restaurations.departement = $request->departement
-                      GROUP BY restaurations.produit) SELECT r.prix, r.libelle,s.produit, r.quantite as sortie,sum(s.quantite)
-                      as entree FROM secondaires s,r WHERE r.produit = s.produit GROUP BY s.produit";
+            $texte = "WITH r AS (SELECT restaurations.departement, p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+                      FROM restaurations INNER JOIN produits p ON p.id = restaurations.produit %2\$s WHERE %1\$s AND restaurations.departement = $request->departement GROUP BY restaurations.produit)
+                      SELECT p.libelle, s.produit, IFNULL(r.quantite,0) AS sortie, sum(s.quantite) AS entree FROM secondaires s
+                      LEFT JOIN r ON r.produit = s.produit INNER JOIN produits p ON p.id = s.produit %2\$s WHERE %1\$s AND s.departement = $request->departement GROUP BY s.produit";
             $condition_consommable = "s.famille = $request->famille";
             $query = sprintf($texte, $condition_consommable, $jointure);
 
@@ -128,3 +131,9 @@ class InventairesController extends Controller
         return response()->json(['inventaire' => $inventaire]);
     }
 }
+/**
+ * WITH r AS (SELECT restaurations.departement, p.libelle, restaurations.produit, sum(restaurations.quantite) AS quantite
+FROM restaurations INNER JOIN produits p ON p.id = restaurations.produit WHERE restaurations.departement = 15 GROUP BY restaurations.produit)
+SELECT p.libelle, s.produit, IFNULL(r.quantite,0) AS sortie, sum(s.quantite) AS entree FROM secondaires s
+LEFT JOIN r ON r.produit = s.produit INNER JOIN produits p ON p.id = s.produit WHERE s.departement = 15 GROUP BY s.produit
+ */
