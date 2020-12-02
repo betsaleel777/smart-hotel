@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -16,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'departement',
     ];
 
     /**
@@ -37,12 +36,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function departementLinked(){
-      return $this->belongsTo(Departement::class,'departement') ;
+    public function departementLinked()
+    {
+        return $this->belongsTo(Departement::class, 'departement');
     }
 
-    public static function isAdmin(User $user){
-      return $user->departementLinked()->id === 1 ;
+    public static function isAdmin(User $user)
+    {
+        return $user->departementLinked()->id === 1;
     }
 
     // public function scopeAdmin($query){

@@ -251,6 +251,7 @@ Route::prefix('home')->group(
                 Route::get('/add', 'ServiceVentesController@add')->name('service_vente_add');
                 Route::get('/edit/{code}', 'ServiceVentesController@edit')->name('service_vente_edit');
                 Route::get('/show/{code}', 'ServiceVentesController@show')->name('service_vente_show');
+                Route::get('/print/{code}', 'ServiceVentesController@print')->name('service_vente_print');
                 Route::get('/ticket/{code}', 'ServiceVentesController@recu')->name('service_vente_ticket');
             }
         );

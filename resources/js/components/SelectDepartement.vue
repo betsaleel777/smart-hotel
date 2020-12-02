@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
     props: {
         list: Array,
@@ -39,7 +40,7 @@ export default {
                 .then((result) => {
                     this.departements = result.data.departements;
                 })
-                .catch((err) => {});
+                .catch(() => {});
         });
     },
 };

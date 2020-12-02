@@ -33,15 +33,15 @@ class PointVentesController extends Controller
 
         if (empty($request->famille) and empty($request->sous_famille)) {
             //famille et sous famille sont vides
-            $texte = "SELECT p.id, p.libelle, sum(r.quantite) AS sortie, r.prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit
-                      WHERE r.departement = $request->departement %1\$s  GROUP BY r.produit";
+            $texte = "SELECT p.id, p.libelle, sum(r.quantite) AS sortie, AVG(r.prix) as prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit
+                      WHERE r.etat = 'facturer' AND r.departement = $request->departement %1\$s  GROUP BY r.produit";
             $query = sprintf($texte, $condition_vente);
             return DB::select(DB::Raw($query));
 
         } elseif (!empty($request->sous_famille)) {
             //sous_famille existe
-            $texte = "SELECT p.id, p.libelle, sum(r.quantite) AS sortie, r.prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit
-                      WHERE r.departement = $request->departement %1\$s  GROUP BY r.produit";
+            $texte = "SELECT p.id, p.libelle, sum(r.quantite) AS sortie, AVG(r.prix) as prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit
+                      WHERE r.etat = 'facturer' AND r.departement = $request->departement %1\$s  GROUP BY r.produit";
             $condition_vente .= " AND produits.sous_famille = $request->sous_famille";
             $query = sprintf($texte, $condition_vente);
             return DB::select(DB::Raw($query));
@@ -49,8 +49,8 @@ class PointVentesController extends Controller
         } elseif (!empty($request->famille) and empty($request->sous_famille)) {
             //la famille et le type sont spécifié les deux
             $jointure = "INNER JOIN sous_familles s ON produits.sous_famille = s.id";
-            $texte = "SELECT p.libelle, sum(r.quantite) AS sortie, r.prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit %2\$s
-                      WHERE r.departement = $request->departement %1\$s  GROUP BY r.produit";
+            $texte = "SELECT p.libelle, sum(r.quantite) AS sortie, AVG(r.prix) as prix FROM restaurations r INNER JOIN produits p ON p.id = r.produit %2\$s
+                      WHERE r.etat = 'facturer' AND r.departement = $request->departement %1\$s  GROUP BY r.produit";
             $condition_vente .= " AND s.famille = $request->famille";
             $query = sprintf($texte, $condition_vente, $jointure);
             return DB::select(DB::Raw($query));

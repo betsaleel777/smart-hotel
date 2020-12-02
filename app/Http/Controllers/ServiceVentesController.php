@@ -153,7 +153,12 @@ class ServiceVentesController extends Controller
         $ventes = Restauration::with('produitLinked', 'tableLinked')->where('code', $code)->get();
         $titre = 'Détails vente ' . $code;
         return view('ventes.show', compact('titre', 'ventes'));
-        //envoyer vers la vue facture (impayer si non soldée)
+    }
+
+    function print(string $code) {
+        $ventes = Restauration::with('produitLinked', 'tableLinked')->where('code', $code)->get();
+        $titre = "$code";
+        return view('ventes.print', compact('titre', 'ventes'));
     }
 
     public function recu(string $code)

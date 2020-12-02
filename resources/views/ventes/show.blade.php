@@ -116,6 +116,8 @@
       <!-- this row will not appear when printing -->
       <div class="row no-print">
          <div class="col-12">
+            <a href="{{ route('service_vente_print', $ventes->first()->code) }}" target="_blank" class="btn btn-default"><i
+                  class="fas fa-print"></i> Print</a>
             <payer-table-vente :table="{{ $ventes->first()->tableLinked->id }}" :code="'{{ $ventes->first()->code }}'">
             </payer-table-vente>
          </div>

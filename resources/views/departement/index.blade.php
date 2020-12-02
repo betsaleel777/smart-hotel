@@ -24,7 +24,7 @@
                   <h6 class="card-title">Liste des départements</h6>
                </div>
                <div class="col-md-2">
-                  <modal-departement reload="true"></modal-departement>
+                  <modal-departement :reload="true"></modal-departement>
                </div>
             </div>
             <div class="card-text">
