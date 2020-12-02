@@ -3,27 +3,38 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SousFamille extends Model
 {
-  use SoftDeletes ;
-  protected $fillable = ['libelle','famille'];
-  const RULES = ['libelle' => 'required|max:100',
-                 'famille' => 'required|numeric'] ;
-  const MESSAGES = [
-                     'libelle.required' => 'le libelle de la sous catégorie est obligatoire',
-                     'libelle.max' => 'Ce libelle est trop long',
-                     'famille.required' => 'le choix de la famille est obligatoire',
-                     'famille.numeric' => 'doit être un nombre',
-                   ] ;
+    protected $fillable = ['libelle', 'famille'];
+    const RULES = [
+        'libelle' => 'required|max:100|unique:sous_familles,libelle',
+        'famille' => 'required|numeric',
+    ];
+    const MESSAGES = [
+        'libelle.unique' => 'Cette valeure du libelle est déjà utilisée',
+        'libelle.required' => 'le libelle de la sous catégorie est obligatoire',
+        'libelle.max' => 'Ce libelle est trop long',
+        'famille.required' => 'le choix de la famille est obligatoire',
+        'famille.numeric' => 'doit être un nombre',
+    ];
 
-  public function familleLinked(){
-    return $this->belongsTo(Famille::class,'famille') ;
-  }
+    public static function regles(int $id)
+    {
+        return [
+            'libelle' => 'required|max:100|unique:sous_familles,libelle,' . $id,
+            'famille' => 'required|numeric',
+        ];
+    }
 
-  public function produits(){
-    return $this->hasMany(Produit::class,'sous_famille') ;
-  }
+    public function familleLinked()
+    {
+        return $this->belongsTo(Famille::class, 'famille');
+    }
+
+    public function produits()
+    {
+        return $this->hasMany(Produit::class, 'sous_famille');
+    }
 
 }

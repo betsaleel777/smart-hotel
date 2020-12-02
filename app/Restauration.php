@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restauration extends Model
 {
-    protected $fillable = ['quantite', 'sejour', 'passage', 'produit', 'etat', 'prix', 'departement'];
+    protected $fillable = ['quantite', 'sejour', 'passage', 'produit', 'etat', 'prix', 'departement', 'latable', 'code'];
 
     const RULES = [
         'quantite' => 'required|numeric',
@@ -34,6 +34,16 @@ class Restauration extends Model
     public function passageLinked()
     {
         return $this->belongsTo(AttributionsPassage::class, 'passage');
+    }
+
+    public function tableLinked()
+    {
+        return $this->belongsTo(Table::class, 'latable');
+    }
+
+    public function departementLinked()
+    {
+        return $this->belongsTo(Departement::class, 'departement');
     }
 
     public function setPay(): void

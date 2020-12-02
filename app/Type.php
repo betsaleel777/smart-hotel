@@ -3,30 +3,40 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Type extends Model
 {
-  use SoftDeletes ;
-    protected $fillable = ['libelle','cout_reservation','cout_repos','cout_passage'] ;
-    protected $dates = ['created_at','updated_at','deleted_at'] ;
+    protected $fillable = ['libelle', 'cout_reservation', 'cout_repos', 'cout_passage'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    const RULES = [ 'libelle' => 'required|max:150',
-                    'cout_repos' => 'required|numeric',
-                    'cout_reservation' => 'required|numeric',
-                    'cout_passage' => 'required|numeric'
-                  ] ;
+    const RULES = ['libelle' => 'required|max:150|unique:types,libelle',
+        'cout_repos' => 'required|numeric',
+        'cout_reservation' => 'required|numeric',
+        'cout_passage' => 'required|numeric',
+    ];
     const MESSAGES = [
-                       'libelle.required' => 'Le libelle est requis' ,
-                       'libelle.max' => 'Maximum de caractères 25' ,
-                       'cout_repos.required' => 'Le coût du repos est requis' ,
-                       'cout_repos.numeric' => 'Ce coût doit être un nombre' ,
-                       'cout_reservation.required' => 'Le cout de la réservation est requis' ,
-                       'cout_reservation.numeric' => 'Ce cout doit être un nombre' ,
-                       'cout_passage.required' => 'Le cout de passage est requis' ,
-                       'cout_passage.numeric' => 'Ce cout doit être un nombre' ,
-                     ] ;
-    public function chambres(){
-      return $this->hasMany(Chambre::class,'type') ;
+        'libelle.required' => 'Le libelle est requis',
+        'libelle.unique' => 'Cette valeure du libellé est déjà utilisée',
+        'libelle.max' => 'Maximum de caractères 25',
+        'cout_repos.required' => 'Le coût du repos est requis',
+        'cout_repos.numeric' => 'Ce coût doit être un nombre',
+        'cout_reservation.required' => 'Le cout de la réservation est requis',
+        'cout_reservation.numeric' => 'Ce cout doit être un nombre',
+        'cout_passage.required' => 'Le cout de passage est requis',
+        'cout_passage.numeric' => 'Ce cout doit être un nombre',
+    ];
+
+    public static function regles(int $id)
+    {
+        return ['libelle' => 'required|max:150|unique:types,libelle,' . $id,
+            'cout_repos' => 'required|numeric',
+            'cout_reservation' => 'required|numeric',
+            'cout_passage' => 'required|numeric',
+        ];
+
+    }
+    public function chambres()
+    {
+        return $this->hasMany(Chambre::class, 'type');
     }
 }

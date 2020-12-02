@@ -129,6 +129,15 @@ Route::prefix('parametre')->group(
                 Route::get('/delete/{id}', 'ProduitsController@delete')->name('produit_delete');
             }
         );
+
+        Route::prefix('/table')->group(function () {
+            Route::get('/', 'TablesController@index')->name('table_index');
+            Route::get('/add', 'TablesController@add')->name('table_add');
+            Route::post('/store', 'TablesController@store')->name('table_store');
+            Route::get('/edit/{id}', 'TablesController@edit')->name('table_edit');
+            Route::post('/update/{id}', 'TablesController@update')->name('table_update');
+            Route::get('/delete/{id}', 'TablesController@delete')->name('table_delete');
+        });
     }
 );
 
@@ -236,9 +245,13 @@ Route::prefix('home')->group(
             }
         );
 
-        Route::prefix('/ventes')->group(
+        Route::prefix('/vente')->group(
             function () {
                 Route::get('/index', 'ServiceVentesController@index')->name('service_vente_index');
+                Route::get('/add', 'ServiceVentesController@add')->name('service_vente_add');
+                Route::get('/edit/{code}', 'ServiceVentesController@edit')->name('service_vente_edit');
+                Route::get('/show/{code}', 'ServiceVentesController@show')->name('service_vente_show');
+                Route::get('/ticket/{code}', 'ServiceVentesController@recu')->name('service_vente_ticket');
             }
         );
 
@@ -269,6 +282,7 @@ Route::prefix('/ajax')->group(
 
         Route::get('/produit/all', 'ProduitsController@getAll');
         Route::get('/produit/consommables/all', 'ProduitsController@getConsommables');
+        Route::get('/produit/consommables/departement/{id}', 'ProduitsController@getConsommablesByDep');
         Route::get('/produit/accessoire/all', 'ProduitsController@getAccessoires');
         Route::post('/produit/show', 'ProduitsController@getDetails');
 
@@ -302,6 +316,8 @@ Route::prefix('/ajax')->group(
         Route::post('/multicritere/vente/interval_date', 'PointVentesController@searchByDateInterval');
         Route::post('/multicritere/vente/default', 'PointVentesController@searchDefault');
 
+        Route::get('/tables', 'TablesController@getAll');
+
         Route::post('/solder', 'FacturesController@solderTable');
 
         Route::post('/departement/store', 'DepartementsController@storejs');
@@ -311,6 +327,10 @@ Route::prefix('/ajax')->group(
         Route::get('/secondaires', 'SecondairesController@getList');
 
         Route::post('/ventes/store', 'ServiceVentesController@storejs');
+        Route::post('/ventes/update', 'ServiceVentesController@updatejs');
+        Route::post('/ventes/solder', 'ServiceVentesController@solderjs');
+        Route::get('/ventes/old/{code}', 'ServiceVentesController@oldVentes');
+        Route::post('/ventes/stats', 'ServiceVentesController@statjs');
     }
 );
 

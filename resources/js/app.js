@@ -12,6 +12,9 @@ import SelectDepartement from "./components/SelectDepartement.vue";
 import SecondaireInputChoice from "./components/Secondaire/InputChoice.vue";
 import VenteInputChoice from "./components/Ventes/InputChoice.vue";
 import VenteSynthese from "./components/Ventes/Synthese.vue";
+import VenteEditInput from "./components/Ventes/InputEdit.vue";
+import VenteEditSynthese from "./components/Ventes/SyntheseEdit.vue";
+import PayerTableVente from "./components/Ventes/PayerTableVente.vue";
 require("./bootstrap");
 window.Vue = require("vue");
 const options = {
@@ -86,7 +89,7 @@ Vue.component(
 Vue.use(VueAWN, options);
 Vue.use(ModalPlugin);
 
-const app = new Vue({
+new Vue({
     el: "#app",
     components: {
         ModalDepartement,
@@ -94,5 +97,8 @@ const app = new Vue({
         SecondaireInputChoice,
         VenteInputChoice,
         VenteSynthese,
+        VenteEditInput,
+        VenteEditSynthese,
+        PayerTableVente,
     },
 });

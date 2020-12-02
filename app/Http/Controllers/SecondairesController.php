@@ -16,7 +16,7 @@ class SecondairesController extends Controller
     public function index()
     {
         $titre = 'Approvisionement des départements';
-        $appros = Secondaire::with('produitLinked')->get();
+        $appros = Secondaire::with('produitLinked', 'departementLinked')->get();
         return view('stock.secondaire.index', compact('appros', 'titre'));
     }
 

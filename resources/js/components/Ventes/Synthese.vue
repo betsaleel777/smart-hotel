@@ -1,6 +1,10 @@
 <template>
     <div class="container">
-        <b-card border-variant="warning" :header="'items sélectionnés'">
+        <b-card
+            border-variant="warning"
+            :header="`total:${total}`"
+            :footer="`total:${total}`"
+        >
             <b-card-text>
                 <ul class="list-group list-group-flush">
                     <li
@@ -39,6 +43,7 @@
 
 <script>
 import { BCard, BCardText } from "bootstrap-vue";
+import axios from "axios";
 export default {
     components: {
         BCard,
@@ -49,6 +54,7 @@ export default {
             total: "0",
             list: [],
             departement: null,
+            table: null,
             fields: [
                 {
                     key: "libelle",
@@ -69,8 +75,8 @@ export default {
         };
     },
     mounted() {
-        this.$root.$on("add", (produit, quantite, prix, departement) => {
-            if (produit && quantite && departement) {
+        this.$root.$on("add", (produit, quantite, prix, departement, table) => {
+            if (produit && quantite && departement && table) {
                 let elt = {};
                 let found = false;
                 if (this.list.length > 0) {
@@ -93,9 +99,12 @@ export default {
                     this.list.push(elt);
                 }
                 this.departement = departement;
+                this.table = table;
+                //fin de section
+                this.totaliser();
             } else {
                 this.$awn.warning(
-                    "Veuillez choisir le produit, la quantité et le département!!"
+                    "Veuillez choisir le produit, la quantité, département, la table"
                 );
             }
         });
@@ -105,20 +114,28 @@ export default {
             let newTab = this.list.filter((line) => line.id !== id);
             this.list = newTab;
         },
+        totaliser() {
+            let total = 0;
+            this.list.forEach((line) => {
+                total += line.quantite * line.prix;
+            });
+            this.total = total;
+        },
         envoyer() {
             if (this.list.length > 0) {
                 axios
                     .post("/ajax/ventes/store", {
                         items: this.list,
                         departement: this.departement,
+                        table: this.table,
                     })
                     .then((response) => {
-                        // console.log(response.data);
                         if (response.data.message) {
                             this.$awn.success(response.data.message);
                             this.list = [];
                             this.$root.$emit("vider");
                         }
+                        location.href = "/home/vente/index";
                     })
                     .catch((err) => {
                         console.log(err);

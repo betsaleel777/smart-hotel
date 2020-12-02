@@ -3,20 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Famille extends Model
 {
-    use SoftDeletes ;
-    protected $fillable = ['libelle'] ;
-    const RULES = ['libelle' => 'required|max:100'] ;
+    protected $fillable = ['libelle'];
+    const RULES = ['libelle' => 'required|max:100|unique:familles,libelle'];
     const MESSAGES = [
-                      'libelle.required' => 'le :attribute est requis' ,
-                      'libelle.max' => 'nombre maximale de caractère:100'
-                     ] ;
+        'libelle.required' => 'le :attribute est requis',
+        'libelle.unique' => 'Cette valeure du libellé est déjà utilisée',
+        'libelle.max' => 'nombre maximale de caractère:100',
+    ];
 
-    public function sous_familles(){
-      return $this->hasMany(SousFamille::class,'famille') ;
+    public static function regles(int $id)
+    {
+        return ['libelle' => 'required|max:100|unique:familles,libelle,' . $id];
+
+    }
+
+    public function sous_familles()
+    {
+        return $this->hasMany(SousFamille::class, 'famille');
     }
 
 }

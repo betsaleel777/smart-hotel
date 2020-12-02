@@ -18,6 +18,18 @@
             </b-form-select>
         </div>
         <div class="form-group">
+            <label for="table">Tables</label>
+            <b-form-select id="table" v-model="tableSelected" search>
+                <option
+                    v-for="table in tables"
+                    :key="table.id"
+                    :value="table.id"
+                >
+                    {{ "table " + table.numero }}
+                </option>
+            </b-form-select>
+        </div>
+        <div class="form-group">
             <label for="produit">Produit</label>
             <b-form-select
                 id="produit"
@@ -91,6 +103,7 @@ import {
     BFormText,
     BFormInvalidFeedback
 } from 'bootstrap-vue'
+import axios from "axios"
 export default {
     components: {
         BFormSelect,
@@ -109,6 +122,8 @@ export default {
     data() {
         return {
             choice: null,
+            tableSelected: null,
+            tables: [],
             selected: null,
             departements: [],
             prix: 0,
@@ -135,18 +150,22 @@ export default {
         }
     },
     mounted() {
-        this.getConsommables()
         this.getDepartements()
+        this.getTables()
         this.$root.$on('vider', () =>{
             this.selected = this.userdep
             this.quantite = ''
             this.showDetails = false
             this.choice = null
+            this.tableSelected = null
             this.prix = 0
         })
         if(this.userdep !== 1){
            this.disableDepartement = true
            this.selected = this.userdep
+           this.getConsommablesByDep()
+        }else {
+            this.getConsommables()
         }
     },
     methods: {
@@ -159,11 +178,28 @@ export default {
                 } = response.data
                 this.produit = produit
                 this.prix = produit.prix
-                this.showDetails = true;
+                this.showDetails = true
+                this.tableSected = null
+            }).catch(() => {})
+        },
+        getTables() {
+            axios.get('/ajax/tables').then((response) => {
+                const {
+                    tables
+                } = response.data
+                this.tables = tables
             }).catch(() => {})
         },
         getConsommables() {
             axios.get('/ajax/produit/consommables/all').then((response) => {
+                const {
+                    products
+                } = response.data
+                this.produits = products
+            }).catch(() => {})
+        },
+        getConsommablesByDep() {
+            axios.get('/ajax/produit/consommables/departement/'+this.selected).then((response) => {
                 const {
                     products
                 } = response.data
@@ -185,8 +221,9 @@ export default {
         },
         addit() {
             axios.post('/ajax/restauration/departement/check', {produit:this.choice, quantite:this.quantite, departement:this.selected}).then((response) => {
+                   console.log(this.choice, this.quantite, this.selected);
                   if(response.data.state){
-                      this.$root.$emit('add', this.produit, this.quantite, this.prix, this.selected)
+                      this.$root.$emit('add', this.produit, this.quantite, this.prix, this.selected, this.tableSelected)
                   }else {
                       this.$awn.alert(response.data.message)
                   }

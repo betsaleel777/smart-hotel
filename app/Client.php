@@ -3,32 +3,30 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
-    use SoftDeletes ;
-    protected $fillable = ['nom','prenom','piece','numero_piece','contact'] ;
-    protected $dates = ['created_at','updated_at'] ;
+    protected $fillable = ['nom', 'prenom', 'piece', 'numero_piece', 'contact'];
+    protected $dates = ['created_at', 'updated_at'];
 
     const MESSAGES = [
-                    'nom.required' => 'le :attribute est requis',
-                    'prenom.required' => 'le :attribute est requis',
-                    'piece.required' => 'le choix du type de pièce est requis',
-                    'numero_piece.required' => 'Le numéro de la pièce est requis',
-                    'numero_piece.unique' => 'Numero de pièce déjà utilisé ',
-                    'contact.required' => 'Le contact du client est requis',
-                    'contact.unique' => 'Contact déjà utilisé',
-                  ] ;
+        'nom.required' => 'le :attribute est requis',
+        'prenom.required' => 'le :attribute est requis',
+        'piece.required' => 'le choix du type de pièce est requis',
+        'numero_piece.required' => 'Le numéro de la pièce est requis',
+        'numero_piece.unique' => 'Numero de pièce déjà utilisé ',
+        'contact.required' => 'Le contact du client est requis',
+        'contact.unique' => 'Contact déjà utilisé',
+    ];
     public static function rules(int $id)
     {
         return [
-                'nom' => 'required',
-                'prenom' => 'required',
-                'piece' => 'required',
-                'numero_piece' => 'required|unique:clients,numero_piece,' . $id,
-                'contact' => 'required|unique:clients,contact,' . $id,
-               ] ;
+            'nom' => 'required',
+            'prenom' => 'required',
+            'piece' => 'required',
+            'numero_piece' => 'required|unique:clients,numero_piece,' . $id,
+            'contact' => 'required|unique:clients,contact,' . $id,
+        ];
     }
 
     public function pieceLinked()

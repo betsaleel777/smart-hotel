@@ -3,16 +3,23 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Batiment extends Model
 {
-    use SoftDeletes ;
 
     protected $fillable = ['libelle'];
-    protected $dates = ['created_at','updated_at','deleted_at'] ;
-    const RULES = ['libelle'  => 'required|max:20' ] ;
-    const MESSAGES = ['libelle.required'  => 'Ce champs est requis','libelle.max' => 'maximum de caractère dépassé (20)' ] ;
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    const RULES = ['libelle' => 'required|max:20|unique:batiments,libelle'];
+    const MESSAGES = [
+        'libelle.required' => 'Ce champs est requis',
+        'libelle.unique' => 'Cette valeure du libellé est déjà utilisée',
+        'libelle.max' => 'maximum de caractère dépassé (20)',
+    ];
+
+    public static function regles(int $id)
+    {
+        return ['libelle' => 'required|max:20|unique:batiments,libelle,' . $id];
+    }
 
     public function chambres()
     {

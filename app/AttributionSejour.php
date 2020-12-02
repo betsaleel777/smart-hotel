@@ -3,26 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AttributionSejour extends Model
 {
-    use SoftDeletes ;
-    protected $fillable = ['sejour','etat','batiment'] ;
-    protected $table = 'attributions_sejours' ;
-    protected $dates = ['created_at','updated_at','deleted_at'] ;
+    protected $fillable = ['sejour', 'etat', 'batiment'];
+    protected $table = 'attributions_sejours';
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    const RULES = ['batiment' => 'required'] ;
-    const MESSAGES = ['batiment.required' => 'le choix du batiment est requis'] ;
+    const RULES = ['batiment' => 'required'];
+    const MESSAGES = ['batiment.required' => 'le choix du batiment est requis'];
 
-    public function setFree():void
+    public function setFree(): void
     {
-        $this->attributes['etat'] = 'libérer' ;
+        $this->attributes['etat'] = 'libérer';
     }
 
-    public function setPay():void
+    public function setPay(): void
     {
-        $this->attributes['etat'] = 'facturer' ;
+        $this->attributes['etat'] = 'facturer';
     }
 
     public function batimentLinked()
@@ -52,6 +50,6 @@ class AttributionSejour extends Model
 
     public function destockes()
     {
-        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_sejour', 'produit')->withPivot('quantite', 'user', 'attribution_passage','prix')->withTimestamps();
+        return $this->belongsToMany(Produit::class, 'destockages', 'attribution_sejour', 'produit')->withPivot('quantite', 'user', 'attribution_passage', 'prix')->withTimestamps();
     }
 }

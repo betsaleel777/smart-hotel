@@ -3,17 +3,20 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TypePiece extends Model
 {
-    use SoftDeletes ;
-    protected $fillable = ['libelle'] ;
-    protected $dates = ['created_at','updated_at'] ;
-    protected $table = 'types_pieces' ;
-    const RULES = ['libelle' => 'required|max:50'] ;
+    protected $fillable = ['libelle'];
+    protected $dates = ['created_at', 'updated_at'];
+    protected $table = 'types_pieces';
+    const RULES = ['libelle' => 'required|max:50|unique:types_pieces,libelle'];
     const MESSAGES = [
-                       'libelle.required' => 'le libellé est réquis',
-                       'libelle.max' => 'maximum caractère dépassé : 50',
-                     ] ;
+        'libelle.required' => 'le libellé est réquis',
+        'libelle.unique' => 'Cette valeure du libellé est déjà utilisée',
+        'libelle.max' => 'maximum caractère dépassé : 50',
+    ];
+    public static function regles(int $id): array
+    {
+        return ['libelle' => 'required|max:50|unique:types_pieces,libelle,' . $id];
+    }
 }

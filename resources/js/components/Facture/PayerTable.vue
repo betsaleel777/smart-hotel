@@ -1,24 +1,25 @@
 <template>
     <div>
-        <button @click="runModal" class="btn btn-success float-right">
+        <button class="btn btn-success float-right" @click="runModal">
             <i class="far fa-credit-card"></i> Faire Payer
         </button>
-        <b-modal @ok="send" id="payer" title="PAYEMENT TABLE">
+        <b-modal id="payer" title="PAYEMENT TABLE" @ok="send">
             <form class="form-group">
                 <label for="heures">Nombre de Personne</label>
-                <input class="form-control" type="text" v-model="nombre" />
+                <input v-model="nombre" class="form-control" type="text" />
             </form>
         </b-modal>
     </div>
 </template>
 
 <script>
+import axios from "axios";
 import { BModal } from "bootstrap-vue";
 export default {
-    props: ["facture"],
     components: {
-        BModal
+        BModal,
     },
+    props: ["facture"],
     data() {
         return { nombre: 0 };
     },
@@ -31,16 +32,16 @@ export default {
             axios
                 .post("/ajax/solder", {
                     encaissement: this.facture,
-                    nombre: this.nombre
+                    nombre: this.nombre,
                 })
-                .then(response => {
+                .then(() => {
                     location.href = "/home/facture";
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
-        }
-    }
+        },
+    },
 };
 </script>
 
